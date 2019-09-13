@@ -1,14 +1,17 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {BrowserRouter} from 'react-router-dom';
+import Main from './components/Main';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        
-      </header>
-    </div>
+    //Use Browser Router to route to different pages
+    <BrowserRouter>
+      <div>
+        {/* App Component Has a Child Component called Main*/}
+        <Main/>
+      </div>
+    </BrowserRouter>
   );
 }
 
