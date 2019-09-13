@@ -49,6 +49,7 @@ app.post('/', function (req, res) {
     res.writeHead(200, {
         'Content-Type': 'text/plain'
     })
+    console.log('Evaluated')
     res.end(data.output);
 });
 
