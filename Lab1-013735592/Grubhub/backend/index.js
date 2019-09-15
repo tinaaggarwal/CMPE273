@@ -216,12 +216,12 @@ app.post('/userUpdateName',function(req,res){
             res.writeHead(400,{
                 'Content-Type' : 'text/plain'
             })
-            res.end("Error While Creating Book");
+            res.end("Error While updating name");
         }else{
             res.writeHead(200,{
                 'Content-Type' : 'text/plain'
             })
-            res.end('Traveler Created Successfully');
+            res.end('Name updated Successfully');
         }
     });
 });
@@ -238,12 +238,32 @@ app.post('/userUpdateEmail',function(req,res){
             res.writeHead(400,{
                 'Content-Type' : 'text/plain'
             })
-            res.end("Error While Creating Book");
+            res.end("Error While updating email");
         }else{
             res.writeHead(200,{
                 'Content-Type' : 'text/plain'
             })
-            res.end('Traveler Created Successfully');
+            res.end('Email updated Successfully');
+        }
+    });
+});
+
+app.post('/userUpdatePassword',function(req,res){
+    console.log("Inside Update Password Handler");
+    // var sql = "UPDATE client_update SET client_email = '"+req.body.client_email+"'  WHERE client_email = '"+clientEmail+"' AND " + "'" + req.body.confirmEmail + "'" + " = '" + req.body.client_email + "'" ;
+    var sql = "UPDATE client_signup SET password = '"+req.body.newPassword+"'  WHERE password = '"+req.body.password+"' AND " + "'" + req.body.newPassword + "'" + " = '" + req.body.confirmPassword + "'" ;
+    console.log(sql)
+    pool.query(sql,function(err,result){
+        if(err){
+            res.writeHead(400,{
+                'Content-Type' : 'text/plain'
+            })
+            res.end("Error While updating password");
+        }else{
+            res.writeHead(200,{
+                'Content-Type' : 'text/plain'
+            })
+            res.end('Password updated Successfully');
         }
     });
 });

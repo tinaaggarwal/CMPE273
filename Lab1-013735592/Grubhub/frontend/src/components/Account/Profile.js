@@ -3,6 +3,7 @@ import axios from 'axios';
 import './Profile.css';
 import EditName from './EditProfile/EditName';
 import EditEmail from './EditProfile/EditEmail';
+import EditPassword from './EditProfile/EditPassword';
 
 class Profile extends Component {
 
@@ -23,6 +24,8 @@ class Profile extends Component {
             delivery_instructions: "",
             address_name: "",
             password: "",
+            newPassword: "",
+            confirmPassword: "",
             authFlag: false,
             showEditName: false,
             showEditEmail: false,
@@ -36,7 +39,10 @@ class Profile extends Component {
         this.firstNameChangeHandler = this.firstNameChangeHandler.bind(this);
         this.lastNameChangeHandler = this.lastNameChangeHandler.bind(this);
         this.passwordChangeHandler = this.passwordChangeHandler.bind(this);
+        this.newPasswordChangeHandler = this.newPasswordChangeHandler.bind(this);
+        this.confirmPasswordChangeHandler = this.confirmPasswordChangeHandler.bind(this);
         this.emailChangeHandler = this.emailChangeHandler.bind(this);
+        this.confirmEmailChangeHandler = this.confirmEmailChangeHandler.bind(this);
         this.submitUpdateName = this.submitUpdateName.bind(this);
     }
 
@@ -79,6 +85,19 @@ class Profile extends Component {
             password: e.target.value
         })
     }
+
+    newPasswordChangeHandler = (e) => {
+        this.setState({
+            newPassword: e.target.value
+        })
+    }
+
+    confirmPasswordChangeHandler = (e) => {
+        this.setState({
+            confirmPassword: e.target.value
+        })
+    }
+
 
     emailChangeHandler = (e) => {
         this.setState({
@@ -167,6 +186,35 @@ class Profile extends Component {
 
     };
 
+    //submit Login handler to send a request to the node backend
+    submitUpdatePassword = (e) => {
+        //prevent page from refresh
+        e.preventDefault();
+        const data = {
+            password: this.state.password,
+            newPassword: this.state.newPassword,
+            confirmPassword: this.state.confirmPassword
+        }
+        //set the with credentials to true
+        axios.defaults.withCredentials = true;
+        //make a post request with the user data
+        axios.post('http://localhost:3001/userUpdatePassword', data)
+            .then(response => {
+                console.log("Status Code : ", response.status);
+                if (response.status === 200) {
+                    this.setState({
+                        authFlag: true
+                    })
+                } else {
+                    this.setState({
+                        authFlag: false
+                    })
+                }
+            });
+        this.showEditPassword()
+
+    };
+
     render() {
         return (
             <div className="divStyle">
@@ -207,6 +255,26 @@ class Profile extends Component {
                                         Email
                                         <p>{this.state.email}</p>
                                         <button onClick={this.showEditEmail} className="btn btn-link" type="submit">Edit</button>
+                                    </div>
+                                }
+                            </li>
+                            <li class="list-group-item">
+                                {this.state.showEditPassword ?
+                                    <EditPassword
+                                        password={this.state.password}
+                                        newPassword={this.state.newPassword}
+                                        confirmPassword={this.state.confirmPassword}
+                                        passwordChangeHandler={this.passwordChangeHandler}
+                                        newPasswordChangeHandler={this.newPasswordChangeHandler}
+                                        confirmPasswordChangeHandler={this.confirmPasswordChangeHandler}
+                                        submitUpdatePassword={this.submitUpdatePassword}
+                                        showEditPassword={this.showEditPassword}
+                                    />
+                                    :
+                                    <div>
+                                        Password
+                                        <p>************</p>
+                                        <button onClick={this.showEditPassword} className="btn btn-link" type="submit">Edit</button>
                                     </div>
                                 }
                             </li>
