@@ -1,6 +1,6 @@
-.layout {
+.divStyle {
     float: right;
-    width: 100%;
-    /* margin-top: 50px;
-    margin-left: 10px; */
-}
+    width: 75%;
+    margin-top: 50px;
+    margin-left: 10px;
+  };

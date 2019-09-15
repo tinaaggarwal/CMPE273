@@ -14,15 +14,6 @@ class Profile extends Component {
             lastName: "",
             email: "",
             confirmEmail: "",
-            street_address: "",
-            apt: "",
-            city: "",
-            state: "",
-            zip_code: "",
-            phone: "",
-            cross_street: "",
-            delivery_instructions: "",
-            address_name: "",
             password: "",
             newPassword: "",
             confirmPassword: "",
@@ -54,15 +45,6 @@ class Profile extends Component {
                     firstName: (response.data[0]).first_name,
                     lastName: (response.data[0]).last_name,
                     email: (response.data[0]).client_email,
-                    street_address: (response.data[0]).street_address,
-                    apt: (response.data[0]).apt,
-                    city: (response.data[0]).city,
-                    state: (response.data[0]).state,
-                    zip_code: (response.data[0]).zip_code,
-                    phone: (response.data[0]).phone,
-                    cross_street: (response.data[0]).cross_street,
-                    delivery_instructions: (response.data[0]).delivery_instructions,
-                    address_name: (response.data[0]).address_name
                 });
             })
     }

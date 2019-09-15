@@ -250,7 +250,6 @@ app.post('/userUpdateEmail',function(req,res){
 
 app.post('/userUpdatePassword',function(req,res){
     console.log("Inside Update Password Handler");
-    // var sql = "UPDATE client_update SET client_email = '"+req.body.client_email+"'  WHERE client_email = '"+clientEmail+"' AND " + "'" + req.body.confirmEmail + "'" + " = '" + req.body.client_email + "'" ;
     var sql = "UPDATE client_signup SET password = '"+req.body.newPassword+"'  WHERE password = '"+req.body.password+"' AND " + "'" + req.body.newPassword + "'" + " = '" + req.body.confirmPassword + "'" ;
     console.log(sql)
     pool.query(sql,function(err,result){
@@ -264,6 +263,61 @@ app.post('/userUpdatePassword',function(req,res){
                 'Content-Type' : 'text/plain'
             })
             res.end('Password updated Successfully');
+        }
+    });
+});
+
+app.get('/addressUpdate', function(req,res){
+    console.log(clientEmail)
+    var sql = "SELECT * FROM client_update where client_email = '"+clientEmail+"'";
+    console.log(sql)
+    pool.getConnection(function(err,pool){
+        if(err){
+            res.writeHead(400,{
+                'Content-Type' : 'text/plain'
+            })
+            res.end("Could Not Get Connection ");
+        }else{
+            pool.query(sql,function(err,result){
+                if(err){
+                    res.writeHead(400,{
+                        'Content-Type' : 'text/plain'
+                    })
+                    res.end("Could Not Get Connection Object");   
+                }else{
+                    res.writeHead(200,{
+                        'Content-Type' : 'application/json'
+                    })
+                    console.log(result);
+                    console.log((result[0]).first_name); 
+                    console.log(JSON.stringify(result));    
+                    res.end(JSON.stringify(result));
+
+                }
+            });
+        }
+    })
+    
+}) 
+
+app.post('/userUpdateAddress',function(req,res){
+    console.log("Inside Update Address Handler");
+    var sql = "UPDATE client_update SET street_address = '"+req.body.street_address+"', apt = '"+req.body.apt +
+    "', city = '"+req.body.city + "', state = '"+req.body.state + "', zip_code = '"+req.body.zip_code +
+    "', phone = '"+req.body.phone + "', cross_street = '"+req.body.cross_street + "', delivery_instructions = '"+req.body.delivery_instructions +
+    "', address_name = '"+req.body.address_name + "'  WHERE client_email = '"+clientEmail+"'";
+    console.log(sql)
+    pool.query(sql,function(err,result){
+        if(err){
+            res.writeHead(400,{
+                'Content-Type' : 'text/plain'
+            })
+            res.end("Error While updating address");
+        }else{
+            res.writeHead(200,{
+                'Content-Type' : 'text/plain'
+            })
+            res.end('Address updated Successfully');
         }
     });
 });
