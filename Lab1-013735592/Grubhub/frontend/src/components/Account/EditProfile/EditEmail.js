@@ -9,11 +9,11 @@ class EditEmail extends Component {
                 <form>
                     <div style={{ width: '30%' }} className="form-group">
                         <label>New Email</label>
-                        <input value={this.props.firstName} type="text" class="form-control" name="firstName" onChange={this.props.emailChangeHandler} />
+                        <input value={this.props.email} type="text" class="form-control" name="email" onChange={this.props.emailChangeHandler} />
                     </div>
                     <div style={{ width: '30%' }} className="form-group">
                         <label>Confirm Email</label>
-                        <input value={this.props.lastName} type="text" class="form-control" name="lastName" onChange={this.props.confirmEmailChangeHandler} />
+                        <input type="text" class="form-control" name="confirmEmail" onChange={this.props.confirmEmailChangeHandler} />
                     </div>
                     <div style={{ width: '30%', display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
                         <button onClick={this.props.submitUpdateEmail} className="btn btn-primary" type="submit">Update Email</button>

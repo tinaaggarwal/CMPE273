@@ -9,15 +9,15 @@ class EditPassword extends Component {
                 <form>
                     <div style={{ width: '30%' }} className="form-group">
                         <label>Current Password</label>
-                        <input value={this.props.password} type="password" class="form-control" name="firstName" onChange={this.props.passwordChangeHandler} required/>
+                        <input value={this.props.password} type="password" class="form-control" name="password" onChange={this.props.passwordChangeHandler} required/>
                     </div>
                     <div style={{ width: '30%' }} className="form-group">
                         <label>New Password</label>
-                        <input value={this.props.newPassword} type="password" class="form-control" name="lastName" onChange={this.props.newPasswordChangeHandler} required/>
+                        <input type="password" class="form-control" name="lastName" onChange={this.props.newPasswordChangeHandler} required/>
                     </div>
                     <div style={{ width: '30%' }} className="form-group">
                         <label>Confirm Password</label>
-                        <input value={this.props.confirmPassword} type="password" class="form-control" name="lastName" onChange={this.props.confirmPasswordChangeHandler} required/>
+                        <input type="password" class="form-control" name="lastName" onChange={this.props.confirmPasswordChangeHandler} required/>
                     </div>
                     <div style={{ width: '30%', display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
                         <button onClick={this.props.submitUpdatePassword} className="btn btn-primary" type="submit">Update Password</button>

@@ -22,6 +22,12 @@ class Account extends Component {
                                     <Link to={`/account/address`}>
                                         <li class="list-group-item">Address and Phone</li>
                                     </Link>
+                                    <Link to={`/account/pastOrder`}>
+                                        <li class="list-group-item">Past orders</li>
+                                    </Link>
+                                    <Link to={`/account/upcomingOrder`}>
+                                        <li class="list-group-item">Upcoming orders</li>
+                                    </Link>
                                 </ul>
                             </div>
                         </div>

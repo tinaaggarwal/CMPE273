@@ -1,21 +1,191 @@
 import React, { Component } from 'react';
+import './Address.css';
+import AddressModal from './AddressModal';
+import axios from 'axios';
 
-const divStyle = {
-    float: 'right',
-    width: '75%',
-    marginTop: '50px',
-    marginLeft: '10px'
-  };
 
 class Address extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            street_address: "",
+            apt: "",
+            city: "",
+            state: "",
+            zip_code: "",
+            phone: "",
+            cross_street: "",
+            delivery_instructions: "",
+            address_name: "",
+            showAddressModal: false,
+            authFlag: false
+        }
+
+        this.showAddressModal = this.showAddressModal.bind(this);
+        this.streetAddressChangeHandler = this.streetAddressChangeHandler.bind(this);
+        this.aptChangeHandler = this.aptChangeHandler.bind(this);
+        this.cityChangeHandler = this.cityChangeHandler.bind(this);
+        this.stateChangeHandler = this.stateChangeHandler.bind(this);
+        this.zipCodeChangeHandler = this.zipCodeChangeHandler.bind(this);
+        this.phoneChangeHandler = this.phoneChangeHandler.bind(this);
+        this.crossStreetChangeHandler = this.crossStreetChangeHandler.bind(this);
+        this.deliveryInstructionsChangeHandler = this.deliveryInstructionsChangeHandler.bind(this);
+        this.addressNameChangeHandler = this.addressNameChangeHandler.bind(this);
+        this.submitAddress = this.submitAddress.bind(this);
+    }
+
+    componentDidMount() {
+        axios.get('http://localhost:3001/addressUpdate')
+            .then((response) => {
+                console.log((response.data))
+                this.setState({
+                    street_address: (response.data[0]).street_address,
+                    apt: (response.data[0]).apt,
+                    city: (response.data[0]).city,
+                    state: (response.data[0]).state,
+                    zip_code: (response.data[0]).zip_code,
+                    phone: (response.data[0]).phone,
+                    cross_street: (response.data[0]).cross_street,
+                    delivery_instructions: (response.data[0]).delivery_instructions,
+                    address_name: (response.data[0]).address_name
+                });
+            })
+    }
+
+    showAddressModal() {
+        this.setState({
+            showAddressModal: !this.state.showAddressModal
+        })
+    }
+
+    streetAddressChangeHandler = (e) => {
+        this.setState({
+            street_address: e.target.value
+        })
+    }
+
+    aptChangeHandler = (e) => {
+        this.setState({
+            apt: e.target.value
+        })
+    }
+
+    cityChangeHandler = (e) => {
+        this.setState({
+            city: e.target.value
+        })
+    }
+
+    stateChangeHandler = (val) => {
+        this.setState({
+            state: val
+        })
+    }
+
+    zipCodeChangeHandler = (e) => {
+        this.setState({
+            zip_code: e.target.value
+        })
+    }
+
+    phoneChangeHandler = (e) => {
+        this.setState({
+            phone: e.target.value
+        })
+    }
+
+    crossStreetChangeHandler = (e) => {
+        this.setState({
+            cross_street: e.target.value
+        })
+    }
+
+    deliveryInstructionsChangeHandler = (e) => {
+        this.setState({
+            delivery_instructions: e.target.value
+        })
+    }
+
+    addressNameChangeHandler = (e) => {
+        this.setState({
+            address_name: e.target.value
+        })
+    }
+
+    //submit Login handler to send a request to the node backend
+    submitAddress = (e) => {
+        //prevent page from refresh
+        e.preventDefault();
+        const data = {
+            street_address: this.state.street_address,
+            apt: this.state.apt,
+            city: this.state.city,
+            state: this.state.state,
+            zip_code: this.state.zip_code,
+            phone: this.state.phone,
+            cross_street: this.state.cross_street,
+            delivery_instructions: this.state.delivery_instructions,
+            address_name: this.state.address_name
+        }
+        //set the with credentials to true
+        axios.defaults.withCredentials = true;
+        //make a post request with the user data
+        axios.post('http://localhost:3001/userUpdateAddress', data)
+            .then(response => {
+                console.log("Status Code : ", response.status);
+                if (response.status === 200) {
+                    this.setState({
+                        authFlag: true
+                    })
+                } else {
+                    this.setState({
+                        authFlag: false
+                    })
+                }
+            });
+        this.showAddressModal()
+
+    };
+
+
     render() {
+        console.log(this.state)
         return (
-            <div style={divStyle}>
+            <div className="divStyle">
                 <div class="card">
                     <div class="card-body">
-                        <h6 class="card-title">Addresses</h6>
-                        <p class="card-text">You don't have any saved addresses.</p>
-                        <a href="#">Add a new address</a>
+                        {this.state.showAddressModal ?
+                            <AddressModal
+                                street_address={this.state.street_address}
+                                apt={this.state.apt}
+                                city={this.state.city}
+                                state={this.state.state}
+                                zip_code={this.state.zip_code}
+                                phone={this.state.phone}
+                                cross_street={this.state.cross_street}
+                                delivery_instructions={this.state.delivery_instructions}
+                                address_name={this.state.address_name} 
+                                streetAddressChangeHandler={this.streetAddressChangeHandler}
+                                aptChangeHandler={this.aptChangeHandler}
+                                cityChangeHandler={this.cityChangeHandler}
+                                stateChangeHandler={this.stateChangeHandler}
+                                zipCodeChangeHandler={this.zipCodeChangeHandler}
+                                phoneChangeHandler={this.phoneChangeHandler}
+                                crossStreetChangeHandler={this.crossStreetChangeHandler}
+                                deliveryInstructionsChangeHandler={this.deliveryInstructionsChangeHandler}
+                                addressNameChangeHandler={this.addressNameChangeHandler}
+                                submitAddress={this.submitAddress}
+                                showAddressModal={this.showAddressModal}
+                            />
+                            :
+                            <div>
+                                <h6 class="card-title">Addresses</h6>
+                                <p class="card-text">You don't have any saved addresses.</p>
+                                <button onClick={this.showAddressModal} className="btn btn-link" type="button">+ Add a new address</button>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
