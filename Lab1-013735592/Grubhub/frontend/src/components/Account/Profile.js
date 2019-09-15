@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-    float: 'left'
-}
 import axios from 'axios';
 import './Profile.css';
 import EditName from './EditProfile/EditName';
