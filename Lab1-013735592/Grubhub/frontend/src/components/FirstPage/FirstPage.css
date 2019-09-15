@@ -1,10 +1,13 @@
-.bgimg .img{ 
-/* width: 50%!important;
-height:100% */
-  
+.bgimg {
+    background-image: url('../../Burger.jpg');
+    background-size: cover;
+    background-position: 100%;
+    background-position-x: 100%;
+    background-position-y: center;
+
 }
 
 .img {
-  height:100%;
-  max-width:100%!important;
+    height: 100%;
+    max-width: 100%!important;
 }
