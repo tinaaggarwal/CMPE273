@@ -85,10 +85,12 @@ class ClientLogin extends Component {
                         </div>
                         
                             <div className="form-group">
-                                <input onChange = {this.emailChangeHandler} type="email" className="form-control" name="email" placeholder="Email" />
+                                <label>Email address</label>
+                                <input onChange = {this.emailChangeHandler} type="email" className="form-control" name="email"/>
                             </div>
                             <div className="form-group">
-                                <input onChange = {this.passwordChangeHandler} type="password" className="form-control" name="password" placeholder="Password" />
+                                <label>Password</label>
+                                <input onChange = {this.passwordChangeHandler} type="password" className="form-control" name="password"/>
                             </div>
                             <button onClick = {this.submitLogin} className="btn btn-primary">Login</button>  
                             <br></br><br/>

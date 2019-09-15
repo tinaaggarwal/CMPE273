@@ -36,7 +36,8 @@ app.use(session({
 //     extended: true
 //   }));
 app.use(bodyParser.json());
-
+var clientEmail = "";
+var ownerEmail= "";
 
 
 //Allow Access Control
@@ -53,10 +54,10 @@ app.use(function(req, res, next) {
 app.post('/clientLogin',function(req,res){
     
     console.log("Inside Client Login Post Request");
-        var email = req.body.email;
+        clientEmail = req.body.email;
         var password = req.body.password;
         var sql = "SELECT *  FROM client_signup WHERE client_email = " + 
-                mysql.escape(email)  + "and password = " + mysql.escape(password);
+                mysql.escape(clientEmail)  + "and password = " + mysql.escape(password);
 
     pool.getConnection(function(err,pool){
         if(err){
@@ -91,6 +92,10 @@ app.post('/clientSignup',function(req,res){
     mysql.escape(req.body.firstName) + " , " + mysql.escape(req.body.lastName) + " , " + mysql.escape(req.body.email) + " , "+
     mysql.escape(req.body.password) + " ) ";
     console.log(sql);
+    var sql1= "INSERT INTO client_update (first_name, last_name, client_email) VALUES ( " + 
+    mysql.escape(req.body.firstName) + " , " + mysql.escape(req.body.lastName) + " , " + mysql.escape(req.body.email) + " ) ";
+    console.log(sql1);
+    pool.query(sql1);
     //var sql1 = "INSERT INTO prop_desc (name) VALUES ( " + mysql.escape(req.body.Name) + " ) ";
     //pool.query(sql1);
     pool.query(sql,function(err,result){
@@ -103,19 +108,18 @@ app.post('/clientSignup',function(req,res){
             res.writeHead(200,{
                 'Content-Type' : 'text/plain'
             })
-            res.end('Owner Created Successfully');
+            res.end('Client Created Successfully');
         }
     });
-    
 });
 
 app.post('/ownerLogin',function(req,res){
     
     console.log("Inside Owner Login Post Request");
-        var email = req.body.email;
+        ownerEmail = req.body.email;
         var password = req.body.password;
         var sql = "SELECT *  FROM owner_signup WHERE owner_email = " + 
-                mysql.escape(email)  + "and password = " + mysql.escape(password);
+                mysql.escape(ownerEmail)  + "and password = " + mysql.escape(password);
 
     pool.getConnection(function(err,pool){
         if(err){
@@ -165,6 +169,103 @@ app.post('/ownerSignup',function(req,res){
         }
     });
     
+});
+
+app.get('/userUpdate', function(req,res){
+    console.log(clientEmail)
+    var sql = "SELECT * FROM client_update where client_email = '"+clientEmail+"'";
+    console.log(sql)
+    pool.getConnection(function(err,pool){
+        if(err){
+            res.writeHead(400,{
+                'Content-Type' : 'text/plain'
+            })
+            res.end("Could Not Get Connection ");
+        }else{
+            pool.query(sql,function(err,result){
+                if(err){
+                    res.writeHead(400,{
+                        'Content-Type' : 'text/plain'
+                    })
+                    res.end("Could Not Get Connection Object");   
+                }else{
+                    res.writeHead(200,{
+                        'Content-Type' : 'application/json'
+                    })
+                    console.log(result);
+                    console.log((result[0]).first_name); 
+                    console.log(JSON.stringify(result));    
+                    res.end(JSON.stringify(result));
+
+                }
+            });
+        }
+    })
+    
+}) 
+
+app.post('/userUpdateName',function(req,res){
+    console.log("Inside Update name Handler");
+    var sql = "UPDATE client_update SET first_name = '"+req.body.first_name+"', last_name = '"+req.body.last_name+"'  WHERE client_email = '"+clientEmail+"'" ;
+    var sql1 = "UPDATE client_signup SET first_name = '"+req.body.first_name+"', last_name = '"+req.body.last_name+"'  WHERE client_email = '"+clientEmail+"'" ;
+    console.log(sql)
+    console.log(sql1)
+    pool.query(sql1)
+    pool.query(sql,function(err,result){
+        if(err){
+            res.writeHead(400,{
+                'Content-Type' : 'text/plain'
+            })
+            res.end("Error While updating name");
+        }else{
+            res.writeHead(200,{
+                'Content-Type' : 'text/plain'
+            })
+            res.end('Name updated Successfully');
+        }
+    });
+});
+
+app.post('/userUpdateEmail',function(req,res){
+    console.log("Inside Update email Handler");
+    var sql = "UPDATE client_update SET client_email = '"+req.body.client_email+"'  WHERE client_email = '"+clientEmail+"' AND " + "'" + req.body.confirmEmail + "'" + " = '" + req.body.client_email + "'" ;
+    var sql1 = "UPDATE client_signup SET client_email = '"+req.body.client_email+"'  WHERE client_email = '"+clientEmail+"' AND " + "'" + req.body.confirmEmail + "'" + " = '" + req.body.client_email + "'" ;
+    console.log(sql)
+    console.log(sql1)
+    pool.query(sql1)
+    pool.query(sql,function(err,result){
+        if(err){
+            res.writeHead(400,{
+                'Content-Type' : 'text/plain'
+            })
+            res.end("Error While updating email");
+        }else{
+            res.writeHead(200,{
+                'Content-Type' : 'text/plain'
+            })
+            res.end('Email updated Successfully');
+        }
+    });
+});
+
+app.post('/userUpdatePassword',function(req,res){
+    console.log("Inside Update Password Handler");
+    // var sql = "UPDATE client_update SET client_email = '"+req.body.client_email+"'  WHERE client_email = '"+clientEmail+"' AND " + "'" + req.body.confirmEmail + "'" + " = '" + req.body.client_email + "'" ;
+    var sql = "UPDATE client_signup SET password = '"+req.body.newPassword+"'  WHERE password = '"+req.body.password+"' AND " + "'" + req.body.newPassword + "'" + " = '" + req.body.confirmPassword + "'" ;
+    console.log(sql)
+    pool.query(sql,function(err,result){
+        if(err){
+            res.writeHead(400,{
+                'Content-Type' : 'text/plain'
+            })
+            res.end("Error While updating password");
+        }else{
+            res.writeHead(200,{
+                'Content-Type' : 'text/plain'
+            })
+            res.end('Password updated Successfully');
+        }
+    });
 });
 
 //start your server on port 3001

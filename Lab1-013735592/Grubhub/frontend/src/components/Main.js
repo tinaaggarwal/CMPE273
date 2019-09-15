@@ -6,7 +6,6 @@ import ClientSignup from './ClientSignup/ClientSignup';
 import OwnerLogin from './OwnerLogin/OwnerLogin';
 import OwnerSignup from './OwnerSignup/OwnerSignup';
 import UserProfile from './UserProfile/UserProfile';
-import Sidebar from './Sidebar/Sidebar';
 import Account from './Account/Account';
 
 class Main extends Component {
@@ -19,7 +18,6 @@ class Main extends Component {
                 <Route path="/OwnerLogin" component={ OwnerLogin } />
                 <Route path="/OwnerSignup" component={ OwnerSignup }/>
                 <Route path= "/UserProfile" component = { UserProfile }/>
-                <Route path="/Sidebar" component={ Sidebar } />
                 <Route path="/Account/" component={ Account } />
             </div>
         );
