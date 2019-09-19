@@ -14,7 +14,7 @@ class Account extends Component {
                     <div className='layout'>
                         <div className='sidebar'>
                             <div class="card">
-                                <h3 class="card-title">Your Account</h3>
+                                <h5 class="card-title">Your Account</h5>
                                 <ul class="list-group list-group-flush">
                                     <Link to={`/account/profile`}>
                                         <li class="list-group-item">Profile</li>

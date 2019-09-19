@@ -6,7 +6,7 @@ class States extends Component {
         return (
             <div style={{ width: '49%' }} className="form-group">
                 <label>State</label>
-                <select id="state" name="state" class="form-control" onChange={val => this.props.stateChangeHandler(val)}>
+                <select id="state" name="state" class="form-control" value={this.props.state} onChange={this.props.stateChangeHandler}>
                     <option value="---">---</option><option value="Alabama">Alabama</option>
                     <option value="Alaska">Alaska</option>
                     <option value="Arizona">Arizona</option>
@@ -69,13 +69,8 @@ class States extends Component {
 }
 
 States.propTypes = {
-    stateChangeHandler: PropTypes.func
+    stateChangeHandler: PropTypes.func,
+    state: PropTypes.string
 }
 
 export default States;
-
-{/* <Select
-        name="states"
-        options={options}
-        onChange={val => this.CurrencyChangeHandler(val)}
-    /> */}
