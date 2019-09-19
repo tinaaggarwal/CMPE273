@@ -83,18 +83,19 @@ class ClientLogin extends Component {
                         <div className="panel">
                             <h2>Sign in with your Grubhub account</h2>
                         </div>
-                        
+                        <form onSubmit={this.submitLogin}>
                             <div className="form-group">
                                 <label>Email address</label>
-                                <input onChange = {this.emailChangeHandler} type="email" className="form-control" name="email"/>
+                                <input onChange = {this.emailChangeHandler} type="email" className="form-control" name="email" required/>
                             </div>
                             <div className="form-group">
                                 <label>Password</label>
-                                <input onChange = {this.passwordChangeHandler} type="password" className="form-control" name="password"/>
+                                <input onChange = {this.passwordChangeHandler} type="password" className="form-control" name="password" required/>
                             </div>
-                            <button onClick = {this.submitLogin} className="btn btn-primary">Login</button>  
+                            <button className="btn btn-primary">Login</button>  
                             <br></br><br/>
-                            <Link to = '/ClientSignup'>Signup</Link>                 
+                            <Link to = '/ClientSignup'>Signup</Link>     
+                            </form>            
                     </div>
                 </div>
             </div>

@@ -27,9 +27,6 @@ class Navbar extends Component {
           <a class="dropdown-item" href="/OwnerLogin">Owner Login</a>
         </div>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/OwnerLogin">List your property</a>
-      </li>
 
     </ul>
   </div>
