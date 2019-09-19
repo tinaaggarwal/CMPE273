@@ -78,9 +78,9 @@ class Address extends Component {
         })
     }
 
-    stateChangeHandler = (val) => {
+    stateChangeHandler = (e) => {
         this.setState({
-            state: val
+            state: e.target.value
         })
     }
 
@@ -151,7 +151,20 @@ class Address extends Component {
 
 
     render() {
-        console.log(this.state)
+
+        let address = null;
+        if (this.state.street_address) {
+            address =
+                <div>
+                    <p>{this.state.address_name}</p>
+                    <p>{this.state.street_address} {this.state.apt}</p>
+                    <button onClick={this.showAddressModal} className="btn btn-link" type="button">Edit</button>
+                    <button className="btn btn-link" type="button">Delete</button>
+                </div>
+        } else {
+            address = <p class="card-text">You don't have any saved addresses.</p>
+        }
+
         return (
             <div className="divStyle">
                 <div class="card">
@@ -166,7 +179,7 @@ class Address extends Component {
                                 phone={this.state.phone}
                                 cross_street={this.state.cross_street}
                                 delivery_instructions={this.state.delivery_instructions}
-                                address_name={this.state.address_name} 
+                                address_name={this.state.address_name}
                                 streetAddressChangeHandler={this.streetAddressChangeHandler}
                                 aptChangeHandler={this.aptChangeHandler}
                                 cityChangeHandler={this.cityChangeHandler}
@@ -182,8 +195,10 @@ class Address extends Component {
                             :
                             <div>
                                 <h6 class="card-title">Addresses</h6>
-                                <p class="card-text">You don't have any saved addresses.</p>
-                                <button onClick={this.showAddressModal} className="btn btn-link" type="button">+ Add a new address</button>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">{address}</li>
+                                    <li class="list-group-item"><button onClick={this.showAddressModal} className="btn btn-link" type="button">+ Add a new address</button></li>
+                                </ul>
                             </div>
                         }
                     </div>

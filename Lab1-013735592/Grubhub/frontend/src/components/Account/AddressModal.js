@@ -21,44 +21,44 @@ class AddressModal extends Component {
                         <form onSubmit={this.props.submitAddress}>
                             <div style={{ width: '30%' }} className="form-group">
                                 <label>Street Address</label>
-                                <input type="text" class="form-control" name="streetAddress" onChange={this.props.streetAddressChangeHandler} required />
+                                <input type="text" class="form-control" value={this.props.street_address} name="streetAddress" onChange={this.props.streetAddressChangeHandler} required />
                             </div>
                             <div style={{ width: '100%' }} className="form-group">
                                 <label>Apt, suite, floor</label>
-                                <input type="text" class="form-control" name="apt" onChange={this.props.aptChangeHandler} />
+                                <input type="text" class="form-control" value={this.props.apt} name="apt" onChange={this.props.aptChangeHandler} />
                             </div>
                             <div className="cityState">
                                 <div style={{ width: '49%' }} className="form-group">
                                     <label>City</label>
-                                    <input type="text" class="form-control" name="city" onChange={this.props.cityChangeHandler} required />
+                                    <input type="text" class="form-control" value={this.props.city} name="city" onChange={this.props.cityChangeHandler} required />
                                 </div>
                                 <States
-                                    stateChangeHandler={this.props.stateChangeHandler} />
+                                    stateChangeHandler={this.props.stateChangeHandler} state={this.props.state}/>
                             </div>
                             <div style={{ width: '49%' }} className="form-group">
                                 <label>Zip code</label>
-                                <input type="text" class="form-control" name="zip_code" onChange={this.props.zipCodeChangeHandler} required />
+                                <input type="text" class="form-control" value={this.props.zip_code} name="zip_code" onChange={this.props.zipCodeChangeHandler} required />
                             </div>
                             <div style={{ width: '49%' }} className="form-group">
                                 <label>Phone</label>
-                                <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="e.g. 555-555-1212" class="form-control" name="phone" onChange={this.props.phoneChangeHandler} required />
+                                <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="e.g. 555-555-1212" class="form-control" value={this.props.phone} name="phone" onChange={this.props.phoneChangeHandler} required />
                             </div>
                             <div style={{ width: '49%' }} className="form-group">
                                 <label>Cross Street</label>
-                                <input type="text" class="form-control" name="cross_street" placeholder="Main Street and Second Avenue" onChange={this.props.crossStreetChangeHandler} />
+                                <input type="text" class="form-control" value={this.props.cross_street} name="cross_street" placeholder="Main Street and Second Avenue" onChange={this.props.crossStreetChangeHandler} />
                             </div>
                             <div style={{ width: '100%' }} className="form-group">
                                 <label>Delivery Instructions</label>
-                                <input type="text" class="form-control" name="delivery_instructions" placeholder="e.g. Check in with the doorman" onChange={this.props.deliveryInstructionsChangeHandler} />
+                                <input type="text" class="form-control" value={this.props.delivery_instructions} name="delivery_instructions" placeholder="e.g. Check in with the doorman" onChange={this.props.deliveryInstructionsChangeHandler} />
                             </div>
                             <div style={{ width: '49%' }} className="form-group">
                                 <label>Address Name</label>
-                                <input type="text" class="form-control" name="address_name" placeholder="e.g. Home" onChange={this.props.addressNameChangeHandler} required />
+                                <input type="text" class="form-control" value={this.props.address_name} name="address_name" placeholder="e.g. Home" onChange={this.props.addressNameChangeHandler} required />
                             </div>
                             <div className="footerBtns">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                        <button onClick={this.props.showAddressModal} type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button onClick={this.props.showAddressModal} type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            </div>
                         </form>
                     </div>
 
