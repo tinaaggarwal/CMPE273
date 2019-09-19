@@ -5,7 +5,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var cors = require('cors');
-app.set('view engine', 'ejs');
+//app.set('view engine', 'ejs');
 var mysql = require('mysql');
 // var pool = require('./pool');
 const multer = require('multer');
@@ -37,7 +37,7 @@ app.use(session({
 //   }));
 app.use(bodyParser.json());
 var clientEmail = "";
-var ownerEmail= "";
+var ownerEmail =  "";
 
 
 //Allow Access Control
@@ -58,7 +58,7 @@ app.post('/clientLogin',function(req,res){
         var password = req.body.password;
         var sql = "SELECT *  FROM client_signup WHERE client_email = " + 
                 mysql.escape(clientEmail)  + "and password = " + mysql.escape(password);
-
+        console.log(sql)
     pool.getConnection(function(err,pool){
         if(err){
             res.writeHead(400,{
@@ -67,6 +67,7 @@ app.post('/clientLogin',function(req,res){
             res.end("Could Not Get Connection Object");
         }else{
             pool.query(sql,function(err,result){
+                console.log(result)
                 if(err){
                     res.writeHead(400,{
                         'Content-Type' : 'text/plain'
@@ -74,6 +75,7 @@ app.post('/clientLogin',function(req,res){
                     res.end("Invalid Credentials");
                 }else{
                     //res.cookie('cookie',"username",{maxAge: 900000, httpOnly: false, path : '/'});
+                    
                     req.session.user = result;
                         res.writeHead(200,{
                             'Content-Type' : 'text/plain'
@@ -129,6 +131,7 @@ app.post('/ownerLogin',function(req,res){
             res.end("Could Not Get Connection Object");
         }else{
             pool.query(sql,function(err,result){
+                console.log(result);
                 if(err){
                     res.writeHead(400,{
                         'Content-Type' : 'text/plain'

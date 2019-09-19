@@ -83,16 +83,18 @@ class OwnerLogin extends Component {
                         <div className="panel">
                             <h2>Grubhub for Restaurants</h2>
                         </div>
+                        <form onSubmit={this.submitLogin}>
+                            <div className="form-group">
+                                <input onChange = {this.emailChangeHandler} type="email" className="form-control" name="email" placeholder="Email" required/>
+                            </div>
+                            <div className="form-group">
+                                <input onChange = {this.passwordChangeHandler} type="password" className="form-control" name="password" placeholder="Password" required/>
+                            </div>
+                            <button className="btn btn-primary">Login</button> 
                         
-                            <div className="form-group">
-                                <input onChange = {this.emailChangeHandler} type="email" className="form-control" name="email" placeholder="Email" />
-                            </div>
-                            <div className="form-group">
-                                <input onChange = {this.passwordChangeHandler} type="password" className="form-control" name="password" placeholder="Password" />
-                            </div>
-                            <button onClick = {this.submitLogin} className="btn btn-primary">Login</button>  
                             <br></br><br/>
-                            <Link to = '/OwnerSignup'>Signup</Link>                 
+                            <Link to = '/OwnerSignup'>Signup</Link>     
+                            </form>             
                     </div>
                 </div>
             </div>

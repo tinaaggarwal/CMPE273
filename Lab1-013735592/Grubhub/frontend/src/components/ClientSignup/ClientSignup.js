@@ -94,24 +94,24 @@ class ClientSignup extends Component{
             <br/>
                 <div class = "container">
                 <h2>Client Signup</h2>
-                <form>
+                <form onSubmit={this.submitCreate}>
                         <div style={{width: '30%'}} className="form-group">
-                            <input onChange = {this.firstNameChangeHandler} type="text" class="form-control" name="firstName" placeholder="First Name"/>
+                            <input onChange = {this.firstNameChangeHandler} type="text" class="form-control" name="firstName" placeholder="First Name" required/>
                         </div>
                         <br/>
                         <div style={{width: '30%'}} className="form-group">
-                            <input onChange = {this.lastNameChangeHandler} type="text" class="form-control" name="lastName" placeholder="Last Name" />
+                            <input onChange = {this.lastNameChangeHandler} type="text" class="form-control" name="lastName" placeholder="Last Name" required/>
                         </div>
                         <div style={{width: '30%'}} className="form-group">
-                                <input  onChange = {this.emailChangeHandler} type="email" class="form-control" name="email" placeholder="Email"/>
+                                <input  onChange = {this.emailChangeHandler} type="email" class="form-control" name="email" placeholder="Email" required/>
                         </div>
                         <br/>
                         <div style={{width: '30%'}} className="form-group">
-                                <input  onChange = {this.passwordChangeHandler} type="password" class="form-control" name="password" placeholder="Password"/>
+                                <input  onChange = {this.passwordChangeHandler} type="password" class="form-control" name="password" placeholder="Password" required/>
                         </div>
                         <br/>
                         <div style={{width: '30%'}}>
-                            <button onClick = {this.submitCreate} className="btn btn-success" type="submit">Create</button>
+                            <button className="btn btn-success" type="submit">Create</button>
                         </div> 
                         </form>
                        
