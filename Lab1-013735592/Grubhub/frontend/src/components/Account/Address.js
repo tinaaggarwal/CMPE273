@@ -171,6 +171,7 @@ class Address extends Component {
                     <div class="card-body">
                         {this.state.showAddressModal ?
                             <AddressModal
+                                isOpen={this.state.showAddressModal}
                                 street_address={this.state.street_address}
                                 apt={this.state.apt}
                                 city={this.state.city}

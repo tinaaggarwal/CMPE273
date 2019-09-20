@@ -138,7 +138,7 @@ app.post('/ownerLogin',function(req,res){
                     })
                     res.end("Invalid Credentials");
                 }else{
-                    //res.cookie('cookie',"username",{maxAge: 900000, httpOnly: false, path : '/'});
+                    res.cookie('cookie',"username",{maxAge: 900000, httpOnly: false, path : '/'});
                     req.session.user = result;
                         res.writeHead(200,{
                             'Content-Type' : 'text/plain'
