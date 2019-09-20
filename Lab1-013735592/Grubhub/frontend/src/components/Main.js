@@ -7,6 +7,7 @@ import OwnerLogin from './OwnerLogin/OwnerLogin';
 import OwnerSignup from './OwnerSignup/OwnerSignup';
 import UserProfile from './UserProfile/UserProfile';
 import Account from './Account/Account';
+import OwnerAccount from './OwnerAccount/OwnerAccount';
 
 class Main extends Component {
     render() {
@@ -19,6 +20,7 @@ class Main extends Component {
                 <Route path="/OwnerSignup" component={ OwnerSignup }/>
                 <Route path= "/UserProfile" component = { UserProfile }/>
                 <Route path="/Account/" component={ Account } />
+                <Route path="/OwnerAccount/" component={ OwnerAccount } />
             </div>
         );
     }

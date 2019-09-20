@@ -71,7 +71,7 @@ class OwnerLogin extends Component {
         //redirect based on successful login
         let redirectVar = null;
         if(this.state.authFlag){
-            redirectVar = <Redirect to= "/UserProfile"/>
+            redirectVar = <Redirect to= "/OwnerAccount"/>
         }
         return(
             <div>
