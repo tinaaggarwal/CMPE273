@@ -5,15 +5,24 @@ import ReactModal from 'react-modal';
 import States from './States';
 
 class AddressModal extends Component {
-
+    
     render() {
+
+        console.log(this.props.btnType);
+        let heading = null;
+        if(this.props.btnType === 'Add') {
+            heading = 'Add new address';
+        } else {
+            heading = 'Update address';
+        }
+
         return (
             <ReactModal
             // style={{ width: '40%' }}
                 isOpen={this.props.isOpen}>
                 <div className="modalLayout">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalCenterTitle">Add new address</h5>
+                        <h5 class="modal-title" id="exampleModalCenterTitle">{heading}</h5>
                         <button onClick={this.props.showAddressModal} type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -59,13 +68,11 @@ class AddressModal extends Component {
                                     <input type="text" class="form-control" value={this.props.address_name} name="address_name" placeholder="e.g. Home" onChange={this.props.addressNameChangeHandler} required />
                                 </div>
                                 <div className="footerBtns">
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <button type="submit" class="btn btn-primary">{this.props.btnType}</button>
                                     <button onClick={this.props.showAddressModal} type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                                 </div>
                             </form>
                         </div>
-
-
                     </div>
                 </div>
             </ReactModal>
@@ -94,7 +101,8 @@ AddressModal.propTypes = {
     deliveryInstructionsChangeHandler: PropTypes.func,
     addressNameChangeHandler: PropTypes.func,
     submitAddress: PropTypes.func,
-    showAddressModal: PropTypes.func
+    showAddressModal: PropTypes.func,
+    btnType: PropTypes.string
 }
 
 export default AddressModal;
