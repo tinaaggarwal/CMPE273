@@ -203,7 +203,6 @@ class Address extends Component {
                     <p>{this.state.address_name}</p>
                     <p>{this.state.street_address} {this.state.apt}</p>
                     <button onClick={this.btnTypeClicked} className="btn btn-link" type="button" name="Update">Edit</button>
-                    <button className="btn btn-link" type="button">Delete</button>
                 </div>
         } else {
             address = <p class="card-text">You don't have any saved addresses.</p>
