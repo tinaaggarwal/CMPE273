@@ -20,7 +20,7 @@ class SectionsModal extends Component {
                         </div>
                         <div class="container">
                             <div class="modal-body">
-                                <form onSubmit={this.props.submitAddress}>
+                                <form onSubmit={this.props.submitSection}>
                                     <div style={{ width: '30%' }} className="form-group">
                                         <label>Section Name</label>
                                         <input
@@ -60,7 +60,8 @@ SectionsModal.propTypes = {
     sectionDescription: PropTypes.string,
     showSectionsModal: PropTypes.func,
     sectionNameChangeHandler: PropTypes.func,
-    sectionDescriptionChangeHandler: PropTypes.func
+    sectionDescriptionChangeHandler: PropTypes.func,
+    submitSection: PropTypes.func
 }
 
 export default SectionsModal;

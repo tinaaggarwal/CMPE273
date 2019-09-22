@@ -8,7 +8,6 @@ class AddressModal extends Component {
     
     render() {
 
-        console.log(this.props.btnType);
         let heading = null;
         if(this.props.btnType === 'Add') {
             heading = 'Add new address';

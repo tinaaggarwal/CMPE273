@@ -23,9 +23,9 @@ class OwnerAccount extends Component {
                                     <Link to={`/owneraccount/sections`}>
                                         <li className="list-group-item">Sections</li>
                                     </Link>
-                                    {/* <Link to={`/addItem`}> */}
+                                    <Link to={`/owneraccount/addItem`}>
                                     <li className="list-group-item">Add Item</li>
-                                    {/* </Link> */}
+                                    </Link>
                                     {/* <Link to={`/account/pastOrder`}> */}
                                     <li className="list-group-item">Past orders</li>
                                     {/* </Link> */}
@@ -38,7 +38,7 @@ class OwnerAccount extends Component {
                         <Route exact path="/owneraccount" component={OwnerProfile} />
                         <Route path="/owneraccount/profile" component={OwnerProfile} />
                         <Route path='/owneraccount/sections' component={Sections} />
-                        {/* <Route path='/addItem' component={AddItem} /> */}
+                        <Route path='/owneraccount/addItem' component={AddItem} />
 
 
                     </div>
