@@ -482,6 +482,38 @@ app.post('/ownerAddItem', function (req, res) {
     });
 });
 
+app.get('/ownerSectionsItems', function (req, res) {
+    console.log(sessionResponse[0])
+    console.log("Inside Owner Sections get items Request Handler");
+
+    var sql = "SELECT * from item_table";
+    pool.getConnection(function (err, pool) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Could Not Get Connection Object");
+        } else {
+            pool.query(sql, function (err, result) {
+                if (err) {
+                    res.writeHead(400, {
+                        'Content-Type': 'text/plain'
+                    })
+                    res.end("Could Not Get Connection Object");
+                } else {
+                    res.writeHead(200, {
+                        'Content-Type': 'application/json'
+                    })
+
+                    res.end(JSON.stringify(result));
+
+                }
+            });
+        }
+    })
+
+});
+
 //start your server on port 3001
 app.listen(3001);
 console.log("Server Listening on port 3001");

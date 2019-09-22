@@ -38,7 +38,7 @@ class OwnerProfile extends Component {
                     lastName: (response.data[0]).last_name,
                     email: (response.data[0]).owner_email,
                     phone: (response.data[0]).phone,
-                    restName: (response.data[0]).restName,
+                    restName: (response.data[0]).rest_name,
                     cuisine: (response.data[0]).cuisine,
                 });
             })

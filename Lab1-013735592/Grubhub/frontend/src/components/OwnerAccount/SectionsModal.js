@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ReactModal from 'react-modal';
 import './SectionsModal.css';
 import Modal from 'react-modal';
 
