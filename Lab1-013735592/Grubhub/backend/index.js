@@ -314,7 +314,7 @@ app.post('/userUpdateAddress', function (req, res) {
             res.writeHead(200, {
                 'Content-Type': 'text/plain'
             })
-            res.end('Address updated Successfully');
+            res.end('client Address updated Successfully');
         }
     });
 });
@@ -339,7 +339,7 @@ app.post('/userAddAddress', function (req, res) {
             res.writeHead(200, {
                 'Content-Type': 'text/plain'
             })
-            res.end('Address updated Successfully');
+            res.end('client Address added Successfully');
         }
     });
 });
@@ -385,9 +385,9 @@ app.get('/ownerUpdate', function (req, res) {
 app.post('/ownerUpdateProfile', function (req, res) {
     console.log("Inside Update name Handler");
     // var sql = "UPDATE client_update SET first_name = '"+req.body.first_name+"', last_name = '"+req.body.last_name+"'  WHERE client_email = '"+clientEmail+"'" ;
-    var sql = "UPDATE owner_profile SET first_name = '" + req.body.first_name + "', last_name = '" + req.body.last_name 
-    + "', owner_email = '" + req.body.owner_email + "', phone = '" + req.body.phone + "', rest_name = '" + req.body.rest_name
-    + "', cuisine = '" + req.body.cuisine + "'  WHERE owner_email = '" + sessionResponse[0].owner_email + "'";
+    var sql = "UPDATE owner_profile SET first_name = '" + req.body.first_name + "', last_name = '" + req.body.last_name
+        + "', owner_email = '" + req.body.owner_email + "', phone = '" + req.body.phone + "', rest_name = '" + req.body.rest_name
+        + "', cuisine = '" + req.body.cuisine + "'  WHERE owner_email = '" + sessionResponse[0].owner_email + "'";
     console.log(sql)
     pool.query(sql, function (err, result) {
         if (err) {
@@ -399,7 +399,85 @@ app.post('/ownerUpdateProfile', function (req, res) {
             res.writeHead(200, {
                 'Content-Type': 'text/plain'
             })
-            res.end('Name updated Successfully');
+            res.end('Owner Name updated Successfully');
+        }
+    });
+});
+
+app.post('/ownerAddSection', function (req, res) {
+    console.log("Inside Insert Section Handler");
+
+    var sql = "INSERT INTO menu_table (r_id, section_name, section_description) VALUES ( " +
+        mysql.escape(sessionResponse[0].r_id) + " , " + mysql.escape(req.body.section_name) + " , " +
+        mysql.escape(req.body.section_description) + " ) ";
+
+    console.log(sql)
+    pool.query(sql, function (err, result) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Error While updating address");
+        } else {
+            res.writeHead(200, {
+                'Content-Type': 'text/plain'
+            })
+            res.end('Section added Successfully');
+        }
+    });
+});
+
+app.get('/ownerSections', function (req, res) {
+    console.log("Inside Owner Sections get Request Handler");
+
+    var sql = "SELECT section_name, section_description, section_id from menu_table WHERE r_id = '" + sessionResponse[0].r_id + "'";
+    pool.getConnection(function (err, pool) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Could Not Get Connection Object");
+        } else {
+            pool.query(sql, function (err, result) {
+                if (err) {
+                    res.writeHead(400, {
+                        'Content-Type': 'text/plain'
+                    })
+                    res.end("Could Not Get Connection Object");
+                } else {
+                    res.writeHead(200, {
+                        'Content-Type': 'application/json'
+                    })
+
+                    res.end(JSON.stringify(result));
+
+                }
+            });
+        }
+    })
+
+});
+
+app.post('/ownerAddItem', function (req, res) {
+    console.log("Inside Insert Item Handler");
+    console.log(req.body)
+
+    var sql = "INSERT INTO item_table (section_id, item_name, item_description, item_price) VALUES ( " +
+        mysql.escape(req.body.section_id) + " , " + mysql.escape(req.body.item_name) + " , " +
+        mysql.escape(req.body.item_description) + " , " + mysql.escape(req.body.item_price) + " ) ";
+
+    console.log(sql)
+    pool.query(sql, function (err, result) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Error While updating address");
+        } else {
+            res.writeHead(200, {
+                'Content-Type': 'text/plain'
+            })
+            res.end('Item added Successfully');
         }
     });
 });

@@ -100,7 +100,6 @@ class OwnerProfile extends Component {
             rest_name: this.state.restName,
             cuisine: this.state.cuisine
         }
-        console.log(data);
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
