@@ -8,6 +8,7 @@ import OwnerSignup from './OwnerSignup/OwnerSignup';
 import UserProfile from './UserProfile/UserProfile';
 import Account from './Account/Account';
 import OwnerAccount from './OwnerAccount/OwnerAccount';
+import AddItem from './OwnerAccount/AddItem';
 
 class Main extends Component {
     render() {
@@ -21,6 +22,7 @@ class Main extends Component {
                 <Route path= "/UserProfile" component = { UserProfile }/>
                 <Route path="/Account/" component={ Account } />
                 <Route path="/OwnerAccount/" component={ OwnerAccount } />
+                <Route path="/AddItem" component={AddItem}/>
             </div>
         );
     }

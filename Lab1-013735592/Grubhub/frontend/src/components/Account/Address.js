@@ -20,7 +20,8 @@ class Address extends Component {
             delivery_instructions: "",
             address_name: "",
             showAddressModal: false,
-            authFlag: false
+            authFlag: false,
+            btnType: ""
         }
 
         this.showAddressModal = this.showAddressModal.bind(this);
@@ -33,7 +34,9 @@ class Address extends Component {
         this.crossStreetChangeHandler = this.crossStreetChangeHandler.bind(this);
         this.deliveryInstructionsChangeHandler = this.deliveryInstructionsChangeHandler.bind(this);
         this.addressNameChangeHandler = this.addressNameChangeHandler.bind(this);
-        this.submitAddress = this.submitAddress.bind(this);
+        this.updateAddress = this.updateAddress.bind(this);
+        this.addAddress = this.addAddress.bind(this);
+        this.btnTypeClicked = this.btnTypeClicked.bind(this);
     }
 
     componentDidMount() {
@@ -114,8 +117,15 @@ class Address extends Component {
         })
     }
 
+    btnTypeClicked = (e) => {
+        this.setState({
+            btnType: e.target.name
+        });
+        this.showAddressModal()
+    }
+
     //submit Login handler to send a request to the node backend
-    submitAddress = (e) => {
+    updateAddress = (e) => {
         //prevent page from refresh
         e.preventDefault();
         const data = {
@@ -149,8 +159,42 @@ class Address extends Component {
 
     };
 
+    addAddress = (e) => {
+        //prevent page from refresh
+        e.preventDefault();
+        const data = {
+            street_address: this.state.street_address,
+            apt: this.state.apt,
+            city: this.state.city,
+            state: this.state.state,
+            zip_code: this.state.zip_code,
+            phone: this.state.phone,
+            cross_street: this.state.cross_street,
+            delivery_instructions: this.state.delivery_instructions,
+            address_name: this.state.address_name
+        }
+        //set the with credentials to true
+        axios.defaults.withCredentials = true;
+        //make a post request with the user data
+        axios.post('http://localhost:3001/userAddAddress', data)
+            .then(response => {
+                console.log("Status Code : ", response.status);
+                if (response.status === 200) {
+                    this.setState({
+                        authFlag: true
+                    })
+                } else {
+                    this.setState({
+                        authFlag: false
+                    })
+                }
+            });
+        this.showAddressModal()
+    };
 
     render() {
+
+        console.log(this.state.btnType);
 
         let address = null;
         if (this.state.street_address) {
@@ -158,8 +202,7 @@ class Address extends Component {
                 <div>
                     <p>{this.state.address_name}</p>
                     <p>{this.state.street_address} {this.state.apt}</p>
-                    <button onClick={this.showAddressModal} className="btn btn-link" type="button">Edit</button>
-                    <button className="btn btn-link" type="button">Delete</button>
+                    <button onClick={this.btnTypeClicked} className="btn btn-link" type="button" name="Update">Edit</button>
                 </div>
         } else {
             address = <p class="card-text">You don't have any saved addresses.</p>
@@ -169,7 +212,17 @@ class Address extends Component {
             <div className="divStyle">
                 <div class="card">
                     <div class="card-body">
-                        {this.state.showAddressModal ?
+                        {!this.state.showAddressModal ?
+                            <div>
+                                <h6 class="card-title">Addresses</h6>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">{address}</li>
+                                    <li class="list-group-item">
+                                        <button onClick={this.btnTypeClicked} name="Add" className="btn btn-link" type="button">+ Add a new address</button>
+                                    </li>
+                                </ul>
+                            </div>
+                            :
                             <AddressModal
                                 isOpen={this.state.showAddressModal}
                                 street_address={this.state.street_address}
@@ -190,17 +243,10 @@ class Address extends Component {
                                 crossStreetChangeHandler={this.crossStreetChangeHandler}
                                 deliveryInstructionsChangeHandler={this.deliveryInstructionsChangeHandler}
                                 addressNameChangeHandler={this.addressNameChangeHandler}
-                                submitAddress={this.submitAddress}
+                                submitAddress={this.state.btnType === 'Add' ? this.addAddress : this.updateAddress}
                                 showAddressModal={this.showAddressModal}
+                                btnType={this.state.btnType}
                             />
-                            :
-                            <div>
-                                <h6 class="card-title">Addresses</h6>
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">{address}</li>
-                                    <li class="list-group-item"><button onClick={this.showAddressModal} className="btn btn-link" type="button">+ Add a new address</button></li>
-                                </ul>
-                            </div>
                         }
                     </div>
                 </div>
