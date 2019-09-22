@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './AddItem.css';
 import ImageUploader from 'react-images-upload';
-import Select from 'react-select';
 import axios from 'axios';
 
 class AddItem extends Component {
@@ -14,7 +13,8 @@ class AddItem extends Component {
             item_decription: '',
             item_price: '',
             section_id: null,
-            authFlag: false
+            authFlag: false,
+            errorMessage: false
         };
 
         this.onDrop = this.onDrop.bind(this);
@@ -67,7 +67,6 @@ class AddItem extends Component {
 
     }
 
-
     onDrop(picture) {
         this.setState({
             pictures: this.state.pictures.concat(picture),
@@ -97,7 +96,8 @@ class AddItem extends Component {
                     })
                 } else {
                     this.setState({
-                        authFlag: false
+                        authFlag: false,
+                        errorMessage: true
                     })
                 }
             });
@@ -108,21 +108,20 @@ class AddItem extends Component {
 
         var options = this.state.sections.map(section => {
             return (
-                <option value={section.section_name}>{section.section_name}</option>
+                <option value={section.section_name} id={section.section_name}>{section.section_name}</option>
             )
-
         })
 
         let message = null;
         if (this.state.authFlag) {
             message = <p>Item added !!!</p>
-        } else {
+        } 
+        if (this.state.errorMessage) {
             message = <p>Cannot add section, try again!</p>
         }
-        console.log(message)
 
         return (
-            <div>
+            <div className="divStyle">
                 <form onSubmit={this.addItem}>
                     <div class="card">
                         <div class="card-body">
