@@ -5,6 +5,7 @@ import './OwnerAccount.css';
 import Sections from './Sections';
 import AddItem from './AddItem';
 import OwnerProfile from './OwnerProfile';
+import Menu from './Menu';
 
 class OwnerAccount extends Component {
     render() {
@@ -20,12 +21,16 @@ class OwnerAccount extends Component {
                                     <Link to={`/owneraccount/profile`}>
                                         <li className="list-group-item">Profile</li>
                                     </Link>
+                                    <Link to={`/owneraccount/menu`}>
+                                    <li className="list-group-item">Menu</li>
+                                    </Link>
                                     <Link to={`/owneraccount/sections`}>
                                         <li className="list-group-item">Sections</li>
                                     </Link>
                                     <Link to={`/owneraccount/addItem`}>
                                     <li className="list-group-item">Add Item</li>
                                     </Link>
+                                    
                                     {/* <Link to={`/account/pastOrder`}> */}
                                     <li className="list-group-item">Past orders</li>
                                     {/* </Link> */}
@@ -37,10 +42,9 @@ class OwnerAccount extends Component {
                         </div>
                         <Route exact path="/owneraccount" component={OwnerProfile} />
                         <Route path="/owneraccount/profile" component={OwnerProfile} />
+                        <Route path='/owneraccount/menu' component={Menu}/>
                         <Route path='/owneraccount/sections' component={Sections} />
                         <Route path='/owneraccount/addItem' component={AddItem} />
-
-
                     </div>
                 </BrowserRouter>
             </div>

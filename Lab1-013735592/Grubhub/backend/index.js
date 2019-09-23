@@ -74,8 +74,7 @@ app.post('/clientLogin', function (req, res) {
                     })
                     res.end("Invalid Credentials");
                 } else {
-                    //res.cookie('cookie',"username",{maxAge: 900000, httpOnly: false, path : '/'});
-
+                    res.cookie('cookie',clientEmail,{maxAge: 900000, httpOnly: false, path : '/'});
                     req.session.user = result;
                     res.writeHead(200, {
                         'Content-Type': 'text/plain'
@@ -486,7 +485,9 @@ app.get('/ownerSectionsItems', function (req, res) {
     console.log(sessionResponse[0])
     console.log("Inside Owner Sections get items Request Handler");
 
-    var sql = "SELECT * from item_table";
+    var sql = "SELECT item_table.section_id, item_table.item_id, item_table.item_name, item_table.item_description, item_table.item_price from item_table, menu_table WHERE item_table.section_id = menu_table.section_id AND menu_table.r_id = " + sessionResponse[0].r_id;
+    
+    console.log(sql);
     pool.getConnection(function (err, pool) {
         if (err) {
             res.writeHead(400, {

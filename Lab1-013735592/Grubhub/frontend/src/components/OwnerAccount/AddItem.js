@@ -108,7 +108,7 @@ class AddItem extends Component {
 
         var options = this.state.sections.map(section => {
             return (
-                <option value={section.section_name} id={section.section_name}>{section.section_name}</option>
+                <option value={section.section_name} key={section.section_name}>{section.section_name}</option>
             )
         })
 
@@ -123,10 +123,10 @@ class AddItem extends Component {
         return (
             <div className="divStyle">
                 <form onSubmit={this.addItem}>
-                    <div class="card">
-                        <div class="card-body">
+                    <div className="card">
+                        <div className="card-body">
                             {message}
-                            <h3 class="card-title">Item info</h3>
+                            <h3 className="card-title">Item info</h3>
                             <p>Name your item and add a clear and informative description for your customers.</p>
                             <div>
                                 <div>
@@ -144,13 +144,13 @@ class AddItem extends Component {
                                 <div>
                                     <div style={{ width: '50%' }} className="form-group">
                                         <label>Name</label>
-                                        <input type="text" class="form-control" name="name" onChange={this.itemNameChangeHandler}/>
+                                        <input type="text" className="form-control" name="name" onChange={this.itemNameChangeHandler}/>
                                     </div>
                                     <div style={{ width: '100%' }} className="form-group">
                                         <label>Description</label>
                                         <textarea
                                             type="text"
-                                            class="form-control"
+                                            className="form-control"
                                             name="description" 
                                             onChange={this.itemDescriptionChangeHandler}/>
                                     </div>
@@ -159,7 +159,7 @@ class AddItem extends Component {
                                         <select
                                             id="section"
                                             name="selectSection"
-                                            class="form-control"
+                                            className="form-control"
                                             onChange={this.itemSectionChangeHandler}
                                         >
                                             {options}
@@ -167,7 +167,7 @@ class AddItem extends Component {
                                     </div>
                                     <div style={{ width: '30%' }} className="form-group">
                                         <label>Base Price</label>
-                                        <input type="text" class="form-control" name="price" placeholder="$" onChange={this.itemPriceChangeHandler}/>
+                                        <input type="text" className="form-control" name="price" placeholder="$" onChange={this.itemPriceChangeHandler}/>
                                     </div>
                                     <button className="btn btn-primary" type="submit">ADD ITEM</button>
                                 </div>

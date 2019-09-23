@@ -13,8 +13,7 @@ class Sections extends Component {
             sections: [],
             showSectionsModal: false,
             authFlag: false,
-            errorMessage: false,
-            items: []
+            errorMessage: false
         }
 
         this.showSectionsModal = this.showSectionsModal.bind(this);
@@ -29,14 +28,6 @@ class Sections extends Component {
                 console.log(response.data);
                 this.setState({
                     sections: response.data
-                });
-            });
-
-        axios.get('http://localhost:3001/ownerSectionsItems')
-            .then((response) => {
-                console.log(response.data);
-                this.setState({
-                    items: response.data
                 });
             });
     }
@@ -103,29 +94,6 @@ class Sections extends Component {
             </li>
         );
 
-        const listItems = this.state.sections.map((section) =>
-            <li className="list-group-item" key={section.section_id}>
-                <h3>{section.section_name}</h3>
-                <p>{section.section_description}</p>
-                <ul className="list-group list-group-flush">
-                    {this.state.items.map((item) => {
-                        if (item.section_id === section.section_id) {
-                            return (
-                                <li className="list-group-item">
-                                    <div className="card">
-                                        {/* <img className="card-img-top" src="..." alt="Card image cap"> */}
-                                        <h5 className="card-title">{item.item_name}</h5>
-                                        <h6 className="card-subtitle">{item.item_description}</h6>
-                                        <p className="card-text">{item.item_price}</p>
-                                    </div>
-                                </li>
-                            );
-                        }
-                    })}
-                </ul>
-            </li>
-        );
-
         return (
             <div className="divStyle">
                 <h6>Sections</h6>
@@ -144,14 +112,13 @@ class Sections extends Component {
                         submitSection={this.submitSection}
                     />
                     :
-                    null
+                    <div>
+                        <button onClick={this.showSectionsModal}>Add Section</button>
+                        <br />
+                        <br />
+                    </div>
                 }
-                <button onClick={this.showSectionsModal}>Add Section</button>
-                <br />
-                <br />
-                <div className="card">
-                    <ul className="list-group list-group-flush">{listItems}</ul>
-                </div>
+
             </div>
         );
     }
