@@ -9,7 +9,6 @@ class Account extends Component {
     render() {
         return (
             <div>
-                <Navbar />
                 <BrowserRouter>
                     <div className='layout'>
                         <div className='sidebar'>
