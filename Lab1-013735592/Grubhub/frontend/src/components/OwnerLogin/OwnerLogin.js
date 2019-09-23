@@ -42,7 +42,6 @@ class OwnerLogin extends Component {
 
     //submit Login handler to send a request to the node backend
     submitLogin = (e) => {
-        var headers = new Headers();
         //prevent page from refresh
         e.preventDefault();
         const data = {
