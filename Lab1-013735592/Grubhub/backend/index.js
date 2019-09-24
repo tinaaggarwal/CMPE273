@@ -543,7 +543,7 @@ app.get('/ownerItemsList', function (req, res) {
 });
 
 app.post('/ownerDeleteItem', function (req, res) {
-    console.log("Inside Delete Ite, Handler");
+    console.log("Inside Delete Item Handler");
     console.log(req.body)
 
     var sql = "DELETE FROM item_table WHERE item_id = " + mysql.escape(req.body.deleteId);
@@ -595,6 +595,52 @@ app.get('/restaurantList', function (req, res) {
         }
     })
 
+});
+
+app.post('/menuSections', function (req, res) {
+    console.log("Inside get all menu sections for client Handler");
+    
+    console.log(req.body)
+    var sql = "SELECT section_name, section_description, section_id from menu_table WHERE r_id = " + mysql.escape(req.body.r_id);
+    console.log(sql)
+
+    pool.query(sql, function (err, result) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Error While deleting section");
+        } else {
+            res.writeHead(200, {
+                'Content-Type': 'text/plain'
+            })
+            console.log(result)
+            res.end(JSON.stringify(result));
+        }
+    });
+});
+
+app.post('/menuItems', function (req, res) {
+    console.log("Inside get all menu items for client Handler");
+    console.log(req.body)
+    var sql = "SELECT item_table.section_id, item_table.item_id, item_table.item_name, item_table.item_description, item_table.item_price from item_table, menu_table WHERE item_table.section_id = menu_table.section_id AND menu_table.r_id = " + mysql.escape(req.body.r_id);
+
+    console.log(sql)
+
+    pool.query(sql, function (err, result) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Error While deleting section");
+        } else {
+            res.writeHead(200, {
+                'Content-Type': 'text/plain'
+            })
+            console.log(result)
+            res.end(JSON.stringify(result));
+        }
+    });
 });
 
 //start your server on port 3001

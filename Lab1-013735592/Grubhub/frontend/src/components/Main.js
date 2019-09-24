@@ -9,7 +9,7 @@ import Account from './Account/Account';
 import OwnerAccount from './OwnerAccount/OwnerAccount';
 import AddItem from './OwnerAccount/AddItem';
 import Navbar from './Navbar/Navbar';
-import Menu from './OwnerAccount/Menu';
+import RestaurantMenu from './ClientHomePage/RestaurantMenu';
 
 class Main extends Component {
     render() {
@@ -22,7 +22,7 @@ class Main extends Component {
                 <Route path="/ownerLogin" component={ OwnerLogin } />
                 <Route path="/ownerSignup" component={ OwnerSignup }/>
                 <Switch>
-                <Route path= "/home/:restaurantId" component = { Menu }/>
+                <Route path= "/home/:restaurantId" component = { RestaurantMenu }/>
                 <Route path= "/home" component = { ClientHomePage }/>
                 <Route path="/account" component={ Account } />
                 <Route path="/ownerAccount" component={ OwnerAccount } />
