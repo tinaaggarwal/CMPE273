@@ -42,7 +42,6 @@ class ClientLogin extends Component {
 
     //submit Login handler to send a request to the node backend
     submitLogin = (e) => {
-        var headers = new Headers();
         //prevent page from refresh
         e.preventDefault();
         const data = {
@@ -71,7 +70,7 @@ class ClientLogin extends Component {
         //redirect based on successful login
         let redirectVar = null;
         if(this.state.authFlag){
-            redirectVar = <Redirect to= "/ClientHomePage"/>
+            redirectVar = <Redirect to= "/home"/>
         }
         return(
             <div>
@@ -94,7 +93,7 @@ class ClientLogin extends Component {
                             </div>
                             <button className="btn btn-primary">Login</button>  
                             <br></br><br/>
-                            <Link to = '/ClientSignup'>Signup</Link>     
+                            <Link to = '/signup'>Signup</Link>     
                             </form>            
                     </div>
                 </div>

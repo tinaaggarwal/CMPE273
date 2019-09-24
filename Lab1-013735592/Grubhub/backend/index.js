@@ -76,6 +76,8 @@ app.post('/clientLogin', function (req, res) {
                 } else {
                     res.cookie('cookie',clientEmail,{maxAge: 900000, httpOnly: false, path : '/'});
                     req.session.user = result;
+                    sessionResponse = JSON.parse((JSON.stringify(req.session.user)));
+                    console.log("client_email", sessionResponse[0].client_email);
                     res.writeHead(200, {
                         'Content-Type': 'text/plain'
                     })
@@ -136,7 +138,7 @@ app.post('/ownerLogin', function (req, res) {
                     req.session.user = result;
                     sessionResponse = JSON.parse((JSON.stringify(req.session.user)));
                     console.log("r_id", sessionResponse[0].r_id);
-                    console.log("r_id", sessionResponse[0].owner_email);
+                    console.log("owner_email", sessionResponse[0].owner_email);
                     res.writeHead(200, {
                         'Content-Type': 'text/plain'
                     })

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { BrowserRouter, Link, Route } from 'react-router-dom';
 import Profile from './Profile';
 import Address from './Address';
-import Navbar from '../Navbar/Navbar';
 import './Account.css';
 
 class Account extends Component {

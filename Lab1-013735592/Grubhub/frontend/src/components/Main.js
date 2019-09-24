@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import ClientLogin from './ClientLogin/ClientLogin';
 import ClientSignup from './ClientSignup/ClientSignup';
 import OwnerLogin from './OwnerLogin/OwnerLogin';
@@ -9,20 +9,26 @@ import Account from './Account/Account';
 import OwnerAccount from './OwnerAccount/OwnerAccount';
 import AddItem from './OwnerAccount/AddItem';
 import Navbar from './Navbar/Navbar';
+import Menu from './OwnerAccount/Menu';
 
 class Main extends Component {
     render() {
         return (
             <div>
+          
                 <Route path="/" component={ Navbar }/>
-                <Route path="/ClientLogin" component={ ClientLogin } />
-                <Route path="/ClientSignup" component={ ClientSignup } />
-                <Route path="/OwnerLogin" component={ OwnerLogin } />
-                <Route path="/OwnerSignup" component={ OwnerSignup }/>
-                <Route path= "/ClientHomePage" component = { ClientHomePage }/>
-                <Route path="/Account/" component={ Account } />
-                <Route path="/OwnerAccount/" component={ OwnerAccount } />
-                <Route path="/AddItem" component={AddItem}/>
+                <Route path="/login" component={ ClientLogin } />
+                <Route path="/signup" component={ ClientSignup } />
+                <Route path="/ownerLogin" component={ OwnerLogin } />
+                <Route path="/ownerSignup" component={ OwnerSignup }/>
+                <Switch>
+                <Route path= "/home/:restaurantId" component = { Menu }/>
+                <Route path= "/home" component = { ClientHomePage }/>
+                <Route path="/account" component={ Account } />
+                <Route path="/ownerAccount" component={ OwnerAccount } />
+                <Route path="/addItem" component={AddItem}/>
+                </Switch>  
+
             </div>
         );
     }

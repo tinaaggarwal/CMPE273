@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Link, Route } from 'react-router-dom';
-import Navbar from '../Navbar/Navbar';
 import './OwnerAccount.css';
 import Sections from './Sections';
 import AddItem from './AddItem';

@@ -106,7 +106,7 @@ class OwnerSignup extends Component {
     render() {
         let redirectvar;
         if (this.state.authFlag) {
-            redirectvar = <Redirect to="/OwnerLogin" />;
+            redirectvar = <Redirect to="/ownerLogin" />;
         }
         return (
             <div>
