@@ -4,20 +4,20 @@ import PropTypes from 'prop-types';
 class EditPassword extends Component {
     render() {
         return (
-            <div class="card-body">
-                <h3 class="card-title">Edit Password</h3>
+            <div className="card-body">
+                <h3 className="card-title">Edit Password</h3>
                 <form>
                     <div style={{ width: '30%' }} className="form-group">
                         <label>Current Password</label>
-                        <input value={this.props.password} type="password" class="form-control" name="password" onChange={this.props.passwordChangeHandler} required/>
+                        <input value={this.props.password} type="password" className="form-control" name="password" onChange={this.props.passwordChangeHandler} required/>
                     </div>
                     <div style={{ width: '30%' }} className="form-group">
                         <label>New Password</label>
-                        <input type="password" class="form-control" name="lastName" onChange={this.props.newPasswordChangeHandler} required/>
+                        <input type="password" className="form-control" name="lastName" onChange={this.props.newPasswordChangeHandler} required/>
                     </div>
                     <div style={{ width: '30%' }} className="form-group">
                         <label>Confirm Password</label>
-                        <input type="password" class="form-control" name="lastName" onChange={this.props.confirmPasswordChangeHandler} required/>
+                        <input type="password" className="form-control" name="lastName" onChange={this.props.confirmPasswordChangeHandler} required/>
                     </div>
                     <div style={{ width: '30%', display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
                         <button onClick={this.props.submitUpdatePassword} className="btn btn-primary" type="submit">Update Password</button>

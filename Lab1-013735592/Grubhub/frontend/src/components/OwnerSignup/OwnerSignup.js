@@ -114,26 +114,26 @@ class OwnerSignup extends Component {
                 <br />
                 <br />
                 <br />
-                <div class="container">
+                <div className="container">
                     <h2>Owner Signup</h2>
                     <form onSubmit={this.submitCreate}>
                         <div style={{ width: '30%' }} className="form-group">
-                            <input onChange={this.firstNameChangeHandler} type="text" class="form-control" name="firstName" placeholder="First Name" required />
+                            <input onChange={this.firstNameChangeHandler} type="text" className="form-control" name="firstName" placeholder="First Name" required />
                         </div>
                         <div style={{ width: '30%' }} className="form-group">
-                            <input onChange={this.lastNameChangeHandler} type="text" class="form-control" name="lastName" placeholder="Last Name" required />
+                            <input onChange={this.lastNameChangeHandler} type="text" className="form-control" name="lastName" placeholder="Last Name" required />
                         </div>
                         <div style={{ width: '30%' }} className="form-group">
-                            <input onChange={this.emailChangeHandler} type="email" class="form-control" name="email" placeholder="Email" required />
+                            <input onChange={this.emailChangeHandler} type="email" className="form-control" name="email" placeholder="Email" required />
                         </div>
                         <div style={{ width: '30%' }} className="form-group">
-                            <input onChange={this.restaurantNameChangeHandler} type="text" class="form-control" name="restaurantName" placeholder="Restaurant Name" required />
+                            <input onChange={this.restaurantNameChangeHandler} type="text" className="form-control" name="restaurantName" placeholder="Restaurant Name" required />
                         </div>
                         <div style={{ width: '30%' }} className="form-group">
-                            <input onChange={this.restaurantZipCodeChangeHandler} type="text" class="form-control" name="restaurantZipCode" placeholder="Restaurant Zip Code" required />
+                            <input onChange={this.restaurantZipCodeChangeHandler} type="text" className="form-control" name="restaurantZipCode" placeholder="Restaurant Zip Code" required />
                         </div>
                         <div style={{ width: '30%' }} className="form-group">
-                            <input onChange={this.passwordChangeHandler} type="password" class="form-control" name="password" placeholder="Password" required />
+                            <input onChange={this.passwordChangeHandler} type="password" className="form-control" name="password" placeholder="Password" required />
                         </div>
                         <div style={{ width: '30%' }}>
                             <button className="btn btn-success" type="submit">Create</button>

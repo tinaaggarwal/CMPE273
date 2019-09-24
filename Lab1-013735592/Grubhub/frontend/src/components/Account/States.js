@@ -6,7 +6,7 @@ class States extends Component {
         return (
             <div style={{ width: '49%' }} className="form-group">
                 <label>State</label>
-                <select id="state" name="state" class="form-control" value={this.props.state} onChange={this.props.stateChangeHandler}>
+                <select id="state" name="state" className="form-control" value={this.props.state} onChange={this.props.stateChangeHandler}>
                     <option value="---">---</option>
                     <option value="Alabama">Alabama</option>
                     <option value="Alaska">Alaska</option>

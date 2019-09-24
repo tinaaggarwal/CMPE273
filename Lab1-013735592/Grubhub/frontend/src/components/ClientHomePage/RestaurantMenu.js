@@ -135,7 +135,7 @@ class RestaurantMenu extends Component {
                                     <input
                                         type="number"
                                         placeholder="0"
-                                        class="form-control"
+                                        className="form-control"
                                         name={item.item_name}
                                         min="0"
                                         onChange={this.quantityChangeHandler}
@@ -143,7 +143,7 @@ class RestaurantMenu extends Component {
                                     />
                                 </div>
                                 <div>
-                                    <button type="button" onClick={this.addItemToCart} class="btn btn-success">Add to cart</button>
+                                    <button type="button" onClick={this.addItemToCart} className="btn btn-success">Add to cart</button>
                                 </div>
                             </div>
                         );

@@ -4,16 +4,16 @@ import PropTypes from 'prop-types';
 class EditName extends Component {
     render() {
         return (
-            <div class="card-body">
-                <h3 class="card-title">Edit Name</h3>
+            <div className="card-body">
+                <h3 className="card-title">Edit Name</h3>
                 <form>
                     <div style={{ width: '30%' }} className="form-group">
                         <label>First Name</label>
-                        <input value={this.props.firstName} type="text" class="form-control" name="firstName" onChange={this.props.firstNameChangeHandler} />
+                        <input value={this.props.firstName} type="text" className="form-control" name="firstName" onChange={this.props.firstNameChangeHandler} />
                     </div>
                     <div style={{ width: '30%' }} className="form-group">
                         <label>Last Name</label>
-                        <input value={this.props.lastName} type="text" class="form-control" name="lastName" onChange={this.props.lastNameChangeHandler} />
+                        <input value={this.props.lastName} type="text" className="form-control" name="lastName" onChange={this.props.lastNameChangeHandler} />
                     </div>
                     <div style={{ width: '30%', display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
                         <button onClick={this.props.submitUpdateName} className="btn btn-primary" type="submit">Update Name</button>
