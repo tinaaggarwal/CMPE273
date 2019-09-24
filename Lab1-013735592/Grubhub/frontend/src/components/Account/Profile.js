@@ -200,11 +200,11 @@ class Profile extends Component {
     render() {
         return (
             <div className="divStyle">
-                <div class="card">
-                    <div class="card-body">
-                        <h3 class="card-title">Your Account</h3>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
+                <div className="card">
+                    <div className="card-body">
+                        <h3 className="card-title">Your Account</h3>
+                        <ul className="list-group list-group-flush">
+                            <li className="list-group-item">
                                 {this.state.showEditName ?
                                     <EditName
                                         firstName={this.state.firstName}
@@ -222,7 +222,7 @@ class Profile extends Component {
                                     </div>
                                 }
                             </li>
-                            <li class="list-group-item">
+                            <li className="list-group-item">
                                 {this.state.showEditEmail ?
                                     <EditEmail
                                         email={this.state.email}
@@ -240,7 +240,7 @@ class Profile extends Component {
                                     </div>
                                 }
                             </li>
-                            <li class="list-group-item">
+                            <li className="list-group-item">
                                 {this.state.showEditPassword ?
                                     <EditPassword
                                         password={this.state.password}

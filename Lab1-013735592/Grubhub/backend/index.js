@@ -39,6 +39,7 @@ app.use(bodyParser.json());
 var clientEmail = "";
 var ownerEmail = "";
 var sessionResponse = "";
+var orderId = 0;
 
 //Allow Access Control
 app.use(function (req, res, next) {
@@ -74,10 +75,12 @@ app.post('/clientLogin', function (req, res) {
                     })
                     res.end("Invalid Credentials");
                 } else {
-                    res.cookie('cookie',clientEmail,{maxAge: 900000, httpOnly: false, path : '/'});
+                    res.cookie('cookie', clientEmail, { maxAge: 900000, httpOnly: false, path: '/' });
                     req.session.user = result;
                     sessionResponse = JSON.parse((JSON.stringify(req.session.user)));
                     console.log("client_email", sessionResponse[0].client_email);
+                    orderId += 1;
+                    console.log(orderId);
                     res.writeHead(200, {
                         'Content-Type': 'text/plain'
                     })
@@ -513,7 +516,7 @@ app.get('/ownerItemsList', function (req, res) {
     console.log("Inside Owner Sections get items Request Handler");
 
     var sql = "SELECT item_table.section_id, item_table.item_id, item_table.item_name, item_table.item_description, item_table.item_price from item_table, menu_table WHERE item_table.section_id = menu_table.section_id AND menu_table.r_id = " + sessionResponse[0].r_id;
-    
+
     console.log(sql);
     pool.getConnection(function (err, pool) {
         if (err) {
@@ -599,7 +602,7 @@ app.get('/restaurantList', function (req, res) {
 
 app.post('/menuSections', function (req, res) {
     console.log("Inside get all menu sections for client Handler");
-    
+
     console.log(req.body)
     var sql = "SELECT section_name, section_description, section_id from menu_table WHERE r_id = " + mysql.escape(req.body.r_id);
     console.log(sql)
@@ -639,6 +642,31 @@ app.post('/menuItems', function (req, res) {
             })
             console.log(result)
             res.end(JSON.stringify(result));
+        }
+    });
+});
+
+
+app.post('/addItemToCart', function (req, res) {
+    console.log("Inside add items to cart client Handler");
+    console.log(req.body.item_quantity * req.body.item_price);
+    console.log('order id .....', orderId)
+    var sql = "INSERT INTO order_details_table (order_id, item_id, item_name, item_quantity, item_total_price) VALUES ( " +
+        orderId + " , " + mysql.escape(req.body.item_id) + " , " + mysql.escape(req.body.item_name) + " , " +
+        req.body.item_quantity + " , " + req.body.item_quantity * req.body.item_price + " ) ";
+
+    console.log(sql)
+    pool.query(sql, function (err, result) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Error While updating address");
+        } else {
+            res.writeHead(200, {
+                'Content-Type': 'text/plain'
+            })
+            res.end('Item added to cart Successfully');
         }
     });
 });

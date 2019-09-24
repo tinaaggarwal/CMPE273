@@ -11,20 +11,20 @@ class Account extends Component {
                 <BrowserRouter>
                     <div className='layout'>
                         <div className='sidebar'>
-                            <div class="card">
-                                <h5 class="card-title">Your Account</h5>
-                                <ul class="list-group list-group-flush">
+                            <div className="card">
+                                <h5 className="card-title">Your Account</h5>
+                                <ul className="list-group list-group-flush">
                                     <Link to={`/account/profile`}>
-                                        <li class="list-group-item">Profile</li>
+                                        <li className="list-group-item">Profile</li>
                                     </Link>
                                     <Link to={`/account/address`}>
-                                        <li class="list-group-item">Address and Phone</li>
+                                        <li className="list-group-item">Address and Phone</li>
                                     </Link>
                                     <Link to={`/account/pastOrder`}>
-                                        <li class="list-group-item">Past orders</li>
+                                        <li className="list-group-item">Past orders</li>
                                     </Link>
                                     <Link to={`/account/upcomingOrder`}>
-                                        <li class="list-group-item">Upcoming orders</li>
+                                        <li className="list-group-item">Upcoming orders</li>
                                     </Link>
                                 </ul>
                             </div>

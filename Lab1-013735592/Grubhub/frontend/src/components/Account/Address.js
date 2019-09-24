@@ -205,19 +205,19 @@ class Address extends Component {
                     <button onClick={this.btnTypeClicked} className="btn btn-link" type="button" name="Update">Edit</button>
                 </div>
         } else {
-            address = <p class="card-text">You don't have any saved addresses.</p>
+            address = <p className="card-text">You don't have any saved addresses.</p>
         }
 
         return (
             <div className="divStyle">
-                <div class="card">
-                    <div class="card-body">
+                <div className="card">
+                    <div className="card-body">
                         {!this.state.showAddressModal ?
                             <div>
-                                <h6 class="card-title">Addresses</h6>
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">{address}</li>
-                                    <li class="list-group-item">
+                                <h6 className="card-title">Addresses</h6>
+                                <ul className="list-group list-group-flush">
+                                    <li className="list-group-item">{address}</li>
+                                    <li className="list-group-item">
                                         <button onClick={this.btnTypeClicked} name="Add" className="btn btn-link" type="button">+ Add a new address</button>
                                     </li>
                                 </ul>

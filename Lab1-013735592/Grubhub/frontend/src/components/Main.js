@@ -10,6 +10,7 @@ import OwnerAccount from './OwnerAccount/OwnerAccount';
 import AddItem from './OwnerAccount/AddItem';
 import Navbar from './Navbar/Navbar';
 import RestaurantMenu from './ClientHomePage/RestaurantMenu';
+import Cart from './ClientHomePage/Cart';
 
 class Main extends Component {
     render() {
@@ -26,7 +27,8 @@ class Main extends Component {
                 <Route path= "/home" component = { ClientHomePage }/>
                 <Route path="/account" component={ Account } />
                 <Route path="/ownerAccount" component={ OwnerAccount } />
-                <Route path="/addItem" component={AddItem}/>
+                <Route path="/addItem" component={ AddItem }/>
+                <Route path="/cart" component={ Cart }/>
                 </Switch>  
 
             </div>

@@ -4,16 +4,16 @@ import PropTypes from 'prop-types';
 class EditEmail extends Component {
     render() {
         return (
-            <div class="card-body">
-                <h3 class="card-title">Edit Email</h3>
+            <div className="card-body">
+                <h3 className="card-title">Edit Email</h3>
                 <form>
                     <div style={{ width: '30%' }} className="form-group">
                         <label>New Email</label>
-                        <input value={this.props.email} type="text" class="form-control" name="email" onChange={this.props.emailChangeHandler} />
+                        <input value={this.props.email} type="text" className="form-control" name="email" onChange={this.props.emailChangeHandler} />
                     </div>
                     <div style={{ width: '30%' }} className="form-group">
                         <label>Confirm Email</label>
-                        <input type="text" class="form-control" name="confirmEmail" onChange={this.props.confirmEmailChangeHandler} />
+                        <input type="text" className="form-control" name="confirmEmail" onChange={this.props.confirmEmailChangeHandler} />
                     </div>
                     <div style={{ width: '30%', display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
                         <button onClick={this.props.submitUpdateEmail} className="btn btn-primary" type="submit">Update Email</button>

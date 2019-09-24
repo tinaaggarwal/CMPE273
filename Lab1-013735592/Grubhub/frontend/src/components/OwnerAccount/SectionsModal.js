@@ -11,20 +11,20 @@ class SectionsModal extends Component {
                     isOpen={this.props.isOpen}
                 >
                     <div>
-                        <div class="modal-header">
-                            <h5 class="modal-title">Add Section</h5>
-                            <button onClick={this.props.showSectionsModal} type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <div className="modal-header">
+                            <h5 className="modal-title">Add Section</h5>
+                            <button onClick={this.props.showSectionsModal} type="button" className="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="container">
-                            <div class="modal-body">
+                        <div className="container">
+                            <div className="modal-body">
                                 <form onSubmit={this.props.submitSection}>
                                     <div style={{ width: '30%' }} className="form-group">
                                         <label>Section Name</label>
                                         <input
                                             type="text"
-                                            class="form-control"
+                                            className="form-control"
                                             value={this.props.sectionName}
                                             name="sectionName"
                                             onChange={this.props.sectionNameChangeHandler}
@@ -34,14 +34,14 @@ class SectionsModal extends Component {
                                         <label>Description</label>
                                         <textarea
                                             type="text"
-                                            class="form-control"
+                                            className="form-control"
                                             value={this.props.sectionDescription}
                                             name="sectionDescription"
                                             onChange={this.props.sectionDescriptionChangeHandler}
                                             placeholder="Describe the types of menu items that will be found in this section" />
                                     </div>
                                     <div className="footerBtns">
-                                        <button type="submit" class="btn btn-primary">Add</button>
+                                        <button type="submit" className="btn btn-primary">Add</button>
                                     </div>
                                 </form>
                             </div>
