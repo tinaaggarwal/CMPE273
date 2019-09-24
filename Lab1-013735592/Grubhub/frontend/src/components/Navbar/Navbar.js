@@ -34,7 +34,7 @@ class Navbar extends Component {
             Login
                 </a>
           <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a className="dropdown-item" href="/clientLogin">Client Login</a>
+            <a className="dropdown-item" href="/login">Client Login</a>
             <div className="dropdown-divider"></div>
             <a className="dropdown-item" href="/ownerLogin">Owner Login</a>
           </div>

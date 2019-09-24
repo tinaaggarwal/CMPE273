@@ -70,7 +70,7 @@ class OwnerLogin extends Component {
         //redirect based on successful login
         let redirectVar = null;
         if(this.state.authFlag){
-            redirectVar = <Redirect to= "/OwnerAccount"/>
+            redirectVar = <Redirect to= "/ownerAccount"/>
         }
         return(
             <div>
@@ -92,7 +92,7 @@ class OwnerLogin extends Component {
                             <button className="btn btn-primary">Login</button> 
                         
                             <br></br><br/>
-                            <Link to = '/OwnerSignup'>Signup</Link>     
+                            <Link to = '/ownerSignup'>Signup</Link>     
                             </form>             
                     </div>
                 </div>
