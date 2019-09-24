@@ -13,6 +13,7 @@ class Menu extends Component {
     }
 
     componentDidMount() {
+
         axios.get('http://localhost:3001/ownerSections')
             .then((response) => {
                 console.log(response.data);
@@ -21,16 +22,55 @@ class Menu extends Component {
                 });
             });
 
-        axios.get('http://localhost:3001/ownerSectionsItems')
+        axios.get('http://localhost:3001/ownerItemsList')
             .then((response) => {
                 console.log(response.data);
                 this.setState({
                     items: response.data
                 });
             });
+            
     }
 
+    submitDeleteItem = (e) => {
+        //prevent page from refresh
+        e.preventDefault();
+        const data = {
+            deleteId: e.target.id
+        }
+        console.log(data.deleteId)
+        //set the with credentials to true
+        axios.defaults.withCredentials = true;
+        //make a post request with the user data
+        axios.post('http://localhost:3001/ownerDeleteItem', data)
+            .then(response => {
+                console.log("Status Code : ", response.status);
+                if (response.status === 200) {
+                    this.setState({
+                        deletedMessage: true
+                    })
+                } else {
+                    this.setState({
+                        authFlag: false,
+                        errorMessage: true
+                    })
+                }
+            });
+        window.location.reload();
+
+    };
+
     render() {
+
+        let message = null;
+        
+        if (this.state.errorMessage) {
+            message = <p>Failed, try again!</p>
+        }
+
+        if (this.state.deletedMessage) {
+            message = <p>Item successfully deleted!</p>
+        }
 
         const listItems = this.state.sections.map((section) =>
             <li className="list-group-item" key={section.section_id}>
@@ -46,7 +86,9 @@ class Menu extends Component {
                                         <h5 className="card-title">{item.item_name}</h5>
                                         <h6 className="card-subtitle">{item.item_description}</h6>
                                         <p className="card-text">{item.item_price}</p>
+                                        <button onClick={this.submitDeleteItem} id={item.item_id} className="btn btn-link" type="button" name="Update">Delete</button>
                                     </div>
+
                                 </li>
                             );
                         }
@@ -57,6 +99,7 @@ class Menu extends Component {
 
         return (
             <div className="divStyle">
+                {message}
                 <div className="card">
                     <ul className="list-group list-group-flush">{listItems}</ul>
                 </div>

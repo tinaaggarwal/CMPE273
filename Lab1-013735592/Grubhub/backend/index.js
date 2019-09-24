@@ -134,7 +134,7 @@ app.post('/ownerLogin', function (req, res) {
                     })
                     res.end("Invalid Credentials");
                 } else {
-                    res.cookie('cookie', "username", { maxAge: 900000, httpOnly: false, path: '/' });
+                    res.cookie('cookie', ownerEmail, { maxAge: 900000, httpOnly: false, path: '/' });
                     req.session.user = result;
                     sessionResponse = JSON.parse((JSON.stringify(req.session.user)));
                     console.log("r_id", sessionResponse[0].r_id);
@@ -409,7 +409,7 @@ app.post('/ownerAddSection', function (req, res) {
     console.log("Inside Insert Section Handler");
 
     var sql = "INSERT INTO menu_table (r_id, section_name, section_description) VALUES ( " +
-        mysql.escape(sessionResponse[0].r_id) + " , " + mysql.escape(req.body.section_name) + " , " +
+        sessionResponse[0].r_id + " , " + mysql.escape(req.body.section_name) + " , " +
         mysql.escape(req.body.section_description) + " ) ";
 
     console.log(sql)
@@ -428,10 +428,34 @@ app.post('/ownerAddSection', function (req, res) {
     });
 });
 
+app.post('/ownerDeleteSection', function (req, res) {
+    console.log("Inside Delete Section Handler");
+    console.log(req.body)
+
+    var sql = "DELETE FROM menu_table WHERE section_id = " + mysql.escape(req.body.deleteId);
+    console.log(sql)
+
+    pool.query(sql, function (err, result) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Error While deleting section");
+        } else {
+            res.writeHead(200, {
+                'Content-Type': 'text/plain'
+            })
+            res.end('section deleted Successfully');
+        }
+    });
+});
+
+
 app.get('/ownerSections', function (req, res) {
     console.log("Inside Owner Sections get Request Handler");
 
     var sql = "SELECT section_name, section_description, section_id from menu_table WHERE r_id = '" + sessionResponse[0].r_id + "'";
+    console.log(sql);
     pool.getConnection(function (err, pool) {
         if (err) {
             res.writeHead(400, {
@@ -449,7 +473,8 @@ app.get('/ownerSections', function (req, res) {
                     res.writeHead(200, {
                         'Content-Type': 'application/json'
                     })
-
+                    console.log(result);
+                    console.log(JSON.stringify(result))
                     res.end(JSON.stringify(result));
 
                 }
@@ -483,13 +508,68 @@ app.post('/ownerAddItem', function (req, res) {
     });
 });
 
-app.get('/ownerSectionsItems', function (req, res) {
+app.get('/ownerItemsList', function (req, res) {
     console.log(sessionResponse[0])
     console.log("Inside Owner Sections get items Request Handler");
 
     var sql = "SELECT item_table.section_id, item_table.item_id, item_table.item_name, item_table.item_description, item_table.item_price from item_table, menu_table WHERE item_table.section_id = menu_table.section_id AND menu_table.r_id = " + sessionResponse[0].r_id;
     
     console.log(sql);
+    pool.getConnection(function (err, pool) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Could Not Get Connection Object");
+        } else {
+            pool.query(sql, function (err, result) {
+                if (err) {
+                    res.writeHead(400, {
+                        'Content-Type': 'text/plain'
+                    })
+                    res.end("Could Not Get Connection Object");
+                } else {
+                    res.writeHead(200, {
+                        'Content-Type': 'application/json'
+                    })
+
+                    res.end(JSON.stringify(result));
+
+                }
+            });
+        }
+    })
+
+});
+
+app.post('/ownerDeleteItem', function (req, res) {
+    console.log("Inside Delete Ite, Handler");
+    console.log(req.body)
+
+    var sql = "DELETE FROM item_table WHERE item_id = " + mysql.escape(req.body.deleteId);
+    console.log(sql)
+
+    pool.query(sql, function (err, result) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Error While deleting section");
+        } else {
+            res.writeHead(200, {
+                'Content-Type': 'text/plain'
+            })
+            res.end('section deleted Successfully');
+        }
+    });
+});
+
+// Client side to view restaurants and order items
+
+app.get('/restaurantList', function (req, res) {
+    console.log("Inside clients homepage get restaurants list Request Handler");
+
+    var sql = "SELECT rest_name, cuisine, rest_zip_code, r_id from owner_profile";
     pool.getConnection(function (err, pool) {
         if (err) {
             res.writeHead(400, {

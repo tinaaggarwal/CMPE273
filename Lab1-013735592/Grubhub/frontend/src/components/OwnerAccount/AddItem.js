@@ -106,11 +106,14 @@ class AddItem extends Component {
 
     render() {
 
-        var options = this.state.sections.map(section => {
+    var options = [<option value="---">---</option>];
+        var moreOptions = this.state.sections.map(section => {
             return (
                 <option value={section.section_name} key={section.section_name}>{section.section_name}</option>
             )
         })
+
+        options = options.concat(moreOptions);
 
         let message = null;
         if (this.state.authFlag) {

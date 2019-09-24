@@ -13,13 +13,15 @@ class Sections extends Component {
             sections: [],
             showSectionsModal: false,
             authFlag: false,
-            errorMessage: false
+            errorMessage: false,
+            deletedMessage: false
         }
 
         this.showSectionsModal = this.showSectionsModal.bind(this);
         this.sectionNameChangeHandler = this.sectionNameChangeHandler.bind(this);
         this.sectionDescriptionChangeHandler = this.sectionDescriptionChangeHandler.bind(this);
         this.submitSection = this.submitSection.bind(this);
+        this.submitDeleteSection = this.submitDeleteSection.bind(this);
     }
 
     componentDidMount() {
@@ -30,6 +32,7 @@ class Sections extends Component {
                     sections: response.data
                 });
             });
+
     }
 
     showSectionsModal() {
@@ -79,20 +82,62 @@ class Sections extends Component {
 
     };
 
+    submitDeleteSection = (e) => {
+        //prevent page from refresh
+        e.preventDefault();
+        const data = {
+            deleteId: e.target.id
+        }
+        console.log(data.deleteId)
+        //set the with credentials to true
+        axios.defaults.withCredentials = true;
+        //make a post request with the user data
+        axios.post('http://localhost:3001/ownerDeleteSection', data)
+            .then(response => {
+                console.log("Status Code : ", response.status);
+                if (response.status === 200) {
+                    this.setState({
+                        deletedMessage: true
+                    })
+                } else {
+                    this.setState({
+                        authFlag: false,
+                        errorMessage: true
+                    })
+                }
+            });
+        window.location.reload();
+
+    };
+
     render() {
+       
+        let sectionsList;
         let message = null;
+        console.log(this.state.deleteId);
+        
         if (this.state.authFlag) {
             message = <p>Section added !!!</p>
         }
+        
         if (this.state.errorMessage) {
-            message = <p>Cannot add section, try again!</p>
+            message = <p>Failed, try again!</p>
         }
 
-        const sectionsList = this.state.sections.map((section) =>
-            <li className="list-group-item" key={section.section_id}>
-                <p>{section.section_name}</p>
-            </li>
-        );
+        if (this.state.deletedMessage) {
+            message = <p>Section successfully deleted!</p>
+        }
+
+        if (this.state.sections.length > 0) {
+            sectionsList = this.state.sections.map((section) =>
+                <li className="list-group-item" key={section.section_id}>
+                    <p>{section.section_name}</p>
+                    <p>{section.section_description}</p>
+                    <button id={section.section_id} className="btn btn-link" type="button" name="Update">Edit</button>
+                    <button onClick={this.submitDeleteSection} id={section.section_id} className="btn btn-link" type="button" name="Update">Delete</button>
+                </li>
+            );
+        }
 
         return (
             <div className="divStyle">
