@@ -39,7 +39,9 @@ app.use(bodyParser.json());
 var clientEmail = "";
 var ownerEmail = "";
 var sessionResponse = "";
-var orderId = 0;
+var orderId;
+var id;
+var nextOrderId;
 
 //Allow Access Control
 app.use(function (req, res, next) {
@@ -79,8 +81,6 @@ app.post('/clientLogin', function (req, res) {
                     req.session.user = result;
                     sessionResponse = JSON.parse((JSON.stringify(req.session.user)));
                     console.log("client_email", sessionResponse[0].client_email);
-                    orderId += 1;
-                    console.log(orderId);
                     res.writeHead(200, {
                         'Content-Type': 'text/plain'
                     })
@@ -600,6 +600,46 @@ app.get('/restaurantList', function (req, res) {
 
 });
 
+app.get('/nextOrderId', function (req, res) {
+    console.log("Inside clients homepage get id for next order Request Handler");
+
+    var sql = "SELECT MAX(order_id) FROM order_details_table";
+    console.log(sql);
+
+    pool.getConnection(function (err, pool) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Could Not Get Connection Object");
+        } else {
+            pool.query(sql, function (err, result) {
+                if (err) {
+                    res.writeHead(400, {
+                        'Content-Type': 'text/plain'
+                    })
+                    res.end("Could Not Get Connection Object");
+                } else {
+                    res.writeHead(200, {
+                        'Content-Type': 'application/json'
+                    })
+
+                    orderId = JSON.stringify(result);
+                    console.log(orderId)
+                    orderId = JSON.parse(orderId);
+                    id = Object.values(orderId[0]);
+                    nextOrderId = id[0];
+                    nextOrderId = nextOrderId + 1
+                    // res.end(JSON.stringify(result));
+
+                }
+            });
+        }
+    })
+
+});
+
+
 app.post('/menuSections', function (req, res) {
     console.log("Inside get all menu sections for client Handler");
 
@@ -644,15 +684,21 @@ app.post('/menuItems', function (req, res) {
             res.end(JSON.stringify(result));
         }
     });
-});
 
+});
 
 app.post('/addItemToCart', function (req, res) {
     console.log("Inside add items to cart client Handler");
     console.log(req.body.item_quantity * req.body.item_price);
-    console.log('order id .....', orderId)
+
+    console.log('order id...', orderId)
+    console.log('id.......', id)
+    console.log('nextorderid.......', nextOrderId)
+
+    console.log('nextorderid.......', nextOrderId)
+
     var sql = "INSERT INTO order_details_table (order_id, item_id, item_name, item_quantity, item_total_price) VALUES ( " +
-        orderId + " , " + mysql.escape(req.body.item_id) + " , " + mysql.escape(req.body.item_name) + " , " +
+        nextOrderId + " , " + mysql.escape(req.body.item_id) + " , " + mysql.escape(req.body.item_name) + " , " +
         req.body.item_quantity + " , " + req.body.item_quantity * req.body.item_price + " ) ";
 
     console.log(sql)
@@ -661,12 +707,113 @@ app.post('/addItemToCart', function (req, res) {
             res.writeHead(400, {
                 'Content-Type': 'text/plain'
             })
-            res.end("Error While updating address");
+            res.end("Error While adding item to cart");
         } else {
             res.writeHead(200, {
                 'Content-Type': 'text/plain'
             })
             res.end('Item added to cart Successfully');
+        }
+    });
+});
+
+
+app.get('/cartItems', function (req, res) {
+    console.log("Inside clients cart get cart items list Request Handler");
+
+    var sql = "SELECT * FROM order_details_table WHERE order_id = " + nextOrderId;
+    console.log(sql);
+    pool.getConnection(function (err, pool) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Could Not Get Connection Object");
+        } else {
+            pool.query(sql, function (err, result) {
+                if (err) {
+                    res.writeHead(400, {
+                        'Content-Type': 'text/plain'
+                    })
+                    res.end("Could Not Get Connection Object");
+                } else {
+                    res.writeHead(200, {
+                        'Content-Type': 'application/json'
+                    })
+
+                    res.end(JSON.stringify(result));
+
+                }
+            });
+        }
+    })
+
+});
+
+app.get('/cartTotal', function (req, res) {
+    console.log("Inside clients calculating total order price Request Handler");
+
+    var sql = "SELECT round(sum(item_total_price),2) from order_details_table group by order_id having order_id = " + nextOrderId;
+    console.log(sql);
+
+    pool.getConnection(function (err, pool) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Could Not Get Connection Object");
+        } else {
+            pool.query(sql, function (err, result) {
+                if (err) {
+                    res.writeHead(400, {
+                        'Content-Type': 'text/plain'
+                    })
+                    res.end("Could Not Get Connection Object");
+                } else {
+                    res.writeHead(200, {
+                        'Content-Type': 'application/json'
+                    })
+
+                    console.log(JSON.stringify(result))
+                    let total = JSON.stringify(result);
+                    // console.log(orderId)
+                    total = JSON.parse(total);
+                    let cartTotal = Object.values(total[0]);
+                    console.log(cartTotal)
+                    let orderTotal =cartTotal[0];
+                    console.log(orderTotal)
+                    // nextOrderId = nextOrderId + 1
+                    res.end(orderTotal.toString());
+
+                }
+            });
+        }
+    })
+
+});
+
+app.post('/submitOrder', function (req, res) {
+    console.log("Inside submit order client Handler");
+
+    var sql = "INSERT INTO order_table (order_id, client_email, client_first_name, client_last_name, client_address, r_id, status) VALUES ( " +
+        req.body.order_id + " , " + mysql.escape(sessionResponse[0].client_email) + " , " 
+        + mysql.escape(sessionResponse[0].first_name) + " , " + mysql.escape(sessionResponse[0].last_name) + " , " +
+        "(SELECT concat(street_address, ' ', apt, ' ', city, ' ', state, ' ', zip_code ) from client_update where client_email=" + mysql.escape(sessionResponse[0].client_email) 
+        + " ), " + req.body.r_id + ", 'New')"
+
+    console.log(sql)
+
+    pool.query(sql, function (err, result) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Error While adding item to cart");
+        } else {
+            res.writeHead(200, {
+                'Content-Type': 'text/plain'
+            })
+            res.end('Order submitted Successfully');
         }
     });
 });

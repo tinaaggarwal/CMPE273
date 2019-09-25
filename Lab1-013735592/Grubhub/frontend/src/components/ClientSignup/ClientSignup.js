@@ -96,18 +96,18 @@ class ClientSignup extends Component{
                 <h2>Client Signup</h2>
                 <form onSubmit={this.submitCreate}>
                         <div style={{width: '30%'}} className="form-group">
-                            <input onChange = {this.firstNameChangeHandler} type="text" class="form-control" name="firstName" placeholder="First Name" required/>
+                            <input onChange = {this.firstNameChangeHandler} type="text" className="form-control" name="firstName" placeholder="First Name" required/>
                         </div>
                         <br/>
                         <div style={{width: '30%'}} className="form-group">
-                            <input onChange = {this.lastNameChangeHandler} type="text" class="form-control" name="lastName" placeholder="Last Name" required/>
+                            <input onChange = {this.lastNameChangeHandler} type="text" className="form-control" name="lastName" placeholder="Last Name" required/>
                         </div>
                         <div style={{width: '30%'}} className="form-group">
-                                <input  onChange = {this.emailChangeHandler} type="email" class="form-control" name="email" placeholder="Email" required/>
+                                <input  onChange = {this.emailChangeHandler} type="email" className="form-control" name="email" placeholder="Email" required/>
                         </div>
                         <br/>
                         <div style={{width: '30%'}} className="form-group">
-                                <input  onChange = {this.passwordChangeHandler} type="password" class="form-control" name="password" placeholder="Password" required/>
+                                <input  onChange = {this.passwordChangeHandler} type="password" className="form-control" name="password" placeholder="Password" required/>
                         </div>
                         <br/>
                         <div style={{width: '30%'}}>

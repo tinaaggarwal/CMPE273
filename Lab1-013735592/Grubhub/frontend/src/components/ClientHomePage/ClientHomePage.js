@@ -23,6 +23,14 @@ class ClientHomePage extends Component {
                     restaurants: response.data
                 });
             });
+
+        axios.get('http://localhost:3001/nextOrderId')
+            .then((response) => {
+                console.log(response.data);
+                this.setState({
+                    nextOrderId: response.data
+                });
+            });
     }
 
     render() {
