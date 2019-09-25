@@ -10,17 +10,103 @@ class Cart extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            sections: [],
-            items: []
+            items: [],
+            orderId: "",
+            cart_total: 0,
+            r_id: 0,
+            authFlag: false
         }
+
+        this.submitOrder = this.submitOrder.bind(this);
+
     }
 
+    componentDidMount() {
+
+        this.setState({
+            r_id: this.props.match.params.restaurantId
+        });
+
+        axios.get('http://localhost:3001/cartItems')
+            .then((response) => {
+                console.log(response.data);
+                this.setState({
+                    items: response.data,
+                    orderId: response.data[0].order_id
+                });
+            });
+
+        axios.get('http://localhost:3001/cartTotal')
+            .then((response) => {
+                console.log(response.data);
+                this.setState({
+                    cart_totalPrice: response.data
+                });
+            });
+    }
+
+    submitOrder = (e) => {
+        //prevent page from refresh
+        e.preventDefault();
+        const data = {
+            order_id: this.state.orderId,
+            r_id: this.state.r_id
+        }
+        //set the with credentials to true
+        axios.defaults.withCredentials = true;
+        // make a post request with the user data
+        axios.post('http://localhost:3001/submitOrder', data)
+            .then(response => {
+                console.log("Status Code : ", response.status);
+                if (response.status === 200) {
+                    this.setState({
+                        authFlag: true
+                    })
+                } else {
+                    this.setState({
+                        authFlag: false
+                    })
+                }
+            });
+    };
 
     render() {
-        
+
+        let redirectVar = null;
+        if(this.state.authFlag){
+            redirectVar = <Redirect to= "/orderPlaced"/>
+        }
+
         return (
-            <div>
-                <h1>cart</h1>
+            <div className="container">
+                {redirectVar}
+                <div className="card text-center">
+                    <div className="card-header">
+                        Review order
+                    </div>
+                    <div className="card-body">
+                        <h5 className="card-title">Order items</h5>
+                        {
+                            this.state.items.map((item) => {
+                                return (
+                                    <li className="list-group-item" key={item.item_id}>
+                                        {/* <div className="card"> */}
+                                        {/* <img className="card-img-top" src="..." alt="Card image cap"> */}
+                                        <h5 className="card-text">{item.item_name}</h5>
+                                        <h6 className="card-text">Quantity: {item.item_quantity}</h6>
+                                        <p className="card-text">Total Price: {item.item_total_price}</p>
+                                        {/* </div> */}
+                                    </li>
+                                );
+                            }
+                            )}
+                    </div>
+                    <div className="card-footer text-muted">
+                        Total: {this.state.cart_totalPrice}
+                        <br />
+                    <button onClick={this.submitOrder} className="btn btn-success" type="button" name="Order">Place Order</button>
+                     </div>
+                </div>
             </div>
         );
     }

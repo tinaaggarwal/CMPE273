@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import cookie from 'react-cookies';
-import { Redirect } from 'react-router';
+import { withRouter } from 'react-router';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
@@ -109,15 +109,8 @@ class RestaurantMenu extends Component {
 
     render() {
 
-        // redirect based on successful addition to cart
-        let redirectVar = null;
-        if (this.state.addToCartSuccessful) {
-            redirectVar = <Redirect to="/cart" />
-        }
 
-        console.log(this.state.authFlag);
-
-        console.log(this.props.match.params.restaurantId);
+        const r_id = this.props.match.params.restaurantId;
 
         const listItems = this.state.sections.map((section) =>
             <div className="card mb-3">
@@ -154,8 +147,8 @@ class RestaurantMenu extends Component {
 
         return (
             <div>
-                {redirectVar}
                 <div className="container">
+                <Link to = {`/home/${r_id}/cart`}>Go to Cart</Link>   
                     {listItems}
                 </div>
             </div>
@@ -165,4 +158,4 @@ class RestaurantMenu extends Component {
 
 }
 
-export default RestaurantMenu;
+export default withRouter(RestaurantMenu);
