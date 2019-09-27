@@ -106,7 +106,7 @@ class AddItem extends Component {
 
     render() {
 
-    var options = [<option value="---">---</option>];
+    var options = [<option value="---" key="null">---</option>];
         var moreOptions = this.state.sections.map(section => {
             return (
                 <option value={section.section_name} key={section.section_name}>{section.section_name}</option>

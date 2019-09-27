@@ -882,6 +882,70 @@ app.get('/pastOrdersForClient', function (req, res) {
 
 });
 
+app.get('/upcomingOrdersForOwner', function (req, res) {
+    console.log("Inside get owner's upcoming orders Request Handler");
+
+    var sql = "SELECT * from order_table where r_id = " + sessionResponse[0].r_id + " and status!='Delivered'";
+    console.log(sql);
+    pool.getConnection(function (err, pool) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Could Not Get Connection Object");
+        } else {
+            pool.query(sql, function (err, result) {
+                if (err) {
+                    res.writeHead(400, {
+                        'Content-Type': 'text/plain'
+                    })
+                    res.end("Could Not Get Connection Object");
+                } else {
+                    res.writeHead(200, {
+                        'Content-Type': 'application/json'
+                    })
+
+                    res.end(JSON.stringify(result));
+
+                }
+            });
+        }
+    })
+
+});
+
+app.get('/pastOrdersForOwner', function (req, res) {
+    console.log("Inside get owner's past orders Request Handler");
+
+    var sql = "SELECT * from order_table where r_id = " + sessionResponse[0].r_id + " and status='Delivered'";
+    console.log(sql);
+    pool.getConnection(function (err, pool) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Could Not Get Connection Object");
+        } else {
+            pool.query(sql, function (err, result) {
+                if (err) {
+                    res.writeHead(400, {
+                        'Content-Type': 'text/plain'
+                    })
+                    res.end("Could Not Get Connection Object");
+                } else {
+                    res.writeHead(200, {
+                        'Content-Type': 'application/json'
+                    })
+
+                    res.end(JSON.stringify(result));
+
+                }
+            });
+        }
+    })
+
+});
+
 app.post('/itemsInOrders', function (req, res) {
     console.log("Inside get client's upcoming orders with list of items Request Handler");
     console.log('array of orderids..........', req.body.order_ids)
