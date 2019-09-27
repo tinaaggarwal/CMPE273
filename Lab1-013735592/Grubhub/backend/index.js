@@ -795,11 +795,11 @@ app.get('/cartTotal', function (req, res) {
 app.post('/submitOrder', function (req, res) {
     console.log("Inside submit order client Handler");
 
-    var sql = "INSERT INTO order_table (order_id, client_email, client_first_name, client_last_name, client_address, r_id, status) VALUES ( " +
+    var sql = "INSERT INTO order_table (order_id, client_email, client_first_name, client_last_name, client_address, r_id, status, order_bill) VALUES ( " +
         req.body.order_id + " , " + mysql.escape(sessionResponse[0].client_email) + " , " 
         + mysql.escape(sessionResponse[0].first_name) + " , " + mysql.escape(sessionResponse[0].last_name) + " , " +
         "(SELECT concat(street_address, ' ', apt, ' ', city, ' ', state, ' ', zip_code ) from client_update where client_email=" + mysql.escape(sessionResponse[0].client_email) 
-        + " ), " + req.body.r_id + ", 'New')"
+        + " ), " + req.body.r_id + ", 'New', " + req.body.cart_totalPrice + ")"
 
     console.log(sql)
 
@@ -817,6 +817,96 @@ app.post('/submitOrder', function (req, res) {
         }
     });
 });
+
+app.get('/upcomingOrdersForClient', function (req, res) {
+    console.log("Inside get client's upcoming orders Request Handler");
+
+    var sql = "SELECT order_id, client_email, client_address, order_bill, order_table.r_id, rest_name, status from order_table, owner_profile where client_email = " + mysql.escape(sessionResponse[0].client_email) + " and status!='Delivered' and order_table.r_id = owner_profile.r_id "
+    console.log(sql);
+    pool.getConnection(function (err, pool) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Could Not Get Connection Object");
+        } else {
+            pool.query(sql, function (err, result) {
+                if (err) {
+                    res.writeHead(400, {
+                        'Content-Type': 'text/plain'
+                    })
+                    res.end("Could Not Get Connection Object");
+                } else {
+                    res.writeHead(200, {
+                        'Content-Type': 'application/json'
+                    })
+
+                    res.end(JSON.stringify(result));
+
+                }
+            });
+        }
+    })
+
+});
+
+app.get('/pastOrdersForClient', function (req, res) {
+    console.log("Inside get client's upcoming orders Request Handler");
+
+    var sql = "SELECT order_id, client_email, client_address, order_bill, order_table.r_id, rest_name, status from order_table, owner_profile where client_email = " + mysql.escape(sessionResponse[0].client_email) + " and status='Delivered' and order_table.r_id = owner_profile.r_id "
+    console.log(sql);
+    pool.getConnection(function (err, pool) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Could Not Get Connection Object");
+        } else {
+            pool.query(sql, function (err, result) {
+                if (err) {
+                    res.writeHead(400, {
+                        'Content-Type': 'text/plain'
+                    })
+                    res.end("Could Not Get Connection Object");
+                } else {
+                    res.writeHead(200, {
+                        'Content-Type': 'application/json'
+                    })
+
+                    res.end(JSON.stringify(result));
+
+                }
+            });
+        }
+    })
+
+});
+
+app.post('/itemsInOrders', function (req, res) {
+    console.log("Inside get client's upcoming orders with list of items Request Handler");
+    console.log('array of orderids..........', req.body.order_ids)
+
+    var sql = "SELECT * from order_details_table WHERE order_id in (" + req.body.order_ids + ")";
+
+    console.log(sql)
+
+    pool.query(sql, function (err, result) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Could Not Get Connection Object");
+        } else {
+            res.writeHead(200, {
+                'Content-Type': 'application/json'
+            })
+
+            res.end(JSON.stringify(result));
+
+        }
+    });
+});
+
 
 //start your server on port 3001
 app.listen(3001);
