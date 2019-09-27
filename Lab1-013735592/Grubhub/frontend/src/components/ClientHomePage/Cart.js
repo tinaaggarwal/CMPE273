@@ -50,7 +50,8 @@ class Cart extends Component {
         e.preventDefault();
         const data = {
             order_id: this.state.orderId,
-            r_id: this.state.r_id
+            r_id: this.state.r_id,
+            cart_totalPrice: this.state.cart_totalPrice
         }
         //set the with credentials to true
         axios.defaults.withCredentials = true;
