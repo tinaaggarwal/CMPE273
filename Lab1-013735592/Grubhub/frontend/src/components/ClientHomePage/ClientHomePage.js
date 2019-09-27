@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import cookie from 'react-cookies';
 import { Redirect, withRouter } from 'react-router';
 import axios from 'axios';
-import { Route, Link } from 'react-router-dom';
-import ItemsList from './RestaurantMenu';
+import { Link } from 'react-router-dom';
 
 
 class ClientHomePage extends Component {
