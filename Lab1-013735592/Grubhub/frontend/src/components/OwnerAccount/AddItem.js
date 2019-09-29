@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './AddItem.css';
 import ImageUploader from 'react-images-upload';
 import axios from 'axios';
+import cookie from 'react-cookies';
+import { Redirect } from 'react-router';
 
 class AddItem extends Component {
     constructor(props) {
@@ -23,6 +25,7 @@ class AddItem extends Component {
         this.itemPriceChangeHandler = this.itemPriceChangeHandler.bind(this);
         this.itemSectionChangeHandler = this.itemSectionChangeHandler.bind(this);
         this.addItem = this.addItem.bind(this);
+        this.uploadImage = this.uploadImage.bind(this);
     }
 
     componentDidMount() {
@@ -67,10 +70,33 @@ class AddItem extends Component {
 
     }
 
+    uploadImage() {
+
+        console.log(this.state.pictures)
+		const uploaders = this.state.pictures.map(picture => {
+			const data = new FormData();
+			data.append("image", picture, picture.name);
+			console.log(data)
+			// Make an AJAX upload request using Axios
+			return axios.post('http://localhost:3001/upload', data)
+				.then(response => {
+					this.setState({ imageUrl: response.data.imageUrl });
+				})
+		});
+
+		// Once all the files are uploaded 
+		axios.all(uploaders).then(() => {
+			console.log('done');
+        }).catch(err => alert(err.message));
+        
+    }
+    
     onDrop(picture) {
         this.setState({
-            pictures: this.state.pictures.concat(picture),
-        });
+            pictures: picture
+        },
+        this.uploadImage
+        );
     }
 
     // submit handler to send a request to the node backend
@@ -106,6 +132,12 @@ class AddItem extends Component {
 
     render() {
 
+        //if not logged in go to login page
+        let redirectVar = null;
+        if (!cookie.load('cookie')) {
+            redirectVar = <Redirect to="/" />
+        }
+
         var options = [<option value="---" key="null">---</option>];
         var moreOptions = this.state.sections.map(section => {
             return (
@@ -125,6 +157,7 @@ class AddItem extends Component {
 
         return (
             <div className="divStyle">
+                {redirectVar}
                 <form onSubmit={this.addItem}>
                     <div className="card">
                         <div className="card-body">
