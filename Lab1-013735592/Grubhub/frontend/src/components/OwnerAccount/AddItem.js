@@ -73,8 +73,8 @@ class AddItem extends Component {
         });
     }
 
-     // submit handler to send a request to the node backend
-     addItem = (e) => {
+    // submit handler to send a request to the node backend
+    addItem = (e) => {
         //prevent page from refresh
         e.preventDefault();
         const data = {
@@ -106,7 +106,7 @@ class AddItem extends Component {
 
     render() {
 
-    var options = [<option value="---" key="null">---</option>];
+        var options = [<option value="---" key="null">---</option>];
         var moreOptions = this.state.sections.map(section => {
             return (
                 <option value={section.section_name} key={section.section_name}>{section.section_name}</option>
@@ -118,7 +118,7 @@ class AddItem extends Component {
         let message = null;
         if (this.state.authFlag) {
             message = <p>Item added !!!</p>
-        } 
+        }
         if (this.state.errorMessage) {
             message = <p>Cannot add section, try again!</p>
         }
@@ -147,15 +147,15 @@ class AddItem extends Component {
                                 <div>
                                     <div style={{ width: '50%' }} className="form-group">
                                         <label>Name</label>
-                                        <input type="text" className="form-control" name="name" onChange={this.itemNameChangeHandler}/>
+                                        <input type="text" className="form-control" name="name" onChange={this.itemNameChangeHandler} />
                                     </div>
                                     <div style={{ width: '100%' }} className="form-group">
                                         <label>Description</label>
                                         <textarea
                                             type="text"
                                             className="form-control"
-                                            name="description" 
-                                            onChange={this.itemDescriptionChangeHandler}/>
+                                            name="description"
+                                            onChange={this.itemDescriptionChangeHandler} />
                                     </div>
                                     <div style={{ width: '50%' }} className="form-group">
                                         <label>Menu Section</label>
@@ -170,7 +170,7 @@ class AddItem extends Component {
                                     </div>
                                     <div style={{ width: '30%' }} className="form-group">
                                         <label>Base Price</label>
-                                        <input type="text" className="form-control" name="price" placeholder="$" onChange={this.itemPriceChangeHandler}/>
+                                        <input type="text" className="form-control" name="price" placeholder="$" onChange={this.itemPriceChangeHandler} />
                                     </div>
                                     <button className="btn btn-primary" type="submit">ADD ITEM</button>
                                 </div>

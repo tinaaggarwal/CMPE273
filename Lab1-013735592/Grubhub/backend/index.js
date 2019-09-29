@@ -628,7 +628,7 @@ app.get('/nextOrderId', function (req, res) {
                     console.log(orderId)
                     orderId = JSON.parse(orderId);
                     id = Object.values(orderId[0]);
-                    nextOrderId = id[0];
+                    nextOrderId = id[0];
                     nextOrderId = nextOrderId + 1
                     // res.end(JSON.stringify(result));
 
@@ -780,7 +780,7 @@ app.get('/cartTotal', function (req, res) {
                     total = JSON.parse(total);
                     let cartTotal = Object.values(total[0]);
                     console.log(cartTotal)
-                    let orderTotal =cartTotal[0];
+                    let orderTotal = cartTotal[0];
                     console.log(orderTotal)
                     // nextOrderId = nextOrderId + 1
                     res.end(orderTotal.toString());
@@ -796,9 +796,9 @@ app.post('/submitOrder', function (req, res) {
     console.log("Inside submit order client Handler");
 
     var sql = "INSERT INTO order_table (order_id, client_email, client_first_name, client_last_name, client_address, r_id, status, order_bill) VALUES ( " +
-        req.body.order_id + " , " + mysql.escape(sessionResponse[0].client_email) + " , " 
+        req.body.order_id + " , " + mysql.escape(sessionResponse[0].client_email) + " , "
         + mysql.escape(sessionResponse[0].first_name) + " , " + mysql.escape(sessionResponse[0].last_name) + " , " +
-        "(SELECT concat(street_address, ' ', apt, ' ', city, ' ', state, ' ', zip_code ) from client_update where client_email=" + mysql.escape(sessionResponse[0].client_email) 
+        "(SELECT concat(street_address, ' ', apt, ' ', city, ' ', state, ' ', zip_code ) from client_update where client_email=" + mysql.escape(sessionResponse[0].client_email)
         + " ), " + req.body.r_id + ", 'New', " + req.body.cart_totalPrice + ")"
 
     console.log(sql)
@@ -974,7 +974,7 @@ app.post('/itemsInOrders', function (req, res) {
 app.post('/updateOrderStatus', function (req, res) {
     console.log("Inside update order status Request Handler");
     console.log('status....', req.body.status)
-    console.log('order id to update ....',req.body.orderIdToUpdate)
+    console.log('order id to update ....', req.body.orderIdToUpdate)
 
     var sql = "UPDATE order_table SET status = " + mysql.escape(req.body.status) + " WHERE order_id = " + req.body.orderIdToUpdate;
 
@@ -994,6 +994,7 @@ app.post('/updateOrderStatus', function (req, res) {
         }
     });
 });
+
 
 //start your server on port 3001
 app.listen(3001);
