@@ -45,21 +45,21 @@ var nextOrderId;
 var imageId;
 
 var storagePropFiles = multer.diskStorage({
-    destination: function(req, file, callback) {
-      console.log("req.session.user is", JSON.stringify(req.params));
-      callback(null, createDirectory(imageId));
+    destination: function (req, file, callback) {
+        console.log("req.session.user is", JSON.stringify(req.params));
+        callback(null, createDirectory(imageId));
     },
-    filename: function(req, file, callback) {
-      console.log("req", req.body);
-      callback(null, file.originalname);
+    filename: function (req, file, callback) {
+        console.log("req", req.body);
+        callback(null, file.originalname);
     }
-  });
-  
-  var rootDirectory = "public/images/";
-  
-  var uploadPropFiles = multer({
+});
+
+var rootDirectory = "public/images/";
+
+var uploadPropFiles = multer({
     storage: storagePropFiles
-  });
+});
 
 //Allow Access Control
 app.use(function (req, res, next) {
@@ -95,7 +95,7 @@ app.post('/clientLogin', function (req, res) {
                     })
                     res.end("Invalid Credentials");
                 } else {
-                    res.cookie('cookie', clientEmail, { maxAge: 900000, httpOnly: false, path: '/' });
+                    res.cookie('cookie', 'client', { maxAge: 900000, httpOnly: false, path: '/' });
                     req.session.user = result;
                     sessionResponse = JSON.parse((JSON.stringify(req.session.user)));
                     console.log("client_email", sessionResponse[0].client_email);
@@ -155,7 +155,7 @@ app.post('/ownerLogin', function (req, res) {
                     })
                     res.end("Invalid Credentials");
                 } else {
-                    res.cookie('cookie', ownerEmail, { maxAge: 900000, httpOnly: false, path: '/' });
+                    res.cookie('cookie', 'owner', { maxAge: 900000, httpOnly: false, path: '/' });
                     req.session.user = result;
                     sessionResponse = JSON.parse((JSON.stringify(req.session.user)));
                     console.log("r_id", sessionResponse[0].r_id);
@@ -370,26 +370,26 @@ app.post('/userAddAddress', function (req, res) {
 
 app.post('/upload', uploadPropFiles.single('image'), (req, res) => {
     console.log(req.file.filename)
-  
+
     if (req.file)
-      res.json({
-        imageUrl: `images/uploads/${req.file.filename}`
-      });
-    else 
-      res.status("409").json("No Files to Upload.")
-  });
-  
-  
+        res.json({
+            imageUrl: `images/uploads/${req.file.filename}`
+        });
+    else
+        res.status("409").json("No Files to Upload.")
+});
+
+
 function createDirectory(imageId) {
     if (!fs.existsSync(rootDirectory)) {
-      fs.mkdirSync(rootDirectory);
+        fs.mkdirSync(rootDirectory);
     }
     let directory = rootDirectory + imageId;
     if (!fs.existsSync(directory)) {
-      fs.mkdirSync(directory);
+        fs.mkdirSync(directory);
     }
     return directory;
-  }
+}
 
 
 // Owner
