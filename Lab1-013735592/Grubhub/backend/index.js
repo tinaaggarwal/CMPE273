@@ -42,6 +42,24 @@ var sessionResponse = "";
 var orderId;
 var id;
 var nextOrderId;
+var imageId;
+
+var storagePropFiles = multer.diskStorage({
+    destination: function(req, file, callback) {
+      console.log("req.session.user is", JSON.stringify(req.params));
+      callback(null, createDirectory(imageId));
+    },
+    filename: function(req, file, callback) {
+      console.log("req", req.body);
+      callback(null, file.originalname);
+    }
+  });
+  
+  var rootDirectory = "public/images/";
+  
+  var uploadPropFiles = multer({
+    storage: storagePropFiles
+  });
 
 //Allow Access Control
 app.use(function (req, res, next) {
@@ -141,6 +159,8 @@ app.post('/ownerLogin', function (req, res) {
                     req.session.user = result;
                     sessionResponse = JSON.parse((JSON.stringify(req.session.user)));
                     console.log("r_id", sessionResponse[0].r_id);
+                    imageId = sessionResponse[0].r_id;
+                    console.log("imageId........", imageId);
                     console.log("owner_email", sessionResponse[0].owner_email);
                     res.writeHead(200, {
                         'Content-Type': 'text/plain'
@@ -347,6 +367,29 @@ app.post('/userAddAddress', function (req, res) {
         }
     });
 });
+
+app.post('/upload', uploadPropFiles.single('image'), (req, res) => {
+    console.log(req.file.filename)
+  
+    if (req.file)
+      res.json({
+        imageUrl: `images/uploads/${req.file.filename}`
+      });
+    else 
+      res.status("409").json("No Files to Upload.")
+  });
+  
+  
+function createDirectory(imageId) {
+    if (!fs.existsSync(rootDirectory)) {
+      fs.mkdirSync(rootDirectory);
+    }
+    let directory = rootDirectory + imageId;
+    if (!fs.existsSync(directory)) {
+      fs.mkdirSync(directory);
+    }
+    return directory;
+  }
 
 
 // Owner
@@ -628,7 +671,7 @@ app.get('/nextOrderId', function (req, res) {
                     console.log(orderId)
                     orderId = JSON.parse(orderId);
                     id = Object.values(orderId[0]);
-                    nextOrderId = id[0];
+                    nextOrderId = id[0];
                     nextOrderId = nextOrderId + 1
                     // res.end(JSON.stringify(result));
 
@@ -780,7 +823,7 @@ app.get('/cartTotal', function (req, res) {
                     total = JSON.parse(total);
                     let cartTotal = Object.values(total[0]);
                     console.log(cartTotal)
-                    let orderTotal =cartTotal[0];
+                    let orderTotal = cartTotal[0];
                     console.log(orderTotal)
                     // nextOrderId = nextOrderId + 1
                     res.end(orderTotal.toString());
@@ -796,9 +839,9 @@ app.post('/submitOrder', function (req, res) {
     console.log("Inside submit order client Handler");
 
     var sql = "INSERT INTO order_table (order_id, client_email, client_first_name, client_last_name, client_address, r_id, status, order_bill) VALUES ( " +
-        req.body.order_id + " , " + mysql.escape(sessionResponse[0].client_email) + " , " 
+        req.body.order_id + " , " + mysql.escape(sessionResponse[0].client_email) + " , "
         + mysql.escape(sessionResponse[0].first_name) + " , " + mysql.escape(sessionResponse[0].last_name) + " , " +
-        "(SELECT concat(street_address, ' ', apt, ' ', city, ' ', state, ' ', zip_code ) from client_update where client_email=" + mysql.escape(sessionResponse[0].client_email) 
+        "(SELECT concat(street_address, ' ', apt, ' ', city, ' ', state, ' ', zip_code ) from client_update where client_email=" + mysql.escape(sessionResponse[0].client_email)
         + " ), " + req.body.r_id + ", 'New', " + req.body.cart_totalPrice + ")"
 
     console.log(sql)
@@ -882,8 +925,72 @@ app.get('/pastOrdersForClient', function (req, res) {
 
 });
 
+app.get('/upcomingOrdersForOwner', function (req, res) {
+    console.log("Inside get owner's upcoming orders Request Handler");
+
+    var sql = "SELECT * from order_table where r_id = " + sessionResponse[0].r_id + " and status!='Delivered'";
+    console.log(sql);
+    pool.getConnection(function (err, pool) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Could Not Get Connection Object");
+        } else {
+            pool.query(sql, function (err, result) {
+                if (err) {
+                    res.writeHead(400, {
+                        'Content-Type': 'text/plain'
+                    })
+                    res.end("Could Not Get Connection Object");
+                } else {
+                    res.writeHead(200, {
+                        'Content-Type': 'application/json'
+                    })
+
+                    res.end(JSON.stringify(result));
+
+                }
+            });
+        }
+    })
+
+});
+
+app.get('/pastOrdersForOwner', function (req, res) {
+    console.log("Inside get owner's past orders Request Handler");
+
+    var sql = "SELECT * from order_table where r_id = " + sessionResponse[0].r_id + " and status='Delivered'";
+    console.log(sql);
+    pool.getConnection(function (err, pool) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Could Not Get Connection Object");
+        } else {
+            pool.query(sql, function (err, result) {
+                if (err) {
+                    res.writeHead(400, {
+                        'Content-Type': 'text/plain'
+                    })
+                    res.end("Could Not Get Connection Object");
+                } else {
+                    res.writeHead(200, {
+                        'Content-Type': 'application/json'
+                    })
+
+                    res.end(JSON.stringify(result));
+
+                }
+            });
+        }
+    })
+
+});
+
 app.post('/itemsInOrders', function (req, res) {
-    console.log("Inside get client's upcoming orders with list of items Request Handler");
+    console.log("Inside get orders with list of items Request Handler");
     console.log('array of orderids..........', req.body.order_ids)
 
     var sql = "SELECT * from order_details_table WHERE order_id in (" + req.body.order_ids + ")";
@@ -903,6 +1010,30 @@ app.post('/itemsInOrders', function (req, res) {
 
             res.end(JSON.stringify(result));
 
+        }
+    });
+});
+
+app.post('/updateOrderStatus', function (req, res) {
+    console.log("Inside update order status Request Handler");
+    console.log('status....', req.body.status)
+    console.log('order id to update ....', req.body.orderIdToUpdate)
+
+    var sql = "UPDATE order_table SET status = " + mysql.escape(req.body.status) + " WHERE order_id = " + req.body.orderIdToUpdate;
+
+    console.log(sql)
+
+    pool.query(sql, function (err, result) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Could Not Get Connection Object");
+        } else {
+            res.writeHead(200, {
+                'Content-Type': 'text/plain'
+            })
+            res.end('Order status updated Successfully');
         }
     });
 });
