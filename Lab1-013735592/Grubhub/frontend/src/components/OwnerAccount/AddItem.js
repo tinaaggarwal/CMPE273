@@ -25,7 +25,6 @@ class AddItem extends Component {
         this.itemPriceChangeHandler = this.itemPriceChangeHandler.bind(this);
         this.itemSectionChangeHandler = this.itemSectionChangeHandler.bind(this);
         this.addItem = this.addItem.bind(this);
-        this.uploadImage = this.uploadImage.bind(this);
     }
 
     componentDidMount() {
@@ -70,64 +69,53 @@ class AddItem extends Component {
 
     }
 
-    uploadImage() {
-
-        console.log(this.state.pictures)
-		const uploaders = this.state.pictures.map(picture => {
-			const data = new FormData();
-			data.append("image", picture, picture.name);
-			console.log(data)
-			// Make an AJAX upload request using Axios
-			return axios.post('http://localhost:3001/upload', data)
-				.then(response => {
-					this.setState({ imageUrl: response.data.imageUrl });
-				})
-		});
-
-		// Once all the files are uploaded 
-		axios.all(uploaders).then(() => {
-			console.log('done');
-        }).catch(err => alert(err.message));
-        
-    }
-    
     onDrop(picture) {
         this.setState({
             pictures: picture
-        },
-        this.uploadImage
-        );
+        });
     }
 
     // submit handler to send a request to the node backend
     addItem = (e) => {
         //prevent page from refresh
         e.preventDefault();
-        const data = {
-            section_id: this.state.section_id,
-            item_name: this.state.item_name,
-            item_description: this.state.item_decription,
-            item_price: this.state.item_price
-        }
-        console.log(data);
-        //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/ownerAddItem', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    this.setState({
-                        authFlag: true
-                    })
-                } else {
-                    this.setState({
-                        authFlag: false,
-                        errorMessage: true
-                    })
-                }
-            });
 
+        const uploaders = this.state.pictures.map(picture => {
+            const data = new FormData();
+            data.append("image", picture, picture.name);
+            console.log(data)
+            // Make an AJAX upload request using Axios
+            axios.post('http://localhost:3001/upload', data)
+                .then(response => {
+                    this.setState({ imageUrl: response.data.imageUrl });
+                }).then(() => {
+                    const data = {
+                        section_id: this.state.section_id,
+                        item_name: this.state.item_name,
+                        item_description: this.state.item_decription,
+                        item_price: this.state.item_price,
+                        item_image: this.state.imageUrl
+                    }
+                    console.log(data);
+                    //set the with credentials to true
+                    axios.defaults.withCredentials = true;
+                    //make a post request with the user data
+                    axios.post('http://localhost:3001/ownerAddItem', data)
+                        .then(response => {
+                            console.log("Status Code : ", response.status);
+                            if (response.status === 200) {
+                                this.setState({
+                                    authFlag: true
+                                })
+                            } else {
+                                this.setState({
+                                    authFlag: false,
+                                    errorMessage: true
+                                })
+                            }
+                        });
+                })
+        });
     };
 
     render() {

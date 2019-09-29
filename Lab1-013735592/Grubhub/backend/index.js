@@ -373,7 +373,7 @@ app.post('/upload', uploadPropFiles.single('image'), (req, res) => {
 
     if (req.file)
         res.json({
-            imageUrl: `images/uploads/${req.file.filename}`
+            imageUrl: `images/${imageId}/${req.file.filename}`
         });
     else
         res.status("409").json("No Files to Upload.")
@@ -534,9 +534,10 @@ app.post('/ownerAddItem', function (req, res) {
     console.log("Inside Insert Item Handler");
     console.log(req.body)
 
-    var sql = "INSERT INTO item_table (section_id, item_name, item_description, item_price) VALUES ( " +
+    var sql = "INSERT INTO item_table (section_id, item_name, item_image, item_description, item_price) VALUES ( " +
         mysql.escape(req.body.section_id) + " , " + mysql.escape(req.body.item_name) + " , " +
-        mysql.escape(req.body.item_description) + " , " + mysql.escape(req.body.item_price) + " ) ";
+        mysql.escape(req.body.item_image) + " , " + mysql.escape(req.body.item_description) + " , " + 
+        mysql.escape(req.body.item_price) + " ) ";
 
     console.log(sql)
     pool.query(sql, function (err, result) {
