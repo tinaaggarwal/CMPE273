@@ -10,25 +10,30 @@ class Orders extends Component {
     render() {
 
         const listItems = this.props.orders.map(order => {
-            return(
-            <div className="card mb-3" key={order.order_id}>
-                <h3>{order.order_id}</h3>
-                <p>{order.client_address}</p>
-                <p>{order.rest_name}</p>
-                <p>{order.order_bill}</p>
-                <p>{order.status}</p>
-                {this.props.order_details.map((item) => {
-                    if (item.order_id === order.order_id) {
-                        return (
-                            <div key={item.item_id}>
-                                <h5>{item.item_name}</h5>
-                                <h6>{item.item_quantity}</h6>
-                                <p>{item.item_total_price}</p>
-                            </div>
-                        );
-                    }
-                })}
-            </div>
+            return (
+                <div className="card mb-3" key={order.order_id}>
+                    <h3>{order.order_id}</h3>
+                    <p>{order.client_address}</p>
+                    <p>{order.rest_name}</p>
+                    <p>{order.order_bill}</p>
+                    <p>{order.status}</p>
+                    {this.props.order_details.map((item) => {
+                        if (item.order_id === order.order_id) {
+                            return (
+                                <div key={item.item_id}>
+                                    <div className="itemLayout">
+                                        <img className="itemImage" src={item.item_image} />
+                                        <div className="itemDetails">
+                                            <h5>{item.item_name}</h5>
+                                            <h6>{item.item_quantity}</h6>
+                                            <p>{item.item_total_price}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        }
+                    })}
+                </div>
             )
         })
 

@@ -121,23 +121,28 @@ class RestaurantMenu extends Component {
                         if (item.section_id === section.section_id) {
                             return (
                                 <div className="card">
-                                    <h5 className="card-title">{item.item_name}</h5>
-                                    <h6 className="card-subtitle">{item.item_description}</h6>
-                                    <p className="card-text">{item.item_price}</p>
-                                    <br />
-                                    <div style={{ width: '7%' }} className="form-group">
-                                        <input
-                                            type="number"
-                                            placeholder="0"
-                                            className="form-control"
-                                            name={item.item_name}
-                                            min="0"
-                                            onChange={this.quantityChangeHandler}
-                                            id={JSON.stringify(item)}
-                                        />
-                                    </div>
-                                    <div>
-                                        <button type="button" onClick={this.addItemToCart} className="btn btn-success">Add to cart</button>
+                                    <div className="itemLayout">
+                                        <img className="itemImage" src={item.item_image} />
+                                        <div className="itemDetails">
+                                            <h5 className="card-title">{item.item_name}</h5>
+                                            <h6 className="card-subtitle">{item.item_description}</h6>
+                                            <p className="card-text">{item.item_price}</p>
+                                            <br />
+                                            <div style={{ width: '150px' }} className="form-group">
+                                                <input
+                                                    type="number"
+                                                    placeholder="0"
+                                                    className="form-control"
+                                                    name={item.item_name}
+                                                    min="0"
+                                                    onChange={this.quantityChangeHandler}
+                                                    id={JSON.stringify(item)}
+                                                />
+                                            </div>
+                                            <div>
+                                                <button type="button" onClick={this.addItemToCart} className="btn btn-success">Add to cart</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             );
