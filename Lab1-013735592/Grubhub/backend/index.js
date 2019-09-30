@@ -709,7 +709,7 @@ app.post('/ownerDeleteItem', function (req, res) {
 app.get('/restaurantList', function (req, res) {
     console.log("Inside clients homepage get restaurants list Request Handler");
 
-    var sql = "SELECT rest_name, cuisine, rest_zip_code, r_id from owner_profile";
+    var sql = "SELECT rest_name, rest_image, cuisine, rest_zip_code, r_id from owner_profile";
     pool.getConnection(function (err, pool) {
         if (err) {
             res.writeHead(400, {
@@ -958,7 +958,7 @@ app.post('/submitOrder', function (req, res) {
 app.get('/upcomingOrdersForClient', function (req, res) {
     console.log("Inside get client's upcoming orders Request Handler");
 
-    var sql = "SELECT order_id, client_email, client_address, order_bill, order_table.r_id, rest_name, status from order_table, owner_profile where client_email = " + mysql.escape(sessionResponse[0].client_email) + " and status!='Delivered' and order_table.r_id = owner_profile.r_id "
+    var sql = "SELECT order_id, client_email, client_address, order_bill, order_table.r_id, rest_name, status from order_table, owner_profile where client_email = " + mysql.escape(sessionResponse[0].client_email) + " and status not in ('Delivered', 'Cancelled') and order_table.r_id = owner_profile.r_id "
     console.log(sql);
     pool.getConnection(function (err, pool) {
         if (err) {
@@ -990,7 +990,7 @@ app.get('/upcomingOrdersForClient', function (req, res) {
 app.get('/pastOrdersForClient', function (req, res) {
     console.log("Inside get client's upcoming orders Request Handler");
 
-    var sql = "SELECT order_id, client_email, client_address, order_bill, order_table.r_id, rest_name, status from order_table, owner_profile where client_email = " + mysql.escape(sessionResponse[0].client_email) + " and status='Delivered' and order_table.r_id = owner_profile.r_id "
+    var sql = "SELECT order_id, client_email, client_address, order_bill, order_table.r_id, rest_name, status from order_table, owner_profile where client_email = " + mysql.escape(sessionResponse[0].client_email) + " and status in ('Delivered', 'Cancelled') and order_table.r_id = owner_profile.r_id order by order_id desc"
     console.log(sql);
     pool.getConnection(function (err, pool) {
         if (err) {
@@ -1022,7 +1022,7 @@ app.get('/pastOrdersForClient', function (req, res) {
 app.get('/upcomingOrdersForOwner', function (req, res) {
     console.log("Inside get owner's upcoming orders Request Handler");
 
-    var sql = "SELECT * from order_table where r_id = " + sessionResponse[0].r_id + " and status!='Delivered'";
+    var sql = "SELECT * from order_table where r_id = " + sessionResponse[0].r_id + " and status  not in ('Delivered', 'Cancelled')";
     console.log(sql);
     pool.getConnection(function (err, pool) {
         if (err) {
@@ -1054,7 +1054,7 @@ app.get('/upcomingOrdersForOwner', function (req, res) {
 app.get('/pastOrdersForOwner', function (req, res) {
     console.log("Inside get owner's past orders Request Handler");
 
-    var sql = "SELECT * from order_table where r_id = " + sessionResponse[0].r_id + " and status='Delivered'";
+    var sql = "SELECT * from order_table where r_id = " + sessionResponse[0].r_id + " and status in ('Delivered', 'Cancelled') order by order_id desc";
     console.log(sql);
     pool.getConnection(function (err, pool) {
         if (err) {
@@ -1131,7 +1131,6 @@ app.post('/updateOrderStatus', function (req, res) {
         }
     });
 });
-
 
 //start your server on port 3001
 app.listen(3001);

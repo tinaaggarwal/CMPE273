@@ -3,6 +3,7 @@ import cookie from 'react-cookies';
 import { withRouter } from 'react-router';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import './RestaurantMenu.css';
 
 class RestaurantMenu extends Component {
 

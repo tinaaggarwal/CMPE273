@@ -43,7 +43,7 @@ class ClientHomePage extends Component {
         const restaurantsList = this.state.restaurants.map((restaurant) =>
             <Link to={`/home/${restaurant.r_id}`} key={restaurant.r_id} className="nav-link">
                 <div className="card mb-3" >
-                    <img className="card-img-top" src="..." alt="Card image cap" />
+                    <img className="restImage" src={restaurant.rest_image} />
                     <div className="card-body">
                         <h5 className="card-title">{restaurant.rest_name}</h5>
                         <p className="card-text">{restaurant.cuisine}</p>

@@ -12,6 +12,8 @@ class UpcomingOrders extends Component {
             order_details: [],
             authFlag: false
         }
+
+        this.cancelBtnHandler = this.cancelBtnHandler.bind(this);
     }
 
     componentDidMount() {
@@ -53,13 +55,43 @@ class UpcomingOrders extends Component {
             });
     }
 
+    cancelBtnHandler = (e) => {
+
+        const data = {
+            status: 'Cancelled',
+            orderIdToUpdate: e.target.id
+        }
+
+        //set the with credentials to true
+        axios.defaults.withCredentials = true;
+        //make a post request with the user data
+        axios.post('http://localhost:3001/updateOrderStatus', data)
+            .then(response => {
+                console.log("Status Code : ", response.status);
+                if (response.status === 200) {
+                    console.log(response.data);
+                    this.setState({
+                        authFlag: true
+                    })
+                } else {
+                    this.setState({
+                        authFlag: false
+                    })
+                }
+            });
+
+        window.location.reload();
+
+    }
+
     render() {
         return (
             <div className="container">
                 <Orders
                     orders={this.state.orders}
                     order_details={this.state.order_details}
-                    type="Upcoming orders" />
+                    type="Upcoming orders" 
+                    cancelBtnHandler={this.cancelBtnHandler}/>
             </div>
         );
     }
