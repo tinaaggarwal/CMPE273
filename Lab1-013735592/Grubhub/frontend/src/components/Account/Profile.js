@@ -4,6 +4,9 @@ import './Profile.css';
 import EditName from './EditProfile/EditName';
 import EditEmail from './EditProfile/EditEmail';
 import EditPassword from './EditProfile/EditPassword';
+import ImageUploader from 'react-images-upload';
+import Image from 'react-bootstrap/Image'
+
 
 class Profile extends Component {
 
@@ -20,8 +23,9 @@ class Profile extends Component {
             authFlag: false,
             showEditName: false,
             showEditEmail: false,
-            showEditPassword: false
-
+            showEditPassword: false,
+            profile_image: [],
+            imageUrl: ""
         }
 
         this.showEditName = this.showEditName.bind(this);
@@ -35,6 +39,8 @@ class Profile extends Component {
         this.emailChangeHandler = this.emailChangeHandler.bind(this);
         this.confirmEmailChangeHandler = this.confirmEmailChangeHandler.bind(this);
         this.submitUpdateName = this.submitUpdateName.bind(this);
+        this.onDrop = this.onDrop.bind(this);
+        this.uploadImage = this.uploadImage.bind(this);
     }
 
     componentDidMount() {
@@ -47,6 +53,60 @@ class Profile extends Component {
                     email: (response.data[0]).client_email,
                 });
             })
+
+        axios.get('http://localhost:3001/userProfileImage')
+            .then((response) => {
+                console.log((response.data))
+                this.setState({
+                    profile_image: (response.data[0]).profile_image
+                });
+            })
+    }
+
+    uploadImage = () => {
+        const uploaders = this.state.pictures.map(picture => {
+            const data = new FormData();
+            data.append("image", picture, picture.name);
+            console.log(data)
+            // Make an AJAX upload request using Axios
+            return axios.post('http://localhost:3001/upload', data)
+                .then(response => {
+                    this.setState({ imageUrl: response.data.imageUrl });
+                }).then(() => {
+                    const data = {
+                        profile_image: this.state.imageUrl
+                    }
+                    //set the with credentials to true
+                    axios.defaults.withCredentials = true;
+                    //make a post request with the user data
+                    axios.post('http://localhost:3001/userUpdateProfileImage', data)
+                        .then(response => {
+                            console.log("Status Code : ", response.status);
+                            if (response.status === 200) {
+                                this.setState({
+                                    authFlag: true
+                                })
+                            } else {
+                                this.setState({
+                                    authFlag: false
+                                })
+                            }
+                        });
+                });
+        });
+        axios.all(uploaders).then(() => {
+            window.location.reload();
+        }).catch(err => alert(err.message));
+
+    }
+
+
+    onDrop(picture) {
+        this.setState({
+            pictures: picture
+        },
+            this.uploadImage
+        );
     }
 
     //username change handler to update state variable with the text entered by the user
@@ -198,11 +258,36 @@ class Profile extends Component {
     };
 
     render() {
+
+        let profile_image = null;
+        if (this.state.profile_image === null) {
+            profile_image =
+                (
+                    <div className="imageUploadPlaceholder">
+                        <ImageUploader
+                            withIcon
+                            buttonText='Upload image'
+                            onChange={this.onDrop}
+                            imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                            maxFileSize={5242880}
+                            label='Upload a high quality profile photo'
+                            withPreview
+                            singleImage
+                            fileContainerStyle={{ borderRadius: '50%', width: '25%' }}
+                        />
+                    </div>)
+        } else {
+            profile_image = <Image src={this.state.profile_image} roundedCircle className="profileImage" />
+        }
+
         return (
             <div className="divStyle">
                 <div className="card">
+                    <div className="card-header">
+                        <h2>Your Account</h2>
+                        {profile_image}
+                    </div>
                     <div className="card-body">
-                        <h3 className="card-title">Your Account</h3>
                         <ul className="list-group list-group-flush">
                             <li className="list-group-item">
                                 {this.state.showEditName ?

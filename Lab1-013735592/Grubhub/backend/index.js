@@ -99,6 +99,8 @@ app.post('/clientLogin', function (req, res) {
                     res.cookie('cookie', 'client', { maxAge: 900000, httpOnly: false, path: '/' });
                     req.session.user = result;
                     sessionResponse = JSON.parse((JSON.stringify(req.session.user)));
+                    imageId = sessionResponse[0].client_email;
+                    console.log('imageId....', imageId);
                     console.log("client_email", sessionResponse[0].client_email);
                     res.writeHead(200, {
                         'Content-Type': 'text/plain'
@@ -198,6 +200,39 @@ app.post('/ownerSignup', function (req, res) {
 app.get('/userUpdate', function (req, res) {
     console.log(clientEmail)
     var sql = "SELECT * FROM client_signup where client_email = '" + clientEmail + "'";
+    console.log(sql)
+    pool.getConnection(function (err, pool) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Could Not Get Connection ");
+        } else {
+            pool.query(sql, function (err, result) {
+                if (err) {
+                    res.writeHead(400, {
+                        'Content-Type': 'text/plain'
+                    })
+                    res.end("Could Not Get Connection Object");
+                } else {
+                    res.writeHead(200, {
+                        'Content-Type': 'application/json'
+                    })
+                    console.log(result);
+                    console.log((result[0]).first_name);
+                    console.log(JSON.stringify(result));
+                    res.end(JSON.stringify(result));
+
+                }
+            });
+        }
+    })
+
+})
+
+app.get('/userProfileImage', function (req, res) {
+    console.log(clientEmail)
+    var sql = "SELECT profile_image from client_update where client_email = '" + clientEmail + "'";
     console.log(sql)
     pool.getConnection(function (err, pool) {
         if (err) {
@@ -369,6 +404,25 @@ app.post('/userAddAddress', function (req, res) {
     });
 });
 
+app.post('/userUpdateProfileImage', function (req, res) {
+    console.log("Inside Update profile image Handler");
+    var sql = "UPDATE client_update SET profile_image = '" + req.body.profile_image + "'  WHERE client_email = '" + clientEmail + "'";
+    console.log(sql)
+    pool.query(sql, function (err, result) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Error While updating name");
+        } else {
+            res.writeHead(200, {
+                'Content-Type': 'text/plain'
+            })
+            res.end('user profile image added Successfully');
+        }
+    });
+});
+
 app.post('/upload', uploadPropFiles.single('image'), (req, res) => {
     console.log(req.file.filename)
 
@@ -448,6 +502,44 @@ app.post('/ownerUpdateProfile', function (req, res) {
                 'Content-Type': 'text/plain'
             })
             res.end('Owner Name updated Successfully');
+        }
+    });
+});
+
+app.post('/ownerUpdateProfileImage', function (req, res) {
+    console.log("Inside Update profile image for owner Handler");
+    var sql = "UPDATE owner_profile SET profile_image = '" + req.body.profile_image + "'  WHERE r_id = " + sessionResponse[0].r_id;
+    console.log(sql)
+    pool.query(sql, function (err, result) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Error While updating name");
+        } else {
+            res.writeHead(200, {
+                'Content-Type': 'text/plain'
+            })
+            res.end('Profile image added Successfully');
+        }
+    });
+});
+
+app.post('/ownerUpdateRestImage', function (req, res) {
+    console.log("Inside Update profile image for owner Handler");
+    var sql = "UPDATE owner_profile SET rest_image = '" + req.body.rest_image + "'  WHERE r_id = " + sessionResponse[0].r_id;
+    console.log(sql)
+    pool.query(sql, function (err, result) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Error While updating name");
+        } else {
+            res.writeHead(200, {
+                'Content-Type': 'text/plain'
+            })
+            res.end('Restaurant image added Successfully');
         }
     });
 });
