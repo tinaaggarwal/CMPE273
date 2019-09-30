@@ -711,7 +711,7 @@ app.post('/menuSections', function (req, res) {
 app.post('/menuItems', function (req, res) {
     console.log("Inside get all menu items for client Handler");
     console.log(req.body)
-    var sql = "SELECT item_table.section_id, item_table.item_id, item_table.item_name, item_table.item_description, item_table.item_price from item_table, menu_table WHERE item_table.section_id = menu_table.section_id AND menu_table.r_id = " + mysql.escape(req.body.r_id);
+    var sql = "SELECT item_table.section_id, item_table.item_id, item_table.item_name, item_table.item_image, item_table.item_description, item_table.item_price from item_table, menu_table WHERE item_table.section_id = menu_table.section_id AND menu_table.r_id = " + mysql.escape(req.body.r_id);
 
     console.log(sql)
 
@@ -995,7 +995,7 @@ app.post('/itemsInOrders', function (req, res) {
     console.log("Inside get orders with list of items Request Handler");
     console.log('array of orderids..........', req.body.order_ids)
 
-    var sql = "SELECT * from order_details_table WHERE order_id in (" + req.body.order_ids + ")";
+    var sql = "SELECT order_details_table.order_id, order_details_table.item_id, item_table.item_image, order_details_table.item_name, order_details_table.item_quantity, order_details_table.item_total_price from order_details_table, item_table WHERE order_id in (" + req.body.order_ids + ") and order_details_table.item_id = item_table.item_id";
 
     console.log(sql)
 
