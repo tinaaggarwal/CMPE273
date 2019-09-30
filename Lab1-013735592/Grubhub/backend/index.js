@@ -55,7 +55,8 @@ var storagePropFiles = multer.diskStorage({
     }
 });
 
-var rootDirectory = "public/images/";
+// var rootDirectory = "public/images/";
+var rootDirectory = "/Users/tinaaggarwal/Documents/GitHub/CMPE273/Lab1-013735592/Grubhub/frontend/public/images/";
 
 var uploadPropFiles = multer({
     storage: storagePropFiles
@@ -373,7 +374,7 @@ app.post('/upload', uploadPropFiles.single('image'), (req, res) => {
 
     if (req.file)
         res.json({
-            imageUrl: `images/${imageId}/${req.file.filename}`
+            imageUrl: `/images/${imageId}/${req.file.filename}`
         });
     else
         res.status("409").json("No Files to Upload.")
@@ -559,7 +560,7 @@ app.get('/ownerItemsList', function (req, res) {
     console.log(sessionResponse[0])
     console.log("Inside Owner Sections get items Request Handler");
 
-    var sql = "SELECT item_table.section_id, item_table.item_id, item_table.item_name, item_table.item_description, item_table.item_price from item_table, menu_table WHERE item_table.section_id = menu_table.section_id AND menu_table.r_id = " + sessionResponse[0].r_id;
+    var sql = "SELECT item_table.section_id, item_table.item_id, item_table.item_name, item_table.item_image, item_table.item_description, item_table.item_price from item_table, menu_table WHERE item_table.section_id = menu_table.section_id AND menu_table.r_id = " + sessionResponse[0].r_id;
 
     console.log(sql);
     pool.getConnection(function (err, pool) {
