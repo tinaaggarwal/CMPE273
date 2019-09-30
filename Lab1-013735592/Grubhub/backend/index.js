@@ -709,7 +709,7 @@ app.post('/ownerDeleteItem', function (req, res) {
 app.get('/restaurantList', function (req, res) {
     console.log("Inside clients homepage get restaurants list Request Handler");
 
-    var sql = "SELECT rest_name, cuisine, rest_zip_code, r_id from owner_profile";
+    var sql = "SELECT rest_name, rest_image, cuisine, rest_zip_code, r_id from owner_profile";
     pool.getConnection(function (err, pool) {
         if (err) {
             res.writeHead(400, {
