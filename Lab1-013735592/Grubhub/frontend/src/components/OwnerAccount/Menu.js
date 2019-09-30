@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import './OwnerProfile.css';
+import './Menu.css';
 
 class Menu extends Component {
 
@@ -29,7 +30,7 @@ class Menu extends Component {
                     items: response.data
                 });
             });
-            
+
     }
 
     submitDeleteItem = (e) => {
@@ -63,7 +64,7 @@ class Menu extends Component {
     render() {
 
         let message = null;
-        
+
         if (this.state.errorMessage) {
             message = <p>Failed, try again!</p>
         }
@@ -82,11 +83,15 @@ class Menu extends Component {
                             return (
                                 <li className="list-group-item" key={item.item_id}>
                                     <div className="card">
-                                        {/* <img className="card-img-top" src="..." alt="Card image cap"> */}
-                                        <h5 className="card-title">{item.item_name}</h5>
-                                        <h6 className="card-subtitle">{item.item_description}</h6>
-                                        <p className="card-text">{item.item_price}</p>
-                                        <button onClick={this.submitDeleteItem} id={item.item_id} className="btn btn-link" type="button" name="Update">Delete</button>
+                                        <div className="itemLayout">
+                                            <img className="itemImage" src={item.item_image} />
+                                            <div className="itemDetails">
+                                                <h5 className="card-title">{item.item_name}</h5>
+                                                <h6 className="card-subtitle">{item.item_description}</h6>
+                                                <p className="card-text">{item.item_price}</p>
+                                                <button onClick={this.submitDeleteItem} id={item.item_id} className="btn btn-link" type="button" name="Update">Delete</button>
+                                            </div>
+                                        </div>
                                     </div>
 
                                 </li>

@@ -163,6 +163,7 @@ class AddItem extends Component {
                                         maxFileSize={5242880}
                                         label='Upload a high quality photo of your item'
                                         withPreview
+                                        singleImage
                                     />
                                 </div>
                                 <div>
