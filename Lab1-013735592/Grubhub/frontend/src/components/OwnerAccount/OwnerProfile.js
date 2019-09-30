@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import './OwnerProfile.css';
 import EditProfile from './EditProfile';
+import ImageUploader from 'react-images-upload';
+import Image from 'react-bootstrap/Image';
+import cookie from 'react-cookies';
+import { Redirect } from 'react-router';
 
 class OwnerProfile extends Component {
 
@@ -15,7 +19,10 @@ class OwnerProfile extends Component {
             restName: "",
             cuisine: "",
             authFlag: false,
-            showEdit: false
+            showEdit: false,
+            rest_image: [],
+            profile_image: [],
+            imageUrl: ""
 
         }
 
@@ -27,6 +34,10 @@ class OwnerProfile extends Component {
         this.restNameChangeHandler = this.restNameChangeHandler.bind(this);
         this.cuisineChangeHandler = this.cuisineChangeHandler.bind(this);
         this.submitUpdate = this.submitUpdate.bind(this);
+        this.onDropProfileImage = this.onDropProfileImage.bind(this);
+        this.uploadProfileImage = this.uploadProfileImage.bind(this);
+        this.onDropRestImage = this.onDropRestImage.bind(this);
+        this.uploadRestImage = this.uploadRestImage.bind(this);
     }
 
     componentDidMount() {
@@ -40,8 +51,103 @@ class OwnerProfile extends Component {
                     phone: (response.data[0]).phone,
                     restName: (response.data[0]).rest_name,
                     cuisine: (response.data[0]).cuisine,
+                    rest_image: (response.data[0]).rest_image,
+                    profile_image: (response.data[0]).profile_image
                 });
             })
+    }
+
+    uploadProfileImage = () => {
+        const uploaders = this.state.pictures.map(picture => {
+            const data = new FormData();
+            data.append("image", picture, picture.name);
+            console.log(data)
+            // Make an AJAX upload request using Axios
+            return axios.post('http://localhost:3001/upload', data)
+                .then(response => {
+                    this.setState({ imageUrl: response.data.imageUrl });
+                }).then(() => {
+                    const data = {
+                        profile_image: this.state.imageUrl
+                    }
+                    //set the with credentials to true
+                    axios.defaults.withCredentials = true;
+                    //make a post request with the user data
+                    axios.post('http://localhost:3001/ownerUpdateProfileImage', data)
+                        .then(response => {
+                            console.log("Status Code : ", response.status);
+                            if (response.status === 200) {
+                                this.setState({
+                                    authFlag: true
+                                })
+                            } else {
+                                this.setState({
+                                    authFlag: false
+                                })
+                            }
+                        });
+                });
+        });
+        axios.all(uploaders).then(() => {
+            window.location.reload();
+        }).catch(err => alert(err.message));
+
+    }
+
+
+    onDropProfileImage(picture) {
+        this.setState({
+            pictures: picture
+        },
+            this.uploadProfileImage
+        );
+    }
+
+    uploadRestImage = () => {
+        const uploaders = this.state.pictures.map(picture => {
+            const data = new FormData();
+            data.append("image", picture, picture.name);
+            console.log(data)
+            // Make an AJAX upload request using Axios
+            return axios.post('http://localhost:3001/upload', data)
+                .then(response => {
+                    this.setState({ imageUrl: response.data.imageUrl });
+                }).then(() => {
+                    const data = {
+                        rest_image: this.state.imageUrl
+                    }
+                    //set the with credentials to true
+                    axios.defaults.withCredentials = true;
+                    //make a post request with the user data
+                    axios.post('http://localhost:3001/ownerUpdateRestImage', data)
+                        .then(response => {
+                            console.log("Status Code : ", response.status);
+                            if (response.status === 200) {
+                                this.setState({
+                                    authFlag: true
+                                })
+                            } else {
+                                this.setState({
+                                    authFlag: false
+                                })
+                            }
+                        });
+                });
+        });
+        axios.all(uploaders).then(() => {
+            window.location.reload();
+            console.log('done')
+        }).catch(err => alert(err.message));
+
+    }
+
+
+    onDropRestImage(picture) {
+        this.setState({
+            pictures: picture
+        },
+            this.uploadRestImage
+        );
     }
 
     //username change handler to update state variable with the text entered by the user
@@ -121,11 +227,63 @@ class OwnerProfile extends Component {
     };
 
     render() {
+
+        let redirectVar = null;
+        if (!cookie.load('cookie')) {
+            redirectVar = <Redirect to="/" />
+        }
+
+        let profile_image = null;
+        if (this.state.profile_image === null) {
+            profile_image =
+                (
+                    <div className="imageUploadPlaceholder">
+                        <ImageUploader
+                            withIcon
+                            buttonText='Upload image'
+                            onChange={this.onDropProfileImage}
+                            imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
+                            maxFileSize={5242880}
+                            label='Upload a high quality profile photo'
+                            withPreview
+                            singleImage
+                            fileContainerStyle={{ borderRadius: '50%', width: '25%' }}
+                        />
+                    </div>)
+        } else {
+            profile_image = <Image src={this.state.profile_image} roundedCircle className="profileImage" />
+        }
+
+        let rest_image = null;
+        if (this.state.rest_image === null) {
+            rest_image =
+                (
+                    <ImageUploader
+                        withIcon
+                        buttonText='Upload image'
+                        onChange={this.onDropRestImage}
+                        imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
+                        maxFileSize={5242880}
+                        label='Upload a high quality restaurant photo'
+                        withPreview
+                        singleImage
+                        fileContainerStyle={{ borderRadius: '50%', width: '25%' }}
+                    />
+                )
+        } else {
+            rest_image = <img src={this.state.rest_image} className="restImage"/>
+        }
+
         return (
             <div className="divStyle">
+                {redirectVar}
                 <div className="card">
+                    {rest_image}
+                    <div className="card-header">
+                        <h2>Your Account</h2>
+                        {profile_image}
+                    </div>
                     <div className="card-body">
-                        <h3 className="card-title">Your Account</h3>
                         <ul className="list-group list-group-flush">
                             <li className="list-group-item">
                                 {this.state.showEdit ?
