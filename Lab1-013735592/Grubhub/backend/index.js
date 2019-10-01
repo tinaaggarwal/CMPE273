@@ -91,6 +91,7 @@ app.post('/clientLogin', function (req, res) {
             pool.query(sql, function (err, result) {
                 console.log(result)
                 if (result.length == 0) {
+                    console.log('hello');
                     res.writeHead(400, {
                         'Content-Type': 'text/plain'
                     })
@@ -563,6 +564,30 @@ app.post('/ownerAddSection', function (req, res) {
                 'Content-Type': 'text/plain'
             })
             res.end('Section added Successfully');
+        }
+    });
+});
+
+app.post('/ownerUpdateSection', function (req, res) {
+    console.log("Inside update Section Handler");
+    console.log(req.body)
+
+    var sql = "UPDATE menu_table SET section_name = " + mysql.escape(req.body.section_name) +
+    ", section_description = " + mysql.escape(req.body.section_description)
+    + " WHERE section_id = " + mysql.escape(req.body.section_id);
+    console.log(sql)
+
+    pool.query(sql, function (err, result) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Error While deleting section");
+        } else {
+            res.writeHead(200, {
+                'Content-Type': 'text/plain'
+            })
+            res.end('section updated Successfully');
         }
     });
 });

@@ -5,6 +5,14 @@ import Modal from 'react-modal';
 
 class SectionsModal extends Component {
     render() {
+
+        let heading = null;
+        if(this.props.btnType === 'Add') {
+            heading = 'Add new section';
+        } else {
+            heading = 'Update section';
+        }
+
         return (
             <div>
                 <Modal
@@ -12,7 +20,7 @@ class SectionsModal extends Component {
                 >
                     <div>
                         <div className="modal-header">
-                            <h5 className="modal-title">Add Section</h5>
+                            <h5 className="modal-title">{heading}</h5>
                             <button onClick={this.props.showSectionsModal} type="button" className="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -41,7 +49,7 @@ class SectionsModal extends Component {
                                             placeholder="Describe the types of menu items that will be found in this section" />
                                     </div>
                                     <div className="footerBtns">
-                                        <button type="submit" className="btn btn-primary">Add</button>
+                                        <button type="submit" className="btn btn-primary">{this.props.btnType}</button>
                                     </div>
                                 </form>
                             </div>
@@ -60,7 +68,8 @@ SectionsModal.propTypes = {
     showSectionsModal: PropTypes.func,
     sectionNameChangeHandler: PropTypes.func,
     sectionDescriptionChangeHandler: PropTypes.func,
-    submitSection: PropTypes.func
+    submitSection: PropTypes.func,
+    btnType: PropTypes.string
 }
 
 export default SectionsModal;
