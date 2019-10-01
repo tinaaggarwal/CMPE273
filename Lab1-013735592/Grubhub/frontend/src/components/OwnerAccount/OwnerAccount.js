@@ -5,7 +5,6 @@ import Sections from './Sections';
 import AddItem from './AddItem';
 import OwnerProfile from './OwnerProfile';
 import Menu from './Menu';
-// import UpdateDeleteSection from './UpdateDeleteSection';
 import UpcomingOrders from './UpcomingOrders';
 import PastOrders from './PastOrders';
 
@@ -13,7 +12,6 @@ class OwnerAccount extends Component {
     render() {
         return (
             <div>
-                {/* <Navbar /> */}
                 <BrowserRouter>
                     <div className='layout'>
                         <div className='sidebar'>
@@ -32,9 +30,6 @@ class OwnerAccount extends Component {
                                     <Link to={`/owneraccount/addItem`}>
                                     <li className="list-group-item">Add Item</li>
                                     </Link>
-                                    {/* <Link to={`/owneraccount/updateDeleteSection`}>
-                                    <li className="list-group-item">Update or Delete Section</li>
-                                    </Link> */}
                                     <Link to={`/owneraccount/upcomingOrders`}>
                                     <li className="list-group-item">Upcoming orders</li>
                                     </Link>
@@ -49,7 +44,6 @@ class OwnerAccount extends Component {
                         <Route path='/owneraccount/menu' component={Menu}/>
                         <Route path='/owneraccount/sections' component={Sections} />
                         <Route path='/owneraccount/addItem' component={AddItem} />
-                        {/* <Route path='/owneraccount/updateDeleteSection' component={UpdateDeleteSection} /> */}
                         <Route path='/owneraccount/upcomingOrders' component={UpcomingOrders}/>
                         <Route path='/owneraccount/pastOrders' component={PastOrders}/>
                     </div>
