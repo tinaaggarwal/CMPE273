@@ -14,14 +14,19 @@ class Sections extends Component {
             showSectionsModal: false,
             authFlag: false,
             errorMessage: false,
-            deletedMessage: false
+            updatedMessage: false,
+            deletedMessage: false,
+            btnType: "",
+            editSectionID: null
         }
 
         this.showSectionsModal = this.showSectionsModal.bind(this);
         this.sectionNameChangeHandler = this.sectionNameChangeHandler.bind(this);
         this.sectionDescriptionChangeHandler = this.sectionDescriptionChangeHandler.bind(this);
         this.submitSection = this.submitSection.bind(this);
+        this.updateSection = this.updateSection.bind(this);
         this.submitDeleteSection = this.submitDeleteSection.bind(this);
+        this.btnTypeClicked = this.btnTypeClicked.bind(this);
     }
 
     componentDidMount() {
@@ -53,6 +58,27 @@ class Sections extends Component {
         })
     }
 
+    btnTypeClicked = (e) => {
+
+        if(e.target.name == 'Update') {
+
+            const sectionToEdit = this.state.sections.filter(section => {
+                return section.section_id == e.target.id;
+              });
+
+            this.setState({
+                editSectionID: e.target.id,
+                sectionName: sectionToEdit[0].section_name,
+                sectionDescription: sectionToEdit[0].section_description
+            })
+        }
+
+        this.setState({
+            btnType: e.target.name
+        });
+        this.showSectionsModal()
+    }
+
     submitSection = (e) => {
         //prevent page from refresh
         e.preventDefault();
@@ -79,7 +105,35 @@ class Sections extends Component {
             });
         this.showSectionsModal();
         window.location.reload();
+    };
 
+    updateSection = (e) => {
+        //prevent page from refresh
+        e.preventDefault();
+        const data = {
+            section_id: this.state.editSectionID,
+            section_name: this.state.sectionName,
+            section_description: this.state.sectionDescription
+        }
+        //set the with credentials to true
+        axios.defaults.withCredentials = true;
+        //make a post request with the user data
+        axios.post('http://localhost:3001/ownerUpdateSection', data)
+            .then(response => {
+                console.log("Status Code : ", response.status);
+                if (response.status === 200) {
+                    this.setState({
+                        updatedMessage: true
+                    })
+                } else {
+                    this.setState({
+                        authFlag: false,
+                        errorMessage: true
+                    })
+                }
+            });
+        this.showSectionsModal();
+        window.location.reload();
     };
 
     submitDeleteSection = (e) => {
@@ -107,14 +161,12 @@ class Sections extends Component {
                 }
             });
         window.location.reload();
-
     };
 
     render() {
-       
+
         let sectionsList;
         let message = null;
-        console.log(this.state.deleteId);
         
         if (this.state.authFlag) {
             message = <p>Section added !!!</p>
@@ -122,6 +174,10 @@ class Sections extends Component {
         
         if (this.state.errorMessage) {
             message = <p>Failed, try again!</p>
+        }
+
+        if (this.state.updatedMessage) {
+            message = <p>Section successfully updated!</p>
         }
 
         if (this.state.deletedMessage) {
@@ -133,8 +189,8 @@ class Sections extends Component {
                 <li className="list-group-item" key={section.section_id}>
                     <p>{section.section_name}</p>
                     <p>{section.section_description}</p>
-                    <button id={section.section_id} className="btn btn-link" type="button" name="Update">Edit</button>
-                    <button onClick={this.submitDeleteSection} id={section.section_id} className="btn btn-link" type="button" name="Update">Delete</button>
+                    <button onClick={this.btnTypeClicked} id={section.section_id} className="btn btn-link" type="button" name="Update">Edit</button>
+                    <button onClick={this.submitDeleteSection} id={section.section_id} className="btn btn-link" type="button" name="Delete">Delete</button>
                 </li>
             );
         }
@@ -154,11 +210,12 @@ class Sections extends Component {
                         sectionDescription={this.state.sectionDescription}
                         sectionNameChangeHandler={this.sectionNameChangeHandler}
                         sectionDescriptionChangeHandler={this.sectionDescriptionChangeHandler}
-                        submitSection={this.submitSection}
+                        submitSection={this.state.btnType === 'Add' ? this.submitSection : this.updateSection}
+                        btnType={this.state.btnType}
                     />
                     :
                     <div>
-                        <button onClick={this.showSectionsModal}>Add Section</button>
+                        <button onClick={this.btnTypeClicked} name="Add">Add Section</button>
                         <br />
                         <br />
                     </div>
