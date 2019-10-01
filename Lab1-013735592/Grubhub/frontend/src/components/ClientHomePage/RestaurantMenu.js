@@ -117,14 +117,16 @@ class RestaurantMenu extends Component {
         const listItems = this.state.sections.map((section) => {
             return (
                 <div className="card mb-3">
-                    <h3>{section.section_name}</h3>
-                    <p>{section.section_description}</p>
+                    <div className="sectionsLayout">
+                        <h3>{section.section_name}</h3>
+                        <p>{section.section_description}</p>
+                    </div>
                     {this.state.items.map((item) => {
                         if (item.section_id === section.section_id) {
                             return (
                                 <div className="card">
                                     <div className="itemLayout">
-                                        <img className="itemImageLayout" src={item.item_image} />
+                                        <img className="itemImageLayout" src={item.item_image} title={item.item_name}/>
                                         <div className="itemDetails">
                                             <h5 className="card-title">{item.item_name}</h5>
                                             <h6 className="card-subtitle">{item.item_description}</h6>

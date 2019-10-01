@@ -31,7 +31,7 @@ class Orders extends Component {
                                 return (
                                     <div key={item.item_id}>
                                         <div className="orderItemLayout">
-                                            <img className="orderItemImage" src={item.item_image} />
+                                            <img className="orderItemImage" src={item.item_image} title={item.item_name}/>
                                             <div className="orderItemDetails">
                                                 <h5>Item name : {item.item_name}</h5>
                                                 <h6>Quantity : {item.item_quantity}</h6>

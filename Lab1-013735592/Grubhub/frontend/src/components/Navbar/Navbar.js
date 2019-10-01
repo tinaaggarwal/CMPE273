@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
+import './Navbar.css';
 
 //create the Navbar Component
 class Navbar extends Component {
@@ -30,9 +32,10 @@ class Navbar extends Component {
                 homeLink = "/ownerAccount";
             } else {
                 homeLink = "/home";
-                accountLink = <li className="nav-item ">
-                <a className="nav-link" href="/account">Account</a>
-            </li>
+                accountLink =
+                    <li className="nav-item ">
+                        <a className="nav-link" href="/account">Account</a>
+                    </li>
             }
 
             navLogin = (
@@ -58,9 +61,17 @@ class Navbar extends Component {
                         Login
                 </a>
                     <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a className="dropdown-item" href="/login">Client Login</a>
+                        <Link to='/login'>
+                            <div className="dropdown-item">
+                                Client Login
+                            </div>
+                        </Link>
                         <div className="dropdown-divider"></div>
-                        <a className="dropdown-item" href="/ownerLogin">Owner Login</a>
+                        <Link to='/ownerLogin'>
+                            <div className="dropdown-item">
+                                Restaurant Login
+                            </div>
+                        </Link>
                     </div>
                 </li>
             )
@@ -75,7 +86,7 @@ class Navbar extends Component {
             <div>
                 {/* {redirectVar} */}
                 <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                    <a className="navbar-brand" href="/">GRUBUHB</a>
+                    <img src="GrubhubLogo.png" className="logoSize" />
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
