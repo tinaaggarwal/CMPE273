@@ -72,10 +72,17 @@ class Cart extends Component {
     render() {
 
         let redirectVar = null;
-        if(this.state.authFlag){
-            redirectVar = <Redirect to= "/orderPlaced"/>
+        if (this.state.authFlag) {
+            redirectVar = <Redirect to={{
+                pathname: "/orderPlaced",
+                state: {
+                    order_id: this.state.order_id,
+                    cart_totalPrice: this.state.cart_totalPrice
+                }
+            }}
+            />
         }
-
+        
         return (
             <div className="container">
                 {redirectVar}
@@ -103,8 +110,8 @@ class Cart extends Component {
                     <div className="card-footer text-muted">
                         Total: {this.state.cart_totalPrice}
                         <br />
-                    <button onClick={this.submitOrder} className="btn btn-success" type="button" name="Order">Place Order</button>
-                     </div>
+                        <button onClick={this.submitOrder} className="btn btn-success" type="button" name="Order">Place Order</button>
+                    </div>
                 </div>
             </div>
         );

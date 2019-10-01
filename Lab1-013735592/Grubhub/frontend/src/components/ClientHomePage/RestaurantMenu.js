@@ -110,6 +110,7 @@ class RestaurantMenu extends Component {
 
     render() {
 
+        const cart = '/cart.jpg'
 
         const r_id = this.props.match.params.restaurantId;
 
@@ -123,7 +124,7 @@ class RestaurantMenu extends Component {
                             return (
                                 <div className="card">
                                     <div className="itemLayout">
-                                        <img className="itemImage" src={item.item_image} />
+                                        <img className="itemImageLayout" src={item.item_image} />
                                         <div className="itemDetails">
                                             <h5 className="card-title">{item.item_name}</h5>
                                             <h6 className="card-subtitle">{item.item_description}</h6>
@@ -156,8 +157,16 @@ class RestaurantMenu extends Component {
         return (
             <div>
                 <div className="container">
-                    <Link to={`/home/${r_id}/cart`}>Go to Cart</Link>
-                    {listItems}
+                    <div className="menuLayout">
+                        <div className="goToCart">
+                            <Link to={`/home/${r_id}/cart`}>
+                                <img className="cartIcon" src={cart} alt="Go to cart" />
+                            </Link>
+                            <br />
+                            Go to cart
+                        </div>
+                        {listItems}
+                    </div>
                 </div>
             </div>
 
