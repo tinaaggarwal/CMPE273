@@ -84,7 +84,7 @@ class Menu extends Component {
                                 <li className="list-group-item" key={item.item_id}>
                                     <div className="card">
                                         <div className="itemLayout">
-                                            <img className="itemImage" src={item.item_image} />
+                                            <img className="itemImage" src={item.item_image} title={item.item_name}/>
                                             <div className="itemDetails">
                                                 <h5 className="card-title">{item.item_name}</h5>
                                                 <h6 className="card-subtitle">{item.item_description}</h6>
