@@ -271,7 +271,7 @@ class OwnerProfile extends Component {
                     />
                 )
         } else {
-            rest_image = <img src={this.state.rest_image} className="restImage"/>
+            rest_image = <img src={this.state.rest_image} className="restImage" alt={"Restaurant"}/>
         }
 
         return (

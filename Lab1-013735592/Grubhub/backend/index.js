@@ -762,6 +762,46 @@ app.get('/restaurantList', function (req, res) {
 
 });
 
+app.post('/searchItem', function (req, res) {
+    console.log("Inside get all menu sections for client Handler");
+
+    console.log('cuisine....', req.body.filterCuisine)
+
+    if(!req.body.searchItem && req.body.filterCuisine) {
+        var sql = "SELECT owner_profile.rest_name, owner_profile.rest_image, owner_profile.cuisine, owner_profile.rest_zip_code, owner_profile.r_id " + 
+        "from owner_profile where cuisine = " + mysql.escape(req.body.filterCuisine);
+    } else if(!req.body.filterCuisine && req.body.searchItem){
+        var sql = "SELECT owner_profile.rest_name, owner_profile.rest_image, owner_profile.cuisine, owner_profile.rest_zip_code, owner_profile.r_id "
+        + "from owner_profile "
+        + "inner join menu_table on owner_profile.r_id = menu_table.r_id "
+        + "inner join item_table on menu_table.section_id = item_table.section_id "
+        + "where item_table.item_name like " + mysql.escape('%'+req.body.searchItem+'%');
+    } else {
+        var sql = "SELECT owner_profile.rest_name, owner_profile.rest_image, owner_profile.cuisine, owner_profile.rest_zip_code, owner_profile.r_id "
+        + "from owner_profile "
+        + "inner join menu_table on owner_profile.r_id = menu_table.r_id "
+        + "inner join item_table on menu_table.section_id = item_table.section_id "
+        + "where item_table.item_name like " + mysql.escape('%'+req.body.searchItem+'%') + "and cuisine = " + mysql.escape(req.body.filterCuisine);
+    }
+    
+    console.log(sql)
+
+    pool.query(sql, function (err, result) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Error While deleting section");
+        } else {
+            res.writeHead(200, {
+                'Content-Type': 'text/plain'
+            })
+            console.log(result)
+            res.end(JSON.stringify(result));
+        }
+    });
+});
+
 app.get('/nextOrderId', function (req, res) {
     console.log("Inside clients homepage get id for next order Request Handler");
 
@@ -801,6 +841,35 @@ app.get('/nextOrderId', function (req, res) {
 
 });
 
+app.get('/distinctCuisines', function (req, res) {
+    console.log("Inside clients homepage get restaurants list Request Handler");
+
+    var sql = "SELECT DISTINCT(cuisine) from owner_profile";
+    pool.getConnection(function (err, pool) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Could Not Get Connection Object");
+        } else {
+            pool.query(sql, function (err, result) {
+                if (err) {
+                    res.writeHead(400, {
+                        'Content-Type': 'text/plain'
+                    })
+                    res.end("Could Not Get Connection Object");
+                } else {
+                    res.writeHead(200, {
+                        'Content-Type': 'application/json'
+                    })
+
+                    res.end(JSON.stringify(result));
+
+                }
+            });
+        }
+    })
+});
 
 app.post('/menuSections', function (req, res) {
     console.log("Inside get all menu sections for client Handler");

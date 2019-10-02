@@ -1,19 +1,19 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import axios from 'axios';
 // import cookie from 'react-cookies';
-import {Redirect} from 'react-router';
-import {Link} from 'react-router-dom';
+import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
 
 class ClientLogin extends Component {
 
-    constructor(props){
+    constructor(props) {
         //Call the constrictor of Super class i.e The Component
         super(props);
         //maintain the state required for this component
         this.state = {
-            email : "",
-            password : "",
-            authFlag : false
+            email: "",
+            password: "",
+            authFlag: false
         }
         //Bind the handlers to this class
         this.emailChangeHandler = this.emailChangeHandler.bind(this);
@@ -22,21 +22,21 @@ class ClientLogin extends Component {
     }
 
     //Call the Will Mount to set the auth Flag to false
-    componentWillMount(){
+    componentWillMount() {
         this.setState({
-            authFlag : false
+            authFlag: false
         })
     }
     //email change handler to update state variable with the text entered by the user
     emailChangeHandler = (e) => {
         this.setState({
-            email : e.target.value
+            email: e.target.value
         })
     }
     //password change handler to update state variable with the text entered by the user
     passwordChangeHandler = (e) => {
         this.setState({
-            password : e.target.value
+            password: e.target.value
         })
     }
 
@@ -45,25 +45,25 @@ class ClientLogin extends Component {
         //prevent page from refresh
         e.preventDefault();
         const data = {
-            email : this.state.email,
-            password : this.state.password
+            email: this.state.email,
+            password: this.state.password
         }
         //set the with credentials to true
-       axios.defaults.withCredentials = true;
+        axios.defaults.withCredentials = true;
         //make a post request with the user data
-         axios.post('http://localhost:3001/clientLogin',data)
+        axios.post('http://localhost:3001/clientLogin', data)
             .then(response => {
-                console.log("Status Code : ",response.status);
-                if(response.status === 200){
+                console.log("Status Code : ", response.status);
+                if (response.status === 200) {
                     this.setState({
                         authFlag : true
                     })
-                }else{
+                } else {
                     this.setState({
                         authFlag : false
                     })
                 }
-            }); 
+            });
     }
 
     render() {
@@ -72,32 +72,33 @@ class ClientLogin extends Component {
         if(this.state.authFlag){
             redirectVar = <Redirect to= "/home"/>
         }
-        return(
+
+
+        return (
             <div>
                 {redirectVar}
-            <div className="container">
-                
-                <div className="login-form">
-                    <div className="main-div">
-                        <div className="panel">
-                            <h2>Sign in with your Grubhub account</h2>
+                <div className="container">
+                    <div className="login-form">
+                        <div className="main-div">
+                            <div className="panel">
+                                <h2>Sign in with your Grubhub account</h2>
+                            </div>
+                            <form onSubmit={this.submitLogin}>
+                                <div className="form-group">
+                                    <label>Email address</label>
+                                    <input onChange={this.emailChangeHandler} type="email" className="form-control" name="email" required />
+                                </div>
+                                <div className="form-group">
+                                    <label>Password</label>
+                                    <input onChange={this.passwordChangeHandler} type="password" className="form-control" name="password" required />
+                                </div>
+                                <button className="btn btn-primary">Login</button>
+                                <br></br><br />
+                                <Link to='/signup'>Signup</Link>
+                            </form>
                         </div>
-                        <form onSubmit={this.submitLogin}>
-                            <div className="form-group">
-                                <label>Email address</label>
-                                <input onChange = {this.emailChangeHandler} type="email" className="form-control" name="email" required/>
-                            </div>
-                            <div className="form-group">
-                                <label>Password</label>
-                                <input onChange = {this.passwordChangeHandler} type="password" className="form-control" name="password" required/>
-                            </div>
-                            <button className="btn btn-primary">Login</button>  
-                            <br></br><br/>
-                            <Link to = '/signup'>Signup</Link>     
-                            </form>            
                     </div>
                 </div>
-            </div>
             </div>
         );
     }
