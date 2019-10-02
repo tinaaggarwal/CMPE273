@@ -126,13 +126,13 @@ class RestaurantMenu extends Component {
                             return (
                                 <div className="card">
                                     <div className="itemLayout">
-                                        <img className="itemImageLayout" src={item.item_image} title={item.item_name}/>
+                                        <img className="itemImageLayout" src={item.item_image} title={item.item_name} alt={item.item_name}/>
                                         <div className="itemDetails">
                                             <h5 className="card-title">{item.item_name}</h5>
                                             <h6 className="card-subtitle">{item.item_description}</h6>
-                                            <p className="card-text">{item.item_price}</p>
-                                            <br />
+                                            <p className="card-text">${item.item_price}</p>
                                             <div style={{ width: '150px' }} className="form-group">
+                                                Qty:
                                                 <input
                                                     type="number"
                                                     placeholder="0"
