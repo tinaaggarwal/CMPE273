@@ -22,8 +22,7 @@ export default class App extends Component {
     switch (btn) {
       case '=': {
         const data = {
-          input: this.state.input,
-          output: this.state.output
+          input: this.state.input
         }
         axios.defaults.withCredentials = true;
         axios.post('http://localhost:3001/', data)
