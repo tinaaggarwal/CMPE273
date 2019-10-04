@@ -573,8 +573,8 @@ app.post('/ownerUpdateSection', function (req, res) {
     console.log(req.body)
 
     var sql = "UPDATE menu_table SET section_name = " + mysql.escape(req.body.section_name) +
-    ", section_description = " + mysql.escape(req.body.section_description)
-    + " WHERE section_id = " + mysql.escape(req.body.section_id);
+        ", section_description = " + mysql.escape(req.body.section_description)
+        + " WHERE section_id = " + mysql.escape(req.body.section_id);
     console.log(sql)
 
     pool.query(sql, function (err, result) {
@@ -654,7 +654,7 @@ app.post('/ownerAddItem', function (req, res) {
 
     var sql = "INSERT INTO item_table (section_id, item_name, item_image, item_description, item_price) VALUES ( " +
         mysql.escape(req.body.section_id) + " , " + mysql.escape(req.body.item_name) + " , " +
-        mysql.escape(req.body.item_image) + " , " + mysql.escape(req.body.item_description) + " , " + 
+        mysql.escape(req.body.item_image) + " , " + mysql.escape(req.body.item_description) + " , " +
         mysql.escape(req.body.item_price) + " ) ";
 
     console.log(sql)
@@ -752,14 +752,12 @@ app.get('/restaurantList', function (req, res) {
                     res.writeHead(200, {
                         'Content-Type': 'application/json'
                     })
-
+                    console.log(result)
                     res.end(JSON.stringify(result));
-
                 }
             });
         }
     })
-
 });
 
 app.post('/searchItem', function (req, res) {
@@ -767,23 +765,23 @@ app.post('/searchItem', function (req, res) {
 
     console.log('cuisine....', req.body.filterCuisine)
 
-    if(!req.body.searchItem && req.body.filterCuisine) {
-        var sql = "SELECT owner_profile.rest_name, owner_profile.rest_image, owner_profile.cuisine, owner_profile.rest_zip_code, owner_profile.r_id " + 
-        "from owner_profile where cuisine = " + mysql.escape(req.body.filterCuisine);
-    } else if(!req.body.filterCuisine && req.body.searchItem){
+    if (!req.body.searchItem && req.body.filterCuisine) {
+        var sql = "SELECT owner_profile.rest_name, owner_profile.rest_image, owner_profile.cuisine, owner_profile.rest_zip_code, owner_profile.r_id " +
+            "from owner_profile where cuisine = " + mysql.escape(req.body.filterCuisine);
+    } else if (!req.body.filterCuisine && req.body.searchItem) {
         var sql = "SELECT owner_profile.rest_name, owner_profile.rest_image, owner_profile.cuisine, owner_profile.rest_zip_code, owner_profile.r_id "
-        + "from owner_profile "
-        + "inner join menu_table on owner_profile.r_id = menu_table.r_id "
-        + "inner join item_table on menu_table.section_id = item_table.section_id "
-        + "where item_table.item_name like " + mysql.escape('%'+req.body.searchItem+'%');
+            + "from owner_profile "
+            + "inner join menu_table on owner_profile.r_id = menu_table.r_id "
+            + "inner join item_table on menu_table.section_id = item_table.section_id "
+            + "where item_table.item_name like " + mysql.escape('%' + req.body.searchItem + '%');
     } else {
         var sql = "SELECT owner_profile.rest_name, owner_profile.rest_image, owner_profile.cuisine, owner_profile.rest_zip_code, owner_profile.r_id "
-        + "from owner_profile "
-        + "inner join menu_table on owner_profile.r_id = menu_table.r_id "
-        + "inner join item_table on menu_table.section_id = item_table.section_id "
-        + "where item_table.item_name like " + mysql.escape('%'+req.body.searchItem+'%') + "and cuisine = " + mysql.escape(req.body.filterCuisine);
+            + "from owner_profile "
+            + "inner join menu_table on owner_profile.r_id = menu_table.r_id "
+            + "inner join item_table on menu_table.section_id = item_table.section_id "
+            + "where item_table.item_name like " + mysql.escape('%' + req.body.searchItem + '%') + "and cuisine = " + mysql.escape(req.body.filterCuisine);
     }
-    
+
     console.log(sql)
 
     pool.query(sql, function (err, result) {
@@ -842,7 +840,7 @@ app.get('/nextOrderId', function (req, res) {
 });
 
 app.get('/distinctCuisines', function (req, res) {
-    console.log("Inside clients homepage get restaurants list Request Handler");
+    console.log("Inside clients homepage get list of distinct cuisines for dropdown filter Request Handler");
 
     var sql = "SELECT DISTINCT(cuisine) from owner_profile";
     pool.getConnection(function (err, pool) {
@@ -862,7 +860,7 @@ app.get('/distinctCuisines', function (req, res) {
                     res.writeHead(200, {
                         'Content-Type': 'application/json'
                     })
-
+                    console.log(result)
                     res.end(JSON.stringify(result));
 
                 }
