@@ -12,7 +12,8 @@ class Cart extends Component {
             orderId: "",
             cart_total: 0,
             r_id: 0,
-            authFlag: false
+            authFlag: false,
+            emptyCart: false
         }
 
         this.submitOrder = this.submitOrder.bind(this);
@@ -28,10 +29,17 @@ class Cart extends Component {
         axios.get('http://localhost:3001/cartItems')
             .then((response) => {
                 console.log(response.data);
-                this.setState({
-                    items: response.data,
-                    orderId: response.data[0].order_id
-                });
+                if (response.data === 'Cart is empty') {
+                    this.setState({
+                        emptyCart: true
+                    });
+                } else {
+                    this.setState({
+                        items: response.data,
+                        orderId: response.data[0].order_id,
+                        emptyCart: false
+                    });
+                }
             });
 
         axios.get('http://localhost:3001/cartTotal')
@@ -72,17 +80,28 @@ class Cart extends Component {
     render() {
 
         let redirectVar = null;
+
+        if(this.state.emptyCart) {
+            redirectVar = <Redirect to={{
+                pathname: "/orderPlaced",
+                state: {
+                    emptyCart: this.state.emptyCart
+                }
+            }}
+            />
+        }
+
         if (this.state.authFlag) {
             redirectVar = <Redirect to={{
                 pathname: "/orderPlaced",
                 state: {
-                    order_id: this.state.order_id,
+                    order_id: this.state.orderId,
                     cart_totalPrice: this.state.cart_totalPrice
                 }
             }}
             />
         }
-        
+
         return (
             <div className="container">
                 {redirectVar}
