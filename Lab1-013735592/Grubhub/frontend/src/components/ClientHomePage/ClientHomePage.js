@@ -94,7 +94,7 @@ class ClientHomePage extends Component {
         //if not logged in go to login page
         let redirectVar = null;
         if (!cookie.load('cookie')) {
-            redirectVar = <Redirect to="/" />
+            redirectVar = <Redirect to="/login" />
         }
 
         var options = [<option value="---" key="null">---</option>];

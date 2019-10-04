@@ -7,7 +7,7 @@ var expect = chai.expect;
 it("Should check client login credentials and return status code", function(done){
     chai.request('http://127.0.0.1:3001')
     .post('/clientLogin')
-    .send({ "email": "s@t.com", "password" : "st"})
+    .send({ "email": "tina@aggarwal.com", "password" : "tina"})
     .end(function (err, res) {
         expect(res).to.have.status(200);
         done();
@@ -18,7 +18,7 @@ it("Should check client login credentials and return status code", function(done
 it("Should check owner login credentials and return status code", function(done){
     chai.request('http://127.0.0.1:3001')
     .post('/ownerLogin')
-    .send({ "email": "kt@kt.com", "password" : "kt"})
+    .send({ "email": "inchins@inchins.com", "password" : "inchins"})
     .end(function (err, res) {
         expect(res).to.have.status(200);
         done();
