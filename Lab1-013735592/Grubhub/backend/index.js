@@ -966,12 +966,15 @@ app.get('/cartItems', function (req, res) {
                     })
                     res.end("Could Not Get Connection Object");
                 } else {
-                    res.writeHead(200, {
-                        'Content-Type': 'application/json'
-                    })
-
-                    res.end(JSON.stringify(result));
-
+                    if(result.length === 0){
+                        console.log('empty')
+                        res.end('Cart is empty')
+                    } else{
+                        res.writeHead(200, {
+                            'Content-Type': 'application/json'
+                        })
+                        res.end(JSON.stringify(result));
+                    }
                 }
             });
         }
