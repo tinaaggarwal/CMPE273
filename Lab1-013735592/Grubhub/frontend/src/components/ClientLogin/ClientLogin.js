@@ -56,11 +56,11 @@ class ClientLogin extends Component {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {
                     this.setState({
-                        authFlag : true
+                        authFlag: true
                     })
                 } else {
                     this.setState({
-                        authFlag : false
+                        authFlag: false
                     })
                 }
             });
@@ -69,36 +69,38 @@ class ClientLogin extends Component {
     render() {
         //redirect based on successful login
         let redirectVar = null;
-        if(this.state.authFlag){
-            redirectVar = <Redirect to= "/home"/>
+        if (this.state.authFlag) {
+            redirectVar = <Redirect to="/home" />
         }
 
 
         return (
             <div>
                 {redirectVar}
+                <br />
+                <br />
+                <br />
                 <div className="container">
-                    <div className="login-form">
-                        <div className="main-div">
-                            <div className="panel">
-                                <h2>Sign in with your Grubhub account</h2>
+                        <div className="login-form">
+                            <div className="main-div">
+                                <div className="panel">
+                                    <h2>Sign in with your Grubhub account</h2>
+                                </div>
+                                <br/>
+                                <form onSubmit={this.submitLogin}>
+                                    <div className="form-group">
+                                        <input onChange={this.emailChangeHandler} type="email" className="form-control" name="email" placeholder="Email address" required />
+                                    </div>
+                                    <div className="form-group">
+                                        <input onChange={this.passwordChangeHandler} type="password" className="form-control" name="password" placeholder="Password" required />
+                                    </div>
+                                    <button className="btn btn-primary">Login</button>
+                                    <br></br><br />
+                                    <Link to='/signup'>Signup</Link>
+                                </form>
                             </div>
-                            <form onSubmit={this.submitLogin}>
-                                <div className="form-group">
-                                    <label>Email address</label>
-                                    <input onChange={this.emailChangeHandler} type="email" className="form-control" name="email" required />
-                                </div>
-                                <div className="form-group">
-                                    <label>Password</label>
-                                    <input onChange={this.passwordChangeHandler} type="password" className="form-control" name="password" required />
-                                </div>
-                                <button className="btn btn-primary">Login</button>
-                                <br></br><br />
-                                <Link to='/signup'>Signup</Link>
-                            </form>
                         </div>
                     </div>
-                </div>
             </div>
         );
     }
