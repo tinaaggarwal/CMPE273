@@ -11,10 +11,19 @@ var mysql = require('mysql');
 const multer = require('multer');
 var fs = require('fs');
 
+// var pool = mysql.createPool({
+//     connectionLimit: 100,
+//     host: 'localhost',
+//     user: 'root',
+//     password: 'Tina.1234',
+//     database: 'grubhub',
+//     debug: false
+// })
+
 var pool = mysql.createPool({
     connectionLimit: 100,
-    host: 'localhost',
-    user: 'root',
+    host: 'grubhub.cv9vraaep5ay.us-west-2.rds.amazonaws.com',
+    user: 'admin',
     password: 'Tina.1234',
     database: 'grubhub',
     debug: false
