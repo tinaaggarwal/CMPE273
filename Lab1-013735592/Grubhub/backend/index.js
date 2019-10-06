@@ -22,6 +22,7 @@ var fs = require('fs');
 
 var pool = mysql.createPool({
     connectionLimit: 100,
+    port: '3306',
     host: 'grubhub.cv9vraaep5ay.us-west-2.rds.amazonaws.com',
     user: 'admin',
     password: 'Tina.1234',
