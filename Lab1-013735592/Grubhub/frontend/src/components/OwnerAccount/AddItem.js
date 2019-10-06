@@ -28,7 +28,7 @@ class AddItem extends Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:3001/ownerSections')
+        axios.get('http://52.26.41.109:3001/ownerSections')
             .then((response) => {
                 console.log(response.data);
                 this.setState({
@@ -85,7 +85,7 @@ class AddItem extends Component {
             data.append("image", picture, picture.name);
             console.log(data)
             // Make an AJAX upload request using Axios
-            axios.post('http://localhost:3001/upload', data)
+            axios.post('http://52.26.41.109:3001/upload', data)
                 .then(response => {
                     this.setState({ imageUrl: response.data.imageUrl });
                 }).then(() => {
@@ -100,7 +100,7 @@ class AddItem extends Component {
                     //set the with credentials to true
                     axios.defaults.withCredentials = true;
                     //make a post request with the user data
-                    axios.post('http://localhost:3001/ownerAddItem', data)
+                    axios.post('http://52.26.41.109:3001/ownerAddItem', data)
                         .then(response => {
                             console.log("Status Code : ", response.status);
                             if (response.status === 200) {

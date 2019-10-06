@@ -26,7 +26,7 @@ class Cart extends Component {
             r_id: this.props.match.params.restaurantId
         });
 
-        axios.get('http://localhost:3001/cartItems')
+        axios.get('http://52.26.41.109:3001/cartItems')
             .then((response) => {
                 console.log(response.data);
                 if (response.data === 'Cart is empty') {
@@ -42,7 +42,7 @@ class Cart extends Component {
                 }
             });
 
-        axios.get('http://localhost:3001/cartTotal')
+        axios.get('http://52.26.41.109:3001/cartTotal')
             .then((response) => {
                 console.log(response.data);
                 this.setState({
@@ -62,7 +62,7 @@ class Cart extends Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         // make a post request with the user data
-        axios.post('http://localhost:3001/submitOrder', data)
+        axios.post('http://52.26.41.109:3001/submitOrder', data)
             .then(response => {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {

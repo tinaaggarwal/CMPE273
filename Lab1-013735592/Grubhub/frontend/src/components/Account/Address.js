@@ -40,7 +40,7 @@ class Address extends Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:3001/addressUpdate')
+        axios.get('http://52.26.41.109:3001/addressUpdate')
             .then((response) => {
                 console.log((response.data))
                 this.setState({
@@ -142,7 +142,7 @@ class Address extends Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post('http://localhost:3001/userUpdateAddress', data)
+        axios.post('http://52.26.41.109:3001/userUpdateAddress', data)
             .then(response => {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {
@@ -176,7 +176,7 @@ class Address extends Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post('http://localhost:3001/userAddAddress', data)
+        axios.post('http://52.26.41.109:3001/userAddAddress', data)
             .then(response => {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {
