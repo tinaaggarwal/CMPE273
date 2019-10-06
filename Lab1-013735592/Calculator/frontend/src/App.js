@@ -25,7 +25,7 @@ export default class App extends Component {
           input: this.state.input
         }
         axios.defaults.withCredentials = true;
-        axios.post('http://localhost:3001/', data)
+        axios.post('http://52.26.41.109:3001/', data)
           .then(response => {
             console.log("Status code: ", response.status);
             if (response.status === 200) {
