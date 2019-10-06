@@ -41,7 +41,7 @@ class OwnerProfile extends Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:3001/ownerUpdate')
+        axios.get('http://52.26.41.109:3001/ownerUpdate')
             .then((response) => {
                 console.log((response.data))
                 this.setState({
@@ -63,7 +63,7 @@ class OwnerProfile extends Component {
             data.append("image", picture, picture.name);
             console.log(data)
             // Make an AJAX upload request using Axios
-            return axios.post('http://localhost:3001/upload', data)
+            return axios.post('http://52.26.41.109:3001/upload', data)
                 .then(response => {
                     this.setState({ imageUrl: response.data.imageUrl });
                 }).then(() => {
@@ -73,7 +73,7 @@ class OwnerProfile extends Component {
                     //set the with credentials to true
                     axios.defaults.withCredentials = true;
                     //make a post request with the user data
-                    axios.post('http://localhost:3001/ownerUpdateProfileImage', data)
+                    axios.post('http://52.26.41.109:3001/ownerUpdateProfileImage', data)
                         .then(response => {
                             console.log("Status Code : ", response.status);
                             if (response.status === 200) {
@@ -109,7 +109,7 @@ class OwnerProfile extends Component {
             data.append("image", picture, picture.name);
             console.log(data)
             // Make an AJAX upload request using Axios
-            return axios.post('http://localhost:3001/upload', data)
+            return axios.post('http://52.26.41.109:3001/upload', data)
                 .then(response => {
                     this.setState({ imageUrl: response.data.imageUrl });
                 }).then(() => {
@@ -119,7 +119,7 @@ class OwnerProfile extends Component {
                     //set the with credentials to true
                     axios.defaults.withCredentials = true;
                     //make a post request with the user data
-                    axios.post('http://localhost:3001/ownerUpdateRestImage', data)
+                    axios.post('http://52.26.41.109:3001/ownerUpdateRestImage', data)
                         .then(response => {
                             console.log("Status Code : ", response.status);
                             if (response.status === 200) {
@@ -209,7 +209,7 @@ class OwnerProfile extends Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post('http://localhost:3001/ownerUpdateProfile', data)
+        axios.post('http://52.26.41.109:3001/ownerUpdateProfile', data)
             .then(response => {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {
