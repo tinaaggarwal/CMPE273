@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import '../../App.css';
-import axios from 'axios';
 // import cookie from 'react-cookies';
-import { Redirect } from 'react-router';
 import './OwnerSignup.css';
 import { ownerActions } from '../../js/actions/index';
 import  { connect } from 'react-redux';

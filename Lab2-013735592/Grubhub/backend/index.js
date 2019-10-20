@@ -89,7 +89,7 @@ app.post('/clientLogin', function (req, res) {
     clientEmail = req.body.email;
     var password = req.body.password;
     var sql = "SELECT *  FROM client_signup WHERE client_email = " +
-        mysql.escape(clientEmail) + "and password = " + mysql.escape(password);
+        mysql.escape(clientEmail) + " and password = " + mysql.escape(password);
     console.log(sql)
     pool.getConnection(function (err, pool) {
         if (err) {
@@ -841,6 +841,7 @@ app.get('/nextOrderId', function (req, res) {
                     nextOrderId = id[0];
                     nextOrderId = nextOrderId + 1
                     // res.end(JSON.stringify(result));
+                    res.send(nextOrderId)
 
                 }
             });

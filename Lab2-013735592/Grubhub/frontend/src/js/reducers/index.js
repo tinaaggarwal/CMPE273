@@ -3,10 +3,12 @@ import {
 } from 'redux';
 import client from './clientReducer';
 import owner from './ownerReducer';
-// likewise import 
+import homePage from './homePageReducer';
+
 const rootReducer = combineReducers({
     client,
-    owner
+    owner,
+    homePage
 });
 
 export default rootReducer;

@@ -1,6 +1,9 @@
 const action_types = {
     LOGIN_USER: 'LOGIN_USER',
     LOGIN_OWNER: 'LOGIN_OWNER',
+    RESTAURANT_LIST: 'RESTAURANT_LIST',
+    DISTINCT_CUISINES: 'DISTINCT_CUISINES',
+    SEARCH_ITEM: 'SEARCH_ITEM',
 }
 
 export default action_types;

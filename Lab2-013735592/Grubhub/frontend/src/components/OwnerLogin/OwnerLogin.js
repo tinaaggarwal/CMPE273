@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 // import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
