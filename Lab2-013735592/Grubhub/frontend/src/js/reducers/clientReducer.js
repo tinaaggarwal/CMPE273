@@ -7,7 +7,6 @@ const initialState = {
 };
 
 const clientReducer = (state = initialState, action) => {
-    let newState;
     switch(action.type) {
         case actionTypes.LOGIN_USER:
             // newState = action.payload;
