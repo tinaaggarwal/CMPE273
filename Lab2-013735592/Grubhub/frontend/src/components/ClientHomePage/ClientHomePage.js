@@ -93,9 +93,9 @@ class ClientHomePage extends Component {
 
         //if not logged in go to login page
         let redirectVar = null;
-        if (!cookie.load('cookie')) {
-            redirectVar = <Redirect to="/login" />
-        }
+        // if (!cookie.load('cookie')) {
+        //     redirectVar = <Redirect to="/login" />
+        // }
 
         var options = [<option value="---" key="null">---</option>];
         var moreOptions = this.state.cuisines.map(cuisine => {

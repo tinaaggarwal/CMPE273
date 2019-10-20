@@ -3,6 +3,8 @@ import axios from 'axios';
 // import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
+import { clientActions } from '../../js/actions/index';
+import  { connect } from 'react-redux';
 
 class ClientLogin extends Component {
 
@@ -13,7 +15,7 @@ class ClientLogin extends Component {
         this.state = {
             email: "",
             password: "",
-            authFlag: false
+            // authFlag: false
         }
         //Bind the handlers to this class
         this.emailChangeHandler = this.emailChangeHandler.bind(this);
@@ -21,12 +23,6 @@ class ClientLogin extends Component {
         this.submitLogin = this.submitLogin.bind(this);
     }
 
-    //Call the Will Mount to set the auth Flag to false
-    componentWillMount() {
-        this.setState({
-            authFlag: false
-        })
-    }
     //email change handler to update state variable with the text entered by the user
     emailChangeHandler = (e) => {
         this.setState({
@@ -44,32 +40,36 @@ class ClientLogin extends Component {
     submitLogin = (e) => {
         //prevent page from refresh
         e.preventDefault();
-        const data = {
+        const payload = {
             email: this.state.email,
-            password: this.state.password
+            password: this.state.password,
+            // authFlag: this.state.authFlag
         }
-        //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/clientLogin', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    this.setState({
-                        authFlag: true
-                    })
-                } else {
-                    this.setState({
-                        authFlag: false
-                    })
-                }
-            });
+
+        this.props.loginClient(payload);
+
     }
 
+    // componentWillReceiveProps(nextProps) {
+    //     console.log(nextProps);
+    //     let redirectVar = null;
+    //     if(nextProps.authFlag) {
+    //         // this.props.history.push('/home')
+    //         redirectVar = <Redirect to="/home" />
+    //     }
+    // }
+
     render() {
+
+        console.log(this.props.authFlag)
         //redirect based on successful login
         let redirectVar = null;
-        if (this.state.authFlag) {
+        let redirect = null;
+        if(this.props.authFlag === true){
+            redirect = true;
+        }
+        console.log(redirect)
+        if (redirect) {
             redirectVar = <Redirect to="/home" />
         }
 
@@ -106,4 +106,14 @@ class ClientLogin extends Component {
     }
 }
 
-export default ClientLogin;
+const mapStateToProps = state => {
+    return { 
+        authFlag: state.client.authFlag
+    };
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    loginClient: payload => dispatch(clientActions.loginClient(payload, ownProps))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ClientLogin);
