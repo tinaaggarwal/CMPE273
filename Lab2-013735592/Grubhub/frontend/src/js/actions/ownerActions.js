@@ -35,6 +35,11 @@ export const signupOwner = (user, ownProps) => {
     return dispatch => {
         return axios.post(`${ROOT_URL}/ownerSignup`, user)
             .then(res => {
+                if (res.status === 200) {
+                    dispatch({
+                        type: actionTypes.SIGNUP_OWNER,
+                    });
+                }
                 ownProps.history.push('/ownerLogin');
             });
     }

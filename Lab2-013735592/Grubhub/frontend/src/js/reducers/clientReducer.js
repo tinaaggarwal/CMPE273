@@ -3,11 +3,13 @@ import actionTypes from '../constants/index';
 const initialState = {
     client_email: '',
     password: '',
-    authFlag: false
+    authFlag: false,
+    signupClient: false
 };
 
 const clientReducer = (state = initialState, action) => {
-    switch(action.type) {
+    switch (action.type) {
+
         case actionTypes.LOGIN_USER:
             // newState = action.payload;
             // // let authFlag = action.payload;
@@ -16,7 +18,13 @@ const clientReducer = (state = initialState, action) => {
             // return Object.assign({}, state, newState);
             return Object.assign({}, state, {
                 authFlag: action.payload.loginFlag
-              });
+            });
+
+        case actionTypes.SIGNUP_CLIENT:
+            return Object.assign({}, state, {
+                signupClient: true
+            });
+            
         default:
             break;
     }

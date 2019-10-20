@@ -2,9 +2,7 @@ import actionTypes from '../constants/index';
 
 const initialState = {
     restaurants: [],
-    cuisines: [],
-    filterCuisine: "",
-    searchItem: "",
+    cuisines: []
 };
 
 const homePageReducer = (state = initialState, action) => {

@@ -4,6 +4,8 @@ import { withRouter } from 'react-router';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './RestaurantMenu.css';
+import { restaurantMenuActions } from '../../js/actions/index';
+import  { connect } from 'react-redux';
 
 class RestaurantMenu extends Component {
 
@@ -31,40 +33,8 @@ class RestaurantMenu extends Component {
             r_id: this.props.match.params.restaurantId
         }
 
-        //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/menuItems', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    console.log(response.data);
-                    this.setState({
-                        items: response.data,
-                        authFlag: true
-                    })
-                } else {
-                    this.setState({
-                        authFlag: false
-                    })
-                }
-            });
-
-        axios.post('http://localhost:3001/menuSections', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    console.log(response.data);
-                    this.setState({
-                        sections: response.data,
-                        authFlag: true
-                    })
-                } else {
-                    this.setState({
-                        authFlag: false
-                    })
-                }
-            });
+        this.props.menuItems(data);
+        this.props.menuSections(data);
 
     }
 
@@ -90,22 +60,8 @@ class RestaurantMenu extends Component {
             item_name: this.state.item_name,
             item_price: this.state.item_price
         }
-        //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        // make a post request with the user data
-        axios.post('http://localhost:3001/addItemToCart', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    this.setState({
-                        addToCartSuccessful: true
-                    })
-                } else {
-                    this.setState({
-                        addToCartSuccessful: false
-                    })
-                }
-            });
+
+        this.props.addItemToCart(data);
     };
 
     render() {
@@ -114,14 +70,14 @@ class RestaurantMenu extends Component {
 
         const r_id = this.props.match.params.restaurantId;
 
-        const listItems = this.state.sections.map((section) => {
+        const listItems = this.props.sections.map((section) => {
             return (
                 <div className="card mb-3" key={section.section_id}>
                     <div className="sectionsLayout">
                         <h3>{section.section_name}</h3>
                         <p>{section.section_description}</p>
                     </div>
-                    {this.state.items.map((item) => {
+                    {this.props.items.map((item) => {
                         if (item.section_id === section.section_id) {
                             return (
                                 <div className="card" key={item.item_id}>
@@ -177,4 +133,17 @@ class RestaurantMenu extends Component {
 
 }
 
-export default withRouter(RestaurantMenu);
+const mapStateToProps = state => {
+    return { 
+        items: state.restaurantMenu.items,
+        sections: state.restaurantMenu.sections
+    };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+    menuItems: data => dispatch(restaurantMenuActions.menuItems(data)),
+    menuSections: data => dispatch(restaurantMenuActions.menuSections(data)),
+    addItemToCart: data => dispatch(restaurantMenuActions.addItemToCart(data))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(RestaurantMenu));

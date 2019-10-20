@@ -35,6 +35,11 @@ export const signupClient = (user, ownProps) => {
     return dispatch => {
         return axios.post(`${ROOT_URL}/clientSignup`, user)
             .then(res => {
+                if (res.status === 200) {
+                    dispatch({
+                        type: actionTypes.SIGNUP_CLIENT,
+                    });
+                }
                 ownProps.history.push('/login');
             });
     }
