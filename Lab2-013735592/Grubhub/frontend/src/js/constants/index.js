@@ -4,6 +4,9 @@ const action_types = {
     RESTAURANT_LIST: 'RESTAURANT_LIST',
     DISTINCT_CUISINES: 'DISTINCT_CUISINES',
     SEARCH_ITEM: 'SEARCH_ITEM',
+    MENU_ITEMS: 'MENU_ITEMS',
+    MENU_SECTIONS: 'MENU_SECTIONS',
+    ADD_TO_CART:  'ADD_TO_CART',
 }
 
 export default action_types;
