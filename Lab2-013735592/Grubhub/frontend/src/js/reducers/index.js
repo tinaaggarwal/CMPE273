@@ -10,6 +10,7 @@ import clientProfile from './clientProfileReducer';
 import clientOrder from './clientOrderReducer';
 import ownerProfile from './ownerProfileReducer';
 import ownerOrder from './ownerOrderReducer';
+import ownerMenu from './ownerMenuReducer';
 
 const rootReducer = combineReducers({
     client,
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
     clientProfile,
     clientOrder,
     ownerOrder,
-    ownerProfile
+    ownerProfile,
+    ownerMenu
 });
 
 export default rootReducer;

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import './OwnerProfile.css';
 import './Menu.css';
+import { ownerMenuActions } from '../../js/actions/index';
+import  { connect } from 'react-redux';
 
 class Menu extends Component {
 
@@ -15,21 +16,9 @@ class Menu extends Component {
 
     componentDidMount() {
 
-        axios.get('http://localhost:3001/ownerSections')
-            .then((response) => {
-                console.log(response.data);
-                this.setState({
-                    sections: response.data
-                });
-            });
+        this.props.ownerSections();
 
-        axios.get('http://localhost:3001/ownerItemsList')
-            .then((response) => {
-                console.log(response.data);
-                this.setState({
-                    items: response.data
-                });
-            });
+        this.props.ownerItemsList();
 
     }
 
@@ -41,22 +30,8 @@ class Menu extends Component {
         }
         console.log(data.deleteId)
         //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/ownerDeleteItem', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    this.setState({
-                        deletedMessage: true
-                    })
-                } else {
-                    this.setState({
-                        authFlag: false,
-                        errorMessage: true
-                    })
-                }
-            });
+        this.props.ownerDeleteItem(data);
+
         window.location.reload();
 
     };
@@ -65,20 +40,20 @@ class Menu extends Component {
 
         let message = null;
 
-        if (this.state.errorMessage) {
+        if (this.props.errorMessage) {
             message = <p>Failed, try again!</p>
         }
 
-        if (this.state.deletedMessage) {
+        if (this.props.deletedMessage) {
             message = <p>Item successfully deleted!</p>
         }
 
-        const listItems = this.state.sections.map((section) =>
+        const listItems = this.props.sections.map((section) =>
             <li className="list-group-item" key={section.section_id}>
                 <h3>{section.section_name}</h3>
                 <p>{section.section_description}</p>
                 <ul className="list-group list-group-flush">
-                    {this.state.items.map((item) => {
+                    {this.props.items.map((item) => {
                         if (item.section_id === section.section_id) {
                             return (
                                 <li className="list-group-item" key={item.item_id}>
@@ -113,4 +88,19 @@ class Menu extends Component {
     }
 }
 
-export default Menu;
+const mapStateToProps = state => {
+    return { 
+        sections: state.ownerMenu.sections,
+        items: state.ownerMenu.items,
+        deletedMessage: state.ownerMenu.deletedMessage,
+        errorMessage: state.ownerMenu.errorMessage
+    };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+    ownerSections: () => dispatch(ownerMenuActions.ownerSections()),
+    ownerItemsList: () => dispatch(ownerMenuActions.ownerItemsList()),
+    ownerDeleteItem: data => dispatch(ownerMenuActions.ownerDeleteItem(data)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Menu);
