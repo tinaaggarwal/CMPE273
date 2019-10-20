@@ -4,6 +4,7 @@ import * as homePageActions from './homePageActions';
 import * as restaurantMenuActions from './restaurantMenuActions';
 import * as cartActions from './cartActions';
 import * as clientProfileActions from './clientProfileActions';
+import * as clientOrderActions from './clientOrderActions';
 
 export {
     clientActions,
@@ -11,5 +12,6 @@ export {
     homePageActions,
     restaurantMenuActions,
     cartActions,
-    clientProfileActions
+    clientProfileActions,
+    clientOrderActions
 };

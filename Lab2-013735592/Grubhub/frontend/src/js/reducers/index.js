@@ -7,6 +7,7 @@ import homePage from './homePageReducer';
 import restaurantMenu from './restaurantMenuReducer';
 import cart from './cartReducer';
 import clientProfile from './clientProfileReducer';
+import clientOrder from './clientOrderReducer';
 
 const rootReducer = combineReducers({
     client,
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
     homePage,
     restaurantMenu,
     cart,
-    clientProfile
+    clientProfile,
+    clientOrder
 });
 
 export default rootReducer;
