@@ -15,7 +15,6 @@ const clientReducer = (state = initialState, action) => {
             // newState.authFlag = true;
             // console.log(action.payload)
             // return Object.assign({}, state, newState);
-            console.log(action.payload)
             return Object.assign({}, state, {
                 authFlag: action.payload.loginFlag
               });
