@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import cookie from 'react-cookies';
-import { Redirect, withRouter } from 'react-router';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './ClientHomePage.css';
+import { homePageActions } from '../../js/actions/index';
+import  { connect } from 'react-redux';
 
 class ClientHomePage extends Component {
 
@@ -24,55 +24,22 @@ class ClientHomePage extends Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:3001/restaurantList')
-            .then((response) => {
-                console.log(response.data);
-                this.setState({
-                    restaurants: response.data
-                });
-            });
 
-        axios.get('http://localhost:3001/nextOrderId')
-            .then((response) => {
-                console.log(response.data);
-                this.setState({
-                    nextOrderId: response.data
-                });
-            });
+        this.props.restaurantList();
 
-        axios.get('http://localhost:3001/distinctCuisines')
-            .then((response) => {
-                console.log(response.data);
-                this.setState({
-                    cuisines: response.data
-                });
-            });
+        this.props.nextOrderId();
+
+        this.props.distinctCuisines();
+
     }
 
     submitSearch = (e) => {
-        //prevent page from refresh
-        // e.preventDefault();
+
         const data = {
             searchItem: this.state.searchItem,
             filterCuisine: this.state.filterCuisine
         }
-        //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        // make a post request with the user data
-        axios.post('http://localhost:3001/searchItem', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    console.log(response.data);
-                    this.setState({
-                        restaurants: response.data
-                    });
-                } else {
-                    this.setState({
-                        authFlag: false
-                    })
-                }
-            });
+        this.props.searchItem(data);
     };
 
     cuisineFilterChangeHandler = (e) => {
@@ -97,8 +64,8 @@ class ClientHomePage extends Component {
         //     redirectVar = <Redirect to="/login" />
         // }
 
-        var options = [<option value="---" key="null">---</option>];
-        var moreOptions = this.state.cuisines.map(cuisine => {
+        var options = [<option value="---" key="None">---</option>];
+        var moreOptions = this.props.cuisines.map(cuisine => {
             return (
                 <option value={cuisine.cuisine} key={cuisine.cuisine}>{cuisine.cuisine}</option>
             )
@@ -106,7 +73,7 @@ class ClientHomePage extends Component {
 
         options = options.concat(moreOptions);
 
-        const restaurantsList = this.state.restaurants.map((restaurant) =>
+        const restaurantsList = this.props.restaurants.map((restaurant) =>
             <Link to={`/home/${restaurant.r_id}`} key={restaurant.r_id} className="nav-link">
                 <div className="card mb-3" >
                     <img className="restImage" src={restaurant.rest_image} alt={restaurant.rest_image}/>
@@ -142,5 +109,19 @@ class ClientHomePage extends Component {
     }
 }
 
-export default withRouter(ClientHomePage);
+const mapStateToProps = state => {
+    return { 
+        restaurants: state.homePage.restaurants,
+        cuisines: state.homePage.cuisines
+    };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+    restaurantList: () => dispatch(homePageActions.restaurantList()),
+    nextOrderId: () => dispatch(homePageActions.nextOrderId()),
+    distinctCuisines: () => dispatch(homePageActions.distinctCuisines()),
+    searchItem: payload => dispatch(homePageActions.searchItem(payload))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ClientHomePage);
 
