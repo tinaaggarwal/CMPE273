@@ -392,12 +392,14 @@ app.post('/userUpdateAddress', function (req, res) {
 
 app.post('/userAddAddress', function (req, res) {
     console.log("Inside Insert Address Handler");
+    
+    var sql = "UPDATE client_update SET street_address = " + mysql.escape(req.body.street_address) +
+    ", apt = " +  mysql.escape(req.body.apt) + ", city = " +  mysql.escape(req.body.city) +
+    ", state = " +  mysql.escape(req.body.state) + ", zip_code = " +  mysql.escape(req.body.zip_code) +
+    ", phone = " +  mysql.escape(req.body.phone) + ", cross_street = " +  mysql.escape(req.body.cross_street) +
+    ", delivery_instructions = " +  mysql.escape(req.body.delivery_instructions) + ", address_name = " +  mysql.escape(req.body.address_name) +
+    " WHERE client_email = " + mysql.escape(clientEmail);
 
-    var sql = "INSERT INTO client_update VALUES ( " +
-        mysql.escape(clientEmail) + " , " + mysql.escape(req.body.street_address) + " , " + mysql.escape(req.body.apt)
-        + " , " + mysql.escape(req.body.city) + " , " + mysql.escape(req.body.state) + " , " + mysql.escape(req.body.zip_code)
-        + " , " + mysql.escape(req.body.phone) + " , " + mysql.escape(req.body.cross_street) +
-        " , " + mysql.escape(req.body.delivery_instructions) + " , " + mysql.escape(req.body.address_name) + " ) ";
 
     console.log(sql)
     pool.query(sql, function (err, result) {
