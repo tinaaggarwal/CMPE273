@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Orders from './Orders';
 import axios from 'axios';
+import { clientOrderActions } from '../../js/actions/index';
+import  { connect } from 'react-redux';
 
 class PastOrders extends Component {
 
@@ -17,41 +19,11 @@ class PastOrders extends Component {
 
     componentDidMount() {
 
-        axios.get('http://localhost:3001/pastOrdersForClient')
-            .then((response) => {
-                console.log(response.data);
-                let orderIds = response.data.map(obj => {
-                    return obj.order_id;
-                });
-                this.setState({
-                    orders: response.data,
-                    order_ids: orderIds
-                });
-            }).then(() => {
-                console.log(this.state.order_ids);
-                const data = {
-                    order_ids: this.state.order_ids
-                }
+        this.props.pastOrdersForClient().then(() => 
+        {
+            this.props.itemsInOrders(this.props.order_ids)
+        });
 
-                //set the with credentials to true
-                axios.defaults.withCredentials = true;
-                //make a post request with the user data
-                axios.post('http://localhost:3001/itemsInOrders', data)
-                    .then(response => {
-                        console.log("Status Code : ", response.status);
-                        if (response.status === 200) {
-                            console.log(response.data);
-                            this.setState({
-                                order_details: response.data,
-                                authFlag: true
-                            })
-                        } else {
-                            this.setState({
-                                authFlag: false
-                            })
-                        }
-                    });
-            });
     }
 
 
@@ -59,12 +31,25 @@ class PastOrders extends Component {
         return (
             <div className="container">
                 <Orders
-                    orders={this.state.orders}
-                    order_details={this.state.order_details}
+                    orders={this.props.orders}
+                    order_details={this.props.order_details}
                     type="Past orders" />
             </div>
         );
     }
 }
 
-export default PastOrders;
+const mapStateToProps = state => {
+    return { 
+        orders: state.clientOrder.orders,
+        order_ids: state.clientOrder.order_ids,
+        order_details: state.clientOrder.order_details
+    };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+    pastOrdersForClient: () => dispatch(clientOrderActions.pastOrdersForClient()),
+    itemsInOrders: data => dispatch(clientOrderActions.itemsInOrders(data))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(PastOrders);
