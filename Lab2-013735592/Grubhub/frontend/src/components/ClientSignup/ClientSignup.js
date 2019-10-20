@@ -70,13 +70,8 @@ class ClientSignup extends Component {
     };
 
     render() {
-        let redirectvar;
-        if (this.state.authFlag) {
-            redirectvar = <Redirect to="/login" />;
-        }
         return (
             <div>
-                {redirectvar}
                 <br />
                 <br />
                 <br />
