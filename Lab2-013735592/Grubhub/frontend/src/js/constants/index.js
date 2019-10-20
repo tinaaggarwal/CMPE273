@@ -9,6 +9,10 @@ const action_types = {
     MENU_ITEMS: 'MENU_ITEMS',
     MENU_SECTIONS: 'MENU_SECTIONS',
     ADD_TO_CART:  'ADD_TO_CART',
+    CART_EMPTY: 'CART_EMPTY',
+    CART_ITEMS: 'CART_ITEMS',
+    CART_TOTAL: 'CART_TOTAL',
+    SUBMIT_ORDER: 'SUBMIT_ORDER',
 }
 
 export default action_types;

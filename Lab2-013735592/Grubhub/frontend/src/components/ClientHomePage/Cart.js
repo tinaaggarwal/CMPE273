@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import axios from 'axios';
+import { cartActions } from '../../js/actions/index';
+import  { connect } from 'react-redux';
 
 class Cart extends Component {
 
@@ -26,77 +28,43 @@ class Cart extends Component {
             r_id: this.props.match.params.restaurantId
         });
 
-        axios.get('http://localhost:3001/cartItems')
-            .then((response) => {
-                console.log(response.data);
-                if (response.data === 'Cart is empty') {
-                    this.setState({
-                        emptyCart: true
-                    });
-                } else {
-                    this.setState({
-                        items: response.data,
-                        orderId: response.data[0].order_id,
-                        emptyCart: false
-                    });
-                }
-            });
+        this.props.cartItems();
 
-        axios.get('http://localhost:3001/cartTotal')
-            .then((response) => {
-                console.log(response.data);
-                this.setState({
-                    cart_totalPrice: response.data
-                });
-            });
+        this.props.cartTotal();
+
     }
 
     submitOrder = (e) => {
         //prevent page from refresh
         e.preventDefault();
         const data = {
-            order_id: this.state.orderId,
+            order_id: this.props.orderId,
             r_id: this.state.r_id,
-            cart_totalPrice: this.state.cart_totalPrice
+            cart_totalPrice: this.props.cart_totalPrice
         }
-        //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        // make a post request with the user data
-        axios.post('http://localhost:3001/submitOrder', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    this.setState({
-                        authFlag: true
-                    })
-                } else {
-                    this.setState({
-                        authFlag: false
-                    })
-                }
-            });
+        this.props.submitOrder(data);
     };
 
     render() {
 
         let redirectVar = null;
 
-        if(this.state.emptyCart) {
+        if(this.props.emptyCart) {
             redirectVar = <Redirect to={{
                 pathname: "/orderPlaced",
                 state: {
-                    emptyCart: this.state.emptyCart
+                    emptyCart: this.props.emptyCart
                 }
             }}
             />
         }
 
-        if (this.state.authFlag) {
+        if (this.props.orderSubmitted) {
             redirectVar = <Redirect to={{
                 pathname: "/orderPlaced",
                 state: {
-                    order_id: this.state.orderId,
-                    cart_totalPrice: this.state.cart_totalPrice
+                    order_id: this.props.orderId,
+                    cart_totalPrice: this.props.cart_totalPrice
                 }
             }}
             />
@@ -112,7 +80,7 @@ class Cart extends Component {
                     <div className="card-body">
                         <h5 className="card-title">Order items</h5>
                         {
-                            this.state.items.map((item) => {
+                            this.props.items.map((item) => {
                                 return (
                                     <li className="list-group-item" key={item.item_id}>
                                         {/* <div className="card"> */}
@@ -138,4 +106,20 @@ class Cart extends Component {
 
 }
 
-export default Cart;
+const mapStateToProps = state => {
+    return { 
+        items: state.cart.items,
+        orderId: state.cart.orderId,
+        cart_totalPrice: state.cart.cart_totalPrice,
+        emptyCart: state.cart.emptyCart,
+        orderSubmitted: state.cart.orderSubmitted
+    };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+    cartItems: () => dispatch(cartActions.cartItems()),
+    cartTotal: () => dispatch(cartActions.cartTotal()),
+    submitOrder: data => dispatch(cartActions.submitOrder(data))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Cart);
