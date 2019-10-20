@@ -229,9 +229,9 @@ class OwnerProfile extends Component {
     render() {
 
         let redirectVar = null;
-        if (!cookie.load('cookie')) {
-            redirectVar = <Redirect to="/" />
-        }
+        // if (!cookie.load('cookie')) {
+        //     redirectVar = <Redirect to="/" />
+        // }
 
         let profile_image = null;
         if (this.state.profile_image === null) {
