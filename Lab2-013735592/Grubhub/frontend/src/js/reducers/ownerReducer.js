@@ -1,15 +1,15 @@
 import actionTypes from '../constants/index';
 
 const initialState = {
-    client_email: '',
+    owner_email: '',
     password: '',
     authFlag: false
 };
 
-const clientReducer = (state = initialState, action) => {
+const ownerReducer = (state = initialState, action) => {
     let newState;
     switch(action.type) {
-        case actionTypes.LOGIN_USER:
+        case actionTypes.LOGIN_OWNER:
             // newState = action.payload;
             // // let authFlag = action.payload;
             // newState.authFlag = true;
@@ -24,4 +24,4 @@ const clientReducer = (state = initialState, action) => {
     return state;
 };
 
-export default clientReducer;
+export default ownerReducer;

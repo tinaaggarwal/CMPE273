@@ -4,6 +4,8 @@ import axios from 'axios';
 // import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import './OwnerSignup.css';
+import { ownerActions } from '../../js/actions/index';
+import  { connect } from 'react-redux';
 
 class OwnerSignup extends Component {
     //call the constructor method
@@ -86,32 +88,12 @@ class OwnerSignup extends Component {
             restaurantZipCode: this.state.restaurantZipCode,
             password: this.state.password
         }
-        //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/ownerSignup', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    this.setState({
-                        authFlag: true
-                    })
-                } else {
-                    this.setState({
-                        authFlag: false
-                    })
-                }
-            });
+        this.props.signupOwner(data);
     };
 
     render() {
-        let redirectvar;
-        if (this.state.authFlag) {
-            redirectvar = <Redirect to="/ownerLogin" />;
-        }
         return (
             <div>
-                {redirectvar}
                 <br />
                 <br />
                 <br />
@@ -158,5 +140,8 @@ class OwnerSignup extends Component {
     }
 }
 
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    signupOwner: payload => dispatch(ownerActions.signupOwner(payload, ownProps))
+});
 
-export default OwnerSignup;
+export default connect(null, mapDispatchToProps)(OwnerSignup);

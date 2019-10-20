@@ -4,7 +4,8 @@ import axios from 'axios';
 // import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import './ClientSignup.css';
-
+import { clientActions } from '../../js/actions/index';
+import  { connect } from 'react-redux';
 class ClientSignup extends Component {
     //call the constructor method
     constructor(props) {
@@ -64,36 +65,17 @@ class ClientSignup extends Component {
             email: this.state.email,
             password: this.state.password
         }
-        //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/clientSignup', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    this.setState({
-                        authFlag: true
-                    })
-                } else {
-                    this.setState({
-                        authFlag: false
-                    })
-                }
-            });
+
+        this.props.signupClient(data);
     };
 
     render() {
-        let redirectvar;
-        if (this.state.authFlag) {
-            redirectvar = <Redirect to="/login" />;
-        }
         return (
             <div>
-                {redirectvar}
                 <br />
                 <br />
                 <br />
-                <div class="container">
+                <div className="container">
                     <div className="login-form">
                         <div className="main-div">
                             <div className="panel">
@@ -128,5 +110,8 @@ class ClientSignup extends Component {
     }
 }
 
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    signupClient: payload => dispatch(clientActions.signupClient(payload, ownProps))
+});
 
-export default ClientSignup;
+export default connect(null, mapDispatchToProps)(ClientSignup);

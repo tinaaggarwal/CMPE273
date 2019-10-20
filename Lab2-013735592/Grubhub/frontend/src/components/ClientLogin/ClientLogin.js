@@ -61,15 +61,8 @@ class ClientLogin extends Component {
 
     render() {
 
-        console.log(this.props.authFlag)
-        //redirect based on successful login
         let redirectVar = null;
-        let redirect = null;
-        if(this.props.authFlag === true){
-            redirect = true;
-        }
-        console.log(redirect)
-        if (redirect) {
+        if (this.props.authFlag) {
             redirectVar = <Redirect to="/home" />
         }
 

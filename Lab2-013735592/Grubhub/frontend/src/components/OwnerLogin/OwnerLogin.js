@@ -3,6 +3,8 @@ import axios from 'axios';
 // import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
+import { ownerActions } from '../../js/actions/index';
+import  { connect } from 'react-redux';
 
 class OwnerLogin extends Component {
 
@@ -13,7 +15,6 @@ class OwnerLogin extends Component {
         this.state = {
             email: "",
             password: "",
-            authFlag: false
         }
         //Bind the handlers to this class
         this.emailChangeHandler = this.emailChangeHandler.bind(this);
@@ -21,12 +22,6 @@ class OwnerLogin extends Component {
         this.submitLogin = this.submitLogin.bind(this);
     }
 
-    //Call the Will Mount to set the auth Flag to false
-    componentWillMount() {
-        this.setState({
-            authFlag: false
-        })
-    }
     //email change handler to update state variable with the text entered by the user
     emailChangeHandler = (e) => {
         this.setState({
@@ -48,28 +43,13 @@ class OwnerLogin extends Component {
             email: this.state.email,
             password: this.state.password
         }
-        //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/ownerLogin', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    this.setState({
-                        authFlag: true
-                    })
-                } else {
-                    this.setState({
-                        authFlag: false
-                    })
-                }
-            });
+        this.props.loginOwner(data);
     }
 
     render() {
         //redirect based on successful login
         let redirectVar = null;
-        if (this.state.authFlag) {
+        if (this.props.authFlag) {
             redirectVar = <Redirect to="/ownerAccount" />
         }
         return (
@@ -106,4 +86,14 @@ class OwnerLogin extends Component {
     }
 }
 
-export default OwnerLogin;
+const mapStateToProps = state => {
+    return { 
+        authFlag: state.owner.authFlag
+    };
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    loginOwner: payload => dispatch(ownerActions.loginOwner(payload, ownProps))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(OwnerLogin);
