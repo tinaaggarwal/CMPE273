@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import Orders from './Orders';
 import { ownerOrderActions } from '../../js/actions/index';
 import { connect } from 'react-redux';
-import axios from 'axios';
-
 
 class UpcomingOrders extends Component {
 

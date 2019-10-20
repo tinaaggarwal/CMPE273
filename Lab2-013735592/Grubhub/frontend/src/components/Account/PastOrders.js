@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Orders from './Orders';
-import axios from 'axios';
 import { clientOrderActions } from '../../js/actions/index';
 import  { connect } from 'react-redux';
 
