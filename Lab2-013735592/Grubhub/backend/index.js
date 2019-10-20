@@ -394,11 +394,11 @@ app.post('/userAddAddress', function (req, res) {
     console.log("Inside Insert Address Handler");
 
     var sql = "UPDATE client_update SET street_address = " + mysql.escape(req.body.street_address) +
-    ", apt = " +  mysql.escape(req.body.apt) + ", city = " +  mysql.escape(req.body.city) +
-    ", state = " +  mysql.escape(req.body.state) + ", zip_code = " +  mysql.escape(req.body.zip_code) +
-    ", phone = " +  mysql.escape(req.body.phone) + ", cross_street = " +  mysql.escape(req.body.cross_street) +
-    ", delivery_instructions = " +  mysql.escape(req.body.delivery_instructions) + ", address_name = " +  mysql.escape(req.body.address_name) +
-    " WHERE client_email = " + mysql.escape(clientEmail);
+        ", apt = " + mysql.escape(req.body.apt) + ", city = " + mysql.escape(req.body.city) +
+        ", state = " + mysql.escape(req.body.state) + ", zip_code = " + mysql.escape(req.body.zip_code) +
+        ", phone = " + mysql.escape(req.body.phone) + ", cross_street = " + mysql.escape(req.body.cross_street) +
+        ", delivery_instructions = " + mysql.escape(req.body.delivery_instructions) + ", address_name = " + mysql.escape(req.body.address_name) +
+        " WHERE client_email = " + mysql.escape(clientEmail);
 
     console.log(sql)
     pool.query(sql, function (err, result) {
@@ -978,10 +978,10 @@ app.get('/cartItems', function (req, res) {
                     })
                     res.end("Could Not Get Connection Object");
                 } else {
-                    if(result.length === 0){
+                    if (result.length === 0) {
                         console.log('empty')
                         res.end('Cart is empty')
-                    } else{
+                    } else {
                         res.writeHead(200, {
                             'Content-Type': 'application/json'
                         })
@@ -1194,25 +1194,31 @@ app.post('/itemsInOrders', function (req, res) {
     console.log("Inside get orders with list of items Request Handler");
     console.log('array of orderids..........', req.body.order_ids)
 
-    var sql = "SELECT order_details_table.order_id, order_details_table.item_id, item_table.item_image, order_details_table.item_name, order_details_table.item_quantity, order_details_table.item_total_price from order_details_table, item_table WHERE order_id in (" + req.body.order_ids + ") and order_details_table.item_id = item_table.item_id";
+    if (req.body.order_ids.length === 0) {
+        console.log('empty order ids array')
+        res.writeHead(204, {
+            'Content-Type': 'text/plain'
+        })
+        res.end('No upcoming orders')
+    } else {
+        var sql = "SELECT order_details_table.order_id, order_details_table.item_id, item_table.item_image, order_details_table.item_name, order_details_table.item_quantity, order_details_table.item_total_price from order_details_table, item_table WHERE order_id in (" + req.body.order_ids + ") and order_details_table.item_id = item_table.item_id";
 
-    console.log(sql)
+        console.log(sql)
 
-    pool.query(sql, function (err, result) {
-        if (err) {
-            res.writeHead(400, {
-                'Content-Type': 'text/plain'
-            })
-            res.end("Could Not Get Connection Object");
-        } else {
-            res.writeHead(200, {
-                'Content-Type': 'application/json'
-            })
-
-            res.end(JSON.stringify(result));
-
-        }
-    });
+        pool.query(sql, function (err, result) {
+            if (err) {
+                res.writeHead(400, {
+                    'Content-Type': 'text/plain'
+                })
+                res.end("Could Not Get Connection Object");
+            } else {
+                res.writeHead(200, {
+                    'Content-Type': 'application/json'
+                })
+                res.end(JSON.stringify(result));
+            }
+        });
+    }
 });
 
 app.post('/updateOrderStatus', function (req, res) {
