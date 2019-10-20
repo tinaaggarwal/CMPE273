@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import SectionsModal from './SectionsModal';
-import axios from 'axios';
 import './OwnerProfile.css';
+import { ownerMenuActions } from '../../js/actions/index';
+import  { connect } from 'react-redux';
 
 class Sections extends Component {
 
@@ -30,13 +31,8 @@ class Sections extends Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:3001/ownerSections')
-            .then((response) => {
-                console.log(response.data);
-                this.setState({
-                    sections: response.data
-                });
-            });
+
+        this.props.ownerSections();
 
     }
 
@@ -62,7 +58,7 @@ class Sections extends Component {
 
         if(e.target.name == 'Update') {
 
-            const sectionToEdit = this.state.sections.filter(section => {
+            const sectionToEdit = this.props.sections.filter(section => {
                 return section.section_id == e.target.id;
               });
 
@@ -86,23 +82,9 @@ class Sections extends Component {
             section_name: this.state.sectionName,
             section_description: this.state.sectionDescription
         }
-        //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/ownerAddSection', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    this.setState({
-                        authFlag: true
-                    })
-                } else {
-                    this.setState({
-                        authFlag: false,
-                        errorMessage: true
-                    })
-                }
-            });
+        
+        this.props.ownerAddSection(data);
+
         this.showSectionsModal();
         window.location.reload();
     };
@@ -115,23 +97,8 @@ class Sections extends Component {
             section_name: this.state.sectionName,
             section_description: this.state.sectionDescription
         }
-        //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/ownerUpdateSection', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    this.setState({
-                        updatedMessage: true
-                    })
-                } else {
-                    this.setState({
-                        authFlag: false,
-                        errorMessage: true
-                    })
-                }
-            });
+        this.props.ownerUpdateSection(data);
+
         this.showSectionsModal();
         window.location.reload();
     };
@@ -142,24 +109,10 @@ class Sections extends Component {
         const data = {
             deleteId: e.target.id
         }
+
         console.log(data.deleteId)
-        //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/ownerDeleteSection', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    this.setState({
-                        deletedMessage: true
-                    })
-                } else {
-                    this.setState({
-                        authFlag: false,
-                        errorMessage: true
-                    })
-                }
-            });
+        this.props.ownerDeleteSection(data);
+
         window.location.reload();
     };
 
@@ -168,24 +121,24 @@ class Sections extends Component {
         let sectionsList;
         let message = null;
         
-        if (this.state.authFlag) {
+        if (this.props.authFlag) {
             message = <p>Section added !!!</p>
         }
         
-        if (this.state.errorMessage) {
+        if (this.props.errorMessage) {
             message = <p>Failed, try again!</p>
         }
 
-        if (this.state.updatedMessage) {
+        if (this.props.updatedMessage) {
             message = <p>Section successfully updated!</p>
         }
 
-        if (this.state.deletedMessage) {
+        if (this.props.deletedMessage) {
             message = <p>Section successfully deleted!</p>
         }
 
-        if (this.state.sections.length > 0) {
-            sectionsList = this.state.sections.map((section) =>
+        if (this.props.sections.length > 0) {
+            sectionsList = this.props.sections.map((section) =>
                 <li className="list-group-item" key={section.section_id}>
                     <p>{section.section_name}</p>
                     <p>{section.section_description}</p>
@@ -226,4 +179,20 @@ class Sections extends Component {
     }
 }
 
-export default Sections;
+const mapStateToProps = state => {
+    return { 
+        sections: state.ownerMenu.sections,
+        deletedMessage: state.ownerMenu.deletedMessage,
+        errorMessage: state.ownerMenu.errorMessage,
+        authFlag: state.ownerMenu.authFlag
+    };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+    ownerSections: () => dispatch(ownerMenuActions.ownerSections()),
+    ownerAddSection: data => dispatch(ownerMenuActions.ownerAddSection(data)),
+    ownerUpdateSection: data => dispatch(ownerMenuActions.ownerUpdateSection(data)),
+    ownerDeleteSection: data => dispatch(ownerMenuActions.ownerDeleteSection(data))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sections);

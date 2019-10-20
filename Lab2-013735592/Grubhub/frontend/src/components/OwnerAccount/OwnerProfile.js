@@ -6,6 +6,8 @@ import ImageUploader from 'react-images-upload';
 import Image from 'react-bootstrap/Image';
 import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
+import { ownerProfileActions } from '../../js/actions/index';
+import  { connect } from 'react-redux';
 
 class OwnerProfile extends Component {
 
@@ -41,21 +43,23 @@ class OwnerProfile extends Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:3001/ownerUpdate')
-            .then((response) => {
-                console.log((response.data))
-                this.setState({
-                    firstName: (response.data[0]).first_name,
-                    lastName: (response.data[0]).last_name,
-                    email: (response.data[0]).owner_email,
-                    phone: (response.data[0]).phone,
-                    restName: (response.data[0]).rest_name,
-                    cuisine: (response.data[0]).cuisine,
-                    rest_image: (response.data[0]).rest_image,
-                    profile_image: (response.data[0]).profile_image
-                });
-            })
+        this.props.ownerUpdate();
     }
+
+    componentWillReceiveProps(nextProps){
+        if (nextProps.updated) {
+          this.setState({ 
+              firstName: nextProps.firstName,
+              lastName: nextProps.lastName,
+              email: nextProps.email,
+              phone: nextProps.phone,
+              restName: nextProps.restName,
+              cuisine: nextProps.cuisine,
+              rest_image: nextProps.rest_image,
+              email: nextProps.email
+            })
+        }
+      }
 
     uploadProfileImage = () => {
         const uploaders = this.state.pictures.map(picture => {
@@ -206,22 +210,9 @@ class OwnerProfile extends Component {
             rest_name: this.state.restName,
             cuisine: this.state.cuisine
         }
-        //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/ownerUpdateProfile', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    this.setState({
-                        authFlag: true
-                    })
-                } else {
-                    this.setState({
-                        authFlag: false
-                    })
-                }
-            });
+
+        this.props.ownerUpdateProfile(data);
+
         this.showEdit()
 
     };
@@ -327,4 +318,24 @@ class OwnerProfile extends Component {
     }
 }
 
-export default OwnerProfile;
+const mapStateToProps = state => {
+    return { 
+        updated: state.ownerProfile.updated,
+        firstName: state.ownerProfile.firstName,
+        lastName: state.ownerProfile.lastName,
+        email: state.ownerProfile.email,
+        phone: state.ownerProfile.phone,
+        restName: state.ownerProfile.restName,
+        cuisine: state.ownerProfile.cuisine,
+        rest_image: state.ownerProfile.rest_image,
+        profile_image: state.ownerProfile.profile_image
+    };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+    ownerUpdate: () => dispatch(ownerProfileActions.ownerUpdate()),
+    ownerUpdateProfile: data => dispatch(ownerProfileActions.ownerUpdateProfile(data))
+
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(OwnerProfile);

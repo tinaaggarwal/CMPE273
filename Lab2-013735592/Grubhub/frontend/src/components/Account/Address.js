@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './Address.css';
 import AddressModal from './AddressModal';
-import axios from 'axios';
 import { clientProfileActions } from '../../js/actions/index';
 import  { connect } from 'react-redux';
 

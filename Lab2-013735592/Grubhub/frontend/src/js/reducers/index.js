@@ -8,7 +8,9 @@ import restaurantMenu from './restaurantMenuReducer';
 import cart from './cartReducer';
 import clientProfile from './clientProfileReducer';
 import clientOrder from './clientOrderReducer';
+import ownerProfile from './ownerProfileReducer';
 import ownerOrder from './ownerOrderReducer';
+import ownerMenu from './ownerMenuReducer';
 
 const rootReducer = combineReducers({
     client,
@@ -18,7 +20,9 @@ const rootReducer = combineReducers({
     cart,
     clientProfile,
     clientOrder,
-    ownerOrder
+    ownerOrder,
+    ownerProfile,
+    ownerMenu
 });
 
 export default rootReducer;

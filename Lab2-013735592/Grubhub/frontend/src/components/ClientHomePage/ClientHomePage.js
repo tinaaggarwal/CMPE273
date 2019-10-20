@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import cookie from 'react-cookies';
 import { Link } from 'react-router-dom';
 import './ClientHomePage.css';
 import { homePageActions } from '../../js/actions/index';

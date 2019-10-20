@@ -5,7 +5,9 @@ import * as restaurantMenuActions from './restaurantMenuActions';
 import * as cartActions from './cartActions';
 import * as clientProfileActions from './clientProfileActions';
 import * as clientOrderActions from './clientOrderActions';
+import * as ownerProfileActions from './ownerProfileActions';
 import * as ownerOrderActions from './ownerOrderActions';
+import * as ownerMenuActions from './ownerMenuActions';
 
 export {
     clientActions,
@@ -15,5 +17,7 @@ export {
     cartActions,
     clientProfileActions,
     clientOrderActions,
-    ownerOrderActions
+    ownerOrderActions,
+    ownerProfileActions,
+    ownerMenuActions
 };

@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
-import axios from 'axios';
 import { cartActions } from '../../js/actions/index';
 import  { connect } from 'react-redux';
 
