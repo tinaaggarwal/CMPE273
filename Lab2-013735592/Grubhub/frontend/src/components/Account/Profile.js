@@ -6,12 +6,14 @@ import EditEmail from './EditProfile/EditEmail';
 import EditPassword from './EditProfile/EditPassword';
 import ImageUploader from 'react-images-upload';
 import Image from 'react-bootstrap/Image'
-
+import { clientProfileActions } from '../../js/actions/index';
+import  { connect } from 'react-redux';
 
 class Profile extends Component {
 
     constructor(props) {
         super(props);
+        console.log(this.props)
         this.state = {
             firstName: "",
             lastName: "",
@@ -44,24 +46,23 @@ class Profile extends Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:3001/userUpdate')
-            .then((response) => {
-                console.log((response.data))
-                this.setState({
-                    firstName: (response.data[0]).first_name,
-                    lastName: (response.data[0]).last_name,
-                    email: (response.data[0]).client_email,
-                });
-            })
 
-        axios.get('http://localhost:3001/userProfileImage')
-            .then((response) => {
-                console.log((response.data))
-                this.setState({
-                    profile_image: (response.data[0]).profile_image
-                });
-            })
+        this.props.userUpdate();
+
+        this.props.userProfileImage();
+
     }
+
+    componentWillReceiveProps(nextProps){
+        if (nextProps.updated) {
+          this.setState({ 
+              firstName: nextProps.firstName,
+              lastName: nextProps.lastName,
+              profile_image: nextProps.profile_image,
+              email: nextProps.email
+            })
+        }
+      }
 
     uploadImage = () => {
         const uploaders = this.state.pictures.map(picture => {
@@ -180,24 +181,9 @@ class Profile extends Component {
             first_name: this.state.firstName,
             last_name: this.state.lastName
         }
-        //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/userUpdateName', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    this.setState({
-                        authFlag: true
-                    })
-                } else {
-                    this.setState({
-                        authFlag: false
-                    })
-                }
-            });
-        this.showEditName()
 
+        this.props.userUpdateName(data);
+        this.showEditName()
     };
 
     //submit Login handler to send a request to the node backend
@@ -208,22 +194,9 @@ class Profile extends Component {
             client_email: this.state.email,
             confirmEmail: this.state.confirmEmail
         }
-        //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/userUpdateEmail', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    this.setState({
-                        authFlag: true
-                    })
-                } else {
-                    this.setState({
-                        authFlag: false
-                    })
-                }
-            });
+
+        this.props.userUpdateEmail(data);
+
         this.showEditEmail()
 
     };
@@ -237,22 +210,8 @@ class Profile extends Component {
             newPassword: this.state.newPassword,
             confirmPassword: this.state.confirmPassword
         }
-        //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/userUpdatePassword', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    this.setState({
-                        authFlag: true
-                    })
-                } else {
-                    this.setState({
-                        authFlag: false
-                    })
-                }
-            });
+        this.props.userUpdatePassword(data);
+
         this.showEditPassword()
 
     };
@@ -353,4 +312,23 @@ class Profile extends Component {
     }
 }
 
-export default Profile;
+const mapStateToProps = state => {
+    return { 
+        updated: state.clientProfile.updated,
+        firstName: state.clientProfile.firstName,
+        lastName: state.clientProfile.lastName,
+        email: state.clientProfile.email,
+        profile_image: state.clientProfile.profile_image
+    };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+    userUpdate: () => dispatch(clientProfileActions.userUpdate()),
+    userUpdateName: data => dispatch(clientProfileActions.userUpdateName(data)),
+    userProfileImage: () => dispatch(clientProfileActions.userProfileImage()),
+    userUpdateEmail: data => dispatch(clientProfileActions.userUpdateEmail(data)),
+    userUpdatePassword: data => dispatch(clientProfileActions.userUpdatePassword(data)),
+
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

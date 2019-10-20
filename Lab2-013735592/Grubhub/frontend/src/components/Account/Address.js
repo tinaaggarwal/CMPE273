@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import './Address.css';
 import AddressModal from './AddressModal';
 import axios from 'axios';
-
+import { clientProfileActions } from '../../js/actions/index';
+import  { connect } from 'react-redux';
 
 class Address extends Component {
 
@@ -40,22 +41,26 @@ class Address extends Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:3001/addressUpdate')
-            .then((response) => {
-                console.log((response.data))
-                this.setState({
-                    street_address: (response.data[0]).street_address,
-                    apt: (response.data[0]).apt,
-                    city: (response.data[0]).city,
-                    state: (response.data[0]).state,
-                    zip_code: (response.data[0]).zip_code,
-                    phone: (response.data[0]).phone,
-                    cross_street: (response.data[0]).cross_street,
-                    delivery_instructions: (response.data[0]).delivery_instructions,
-                    address_name: (response.data[0]).address_name
-                });
-            })
+
+        this.props.addressUpdate();
+
     }
+
+    componentWillReceiveProps(nextProps){
+        if (nextProps.updated) {
+          this.setState({ 
+              street_address: nextProps.street_address,
+              apt: nextProps.apt,
+              city: nextProps.city,
+              state: nextProps.state,
+              zip_code: nextProps.zip_code,
+              phone: nextProps.phone,
+              cross_street: nextProps.cross_street,
+              delivery_instructions: nextProps.delivery_instructions,
+              address_name: nextProps.address_name
+            })
+        }
+      }
 
     showAddressModal() {
         this.setState({
@@ -139,22 +144,8 @@ class Address extends Component {
             delivery_instructions: this.state.delivery_instructions,
             address_name: this.state.address_name
         }
-        //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/userUpdateAddress', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    this.setState({
-                        authFlag: true
-                    })
-                } else {
-                    this.setState({
-                        authFlag: false
-                    })
-                }
-            });
+
+        this.props.userUpdateAddress(data);
         this.showAddressModal()
 
     };
@@ -173,22 +164,8 @@ class Address extends Component {
             delivery_instructions: this.state.delivery_instructions,
             address_name: this.state.address_name
         }
-        //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/userAddAddress', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    this.setState({
-                        authFlag: true
-                    })
-                } else {
-                    this.setState({
-                        authFlag: false
-                    })
-                }
-            });
+
+        this.props.userAddAddress(data);
         this.showAddressModal()
     };
 
@@ -256,4 +233,26 @@ class Address extends Component {
     }
 }
 
-export default Address;
+const mapStateToProps = state => {
+    return { 
+        updated: state.clientProfile.updated,
+        street_address: state.clientProfile.street_address,
+        apt: state.clientProfile.apt,
+        city: state.clientProfile.city,
+        state: state.clientProfile.state,
+        zip_code: state.clientProfile.zip_code,
+        phone: state.clientProfile.phone,
+        cross_street: state.clientProfile.cross_street,
+        delivery_instructions: state.clientProfile.delivery_instructions,
+        address_name: state.clientProfile.address_name        
+    };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+    addressUpdate: () => dispatch(clientProfileActions.addressUpdate()),
+    userUpdateAddress: data => dispatch(clientProfileActions.userUpdateAddress(data)),
+    userAddAddress: data => dispatch(clientProfileActions.userAddAddress(data)),
+
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Address);
