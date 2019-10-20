@@ -296,8 +296,8 @@ app.post('/userUpdateName', function (req, res) {
 
 app.post('/userUpdateEmail', function (req, res) {
     console.log("Inside Update email Handler");
-    var sql = "UPDATE client_update SET client_email = '" + req.body.client_email + "'  WHERE client_email = '" + clientEmail + "' AND " + "'" + req.body.confirmEmail + "'" + " = '" + req.body.client_email + "'";
-    var sql1 = "UPDATE client_signup SET client_email = '" + req.body.client_email + "'  WHERE client_email = '" + clientEmail + "' AND " + "'" + req.body.confirmEmail + "'" + " = '" + req.body.client_email + "'";
+    var sql = "UPDATE client_update SET client_email = '" + req.body.client_email + "' WHERE client_email = '" + clientEmail + "' AND " + "'" + req.body.confirmEmail + "'" + " = '" + req.body.client_email + "'";
+    var sql1 = "UPDATE client_signup SET client_email = '" + req.body.client_email + "' WHERE client_email = '" + clientEmail + "' AND " + "'" + req.body.confirmEmail + "'" + " = '" + req.body.client_email + "'";
     console.log(sql)
     console.log(sql1)
     pool.query(sql1)
@@ -318,7 +318,7 @@ app.post('/userUpdateEmail', function (req, res) {
 
 app.post('/userUpdatePassword', function (req, res) {
     console.log("Inside Update Password Handler");
-    var sql = "UPDATE client_signup SET password = '" + req.body.newPassword + "'  WHERE password = '" + req.body.password + "' AND " + "'" + req.body.newPassword + "'" + " = '" + req.body.confirmPassword + "'";
+    var sql = "UPDATE client_signup SET password = '" + req.body.newPassword + "' WHERE password = '" + req.body.password + "' AND " + "'" + req.body.newPassword + "'" + " = '" + req.body.confirmPassword + "'";
     console.log(sql)
     pool.query(sql, function (err, result) {
         if (err) {
@@ -393,11 +393,12 @@ app.post('/userUpdateAddress', function (req, res) {
 app.post('/userAddAddress', function (req, res) {
     console.log("Inside Insert Address Handler");
 
-    var sql = "INSERT INTO client_update VALUES ( " +
-        mysql.escape(clientEmail) + " , " + mysql.escape(req.body.street_address) + " , " + mysql.escape(req.body.apt)
-        + " , " + mysql.escape(req.body.city) + " , " + mysql.escape(req.body.state) + " , " + mysql.escape(req.body.zip_code)
-        + " , " + mysql.escape(req.body.phone) + " , " + mysql.escape(req.body.cross_street) +
-        " , " + mysql.escape(req.body.delivery_instructions) + " , " + mysql.escape(req.body.address_name) + " ) ";
+    var sql = "UPDATE client_update SET street_address = " + mysql.escape(req.body.street_address) +
+    ", apt = " +  mysql.escape(req.body.apt) + ", city = " +  mysql.escape(req.body.city) +
+    ", state = " +  mysql.escape(req.body.state) + ", zip_code = " +  mysql.escape(req.body.zip_code) +
+    ", phone = " +  mysql.escape(req.body.phone) + ", cross_street = " +  mysql.escape(req.body.cross_street) +
+    ", delivery_instructions = " +  mysql.escape(req.body.delivery_instructions) + ", address_name = " +  mysql.escape(req.body.address_name) +
+    " WHERE client_email = " + mysql.escape(clientEmail);
 
     console.log(sql)
     pool.query(sql, function (err, result) {
