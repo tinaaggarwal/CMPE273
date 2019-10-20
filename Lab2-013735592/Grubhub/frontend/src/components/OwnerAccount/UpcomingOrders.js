@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import Orders from './Orders';
+import { ownerOrderActions } from '../../js/actions/index';
+import { connect } from 'react-redux';
 import axios from 'axios';
+
 
 class UpcomingOrders extends Component {
 
@@ -19,41 +22,10 @@ class UpcomingOrders extends Component {
 
     componentDidMount() {
 
-        axios.get('http://localhost:3001/upcomingOrdersForOwner')
-            .then((response) => {
-                console.log(response.data);
-                let orderIds = response.data.map(obj => {
-                    return obj.order_id;
-                });
-                this.setState({
-                    orders: response.data,
-                    order_ids: orderIds
-                });
-            }).then(() => {
-                console.log(this.state.order_ids);
-                const data = {
-                    order_ids: this.state.order_ids
-                }
+        this.props.upcomingOrdersForOwner().then(() => {
+            this.props.itemsInOrders(this.props.order_ids)
+        });
 
-                //set the with credentials to true
-                axios.defaults.withCredentials = true;
-                //make a post request with the user data
-                axios.post('http://localhost:3001/itemsInOrders', data)
-                    .then(response => {
-                        console.log("Status Code : ", response.status);
-                        if (response.status === 200) {
-                            console.log(response.data);
-                            this.setState({
-                                order_details: response.data,
-                                authFlag: true
-                            })
-                        } else {
-                            this.setState({
-                                authFlag: false
-                            })
-                        }
-                    });
-            });
     }
 
     statusChangeHandler = (e) => {
@@ -63,23 +35,7 @@ class UpcomingOrders extends Component {
             orderIdToUpdate: e.target.id
         }
 
-        //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/updateOrderStatus', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    console.log(response.data);
-                    this.setState({
-                        authFlag: true
-                    })
-                } else {
-                    this.setState({
-                        authFlag: false
-                    })
-                }
-            });
+        this.props.updateOrderStatus(data);
 
         window.location.reload();
 
@@ -92,23 +48,7 @@ class UpcomingOrders extends Component {
             orderIdToUpdate: e.target.id
         }
 
-        //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/updateOrderStatus', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    console.log(response.data);
-                    this.setState({
-                        authFlag: true
-                    })
-                } else {
-                    this.setState({
-                        authFlag: false
-                    })
-                }
-            });
+        this.props.updateOrderStatus(data);
 
         window.location.reload();
 
@@ -118,8 +58,8 @@ class UpcomingOrders extends Component {
         return (
             <div className="container">
                 <Orders
-                    orders={this.state.orders}
-                    order_details={this.state.order_details}
+                    orders={this.props.orders}
+                    order_details={this.props.order_details}
                     type="Upcoming orders"
                     statusChangeHandler={this.statusChangeHandler}
                     cancelBtnHandler={this.cancelBtnHandler}/>
@@ -128,4 +68,18 @@ class UpcomingOrders extends Component {
     }
 }
 
-export default UpcomingOrders;
+const mapStateToProps = state => {
+    return {
+        orders: state.ownerOrder.orders,
+        order_ids: state.ownerOrder.order_ids,
+        order_details: state.ownerOrder.order_details
+    };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+    upcomingOrdersForOwner: () => dispatch(ownerOrderActions.upcomingOrdersForOwner()),
+    itemsInOrders: data => dispatch(ownerOrderActions.itemsInOrders(data)),
+    updateOrderStatus: data => dispatch(ownerOrderActions.updateOrderStatus(data))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(UpcomingOrders);
