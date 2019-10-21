@@ -50,6 +50,23 @@ export const userProfileImage = () => {
     }
 }
 
+export const userUpdateProfileImage = (payload) => {
+    return dispatch => {
+        console.log('payload', payload)
+        return axios.post(`${ROOT_URL}/userUpdateProfileImage`, payload)
+            .then(response => {
+                console.log("Status Code : ", response.status);
+                if (response.status === 200) {
+                    dispatch({
+                        type: actionTypes.USER_UPDATE_PROFILE_IMAGE,
+                        payload: response.data
+                    });
+                } 
+            });
+
+    }
+}
+
 export const userUpdateEmail = (payload) => {
     return dispatch => {
         console.log('payload', payload)

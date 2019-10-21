@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import './AddItem.css';
 import ImageUploader from 'react-images-upload';
-import axios from 'axios';
-import cookie from 'react-cookies';
-import { Redirect } from 'react-router';
+import { ownerMenuActions } from '../../js/actions/index';
+import { imageActions } from '../../js/actions/index';
+import  { connect } from 'react-redux';
 
 class AddItem extends Component {
     constructor(props) {
@@ -28,13 +28,9 @@ class AddItem extends Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:3001/ownerSections')
-            .then((response) => {
-                console.log(response.data);
-                this.setState({
-                    sections: response.data
-                });
-            });
+
+        this.props.ownerSections();
+
     }
 
     itemNameChangeHandler = (e) => {
@@ -57,7 +53,7 @@ class AddItem extends Component {
 
     itemSectionChangeHandler = (e) => {
 
-        var sectionID = this.state.sections.filter(section => {
+        var sectionID = this.props.sections.filter(section => {
             if (e.target.value === section.section_name) {
                 return section.section_id;
             }
@@ -84,36 +80,19 @@ class AddItem extends Component {
             const data = new FormData();
             data.append("image", picture, picture.name);
             console.log(data)
-            // Make an AJAX upload request using Axios
-            axios.post('http://localhost:3001/upload', data)
-                .then(response => {
-                    this.setState({ imageUrl: response.data.imageUrl });
-                }).then(() => {
+
+            this.props.upload(data)
+                .then(() => {
                     const data = {
                         section_id: this.state.section_id,
                         item_name: this.state.item_name,
                         item_description: this.state.item_decription,
                         item_price: this.state.item_price,
-                        item_image: this.state.imageUrl
+                        item_image: this.props.imageUrl
                     }
                     console.log(data);
-                    //set the with credentials to true
-                    axios.defaults.withCredentials = true;
-                    //make a post request with the user data
-                    axios.post('http://localhost:3001/ownerAddItem', data)
-                        .then(response => {
-                            console.log("Status Code : ", response.status);
-                            if (response.status === 200) {
-                                this.setState({
-                                    authFlag: true
-                                })
-                            } else {
-                                this.setState({
-                                    authFlag: false,
-                                    errorMessage: true
-                                })
-                            }
-                        });
+                    this.props.ownerAddItem(data);
+
                 })
         });
     };
@@ -121,13 +100,13 @@ class AddItem extends Component {
     render() {
 
         //if not logged in go to login page
-        let redirectVar = null;
-        if (!cookie.load('cookie')) {
-            redirectVar = <Redirect to="/" />
-        }
+        // let redirectVar = null;
+        // if (!cookie.load('cookie')) {
+        //     redirectVar = <Redirect to="/" />
+        // }
 
         var options = [<option value="---" key="null">---</option>];
-        var moreOptions = this.state.sections.map(section => {
+        var moreOptions = this.props.sections.map(section => {
             return (
                 <option value={section.section_name} key={section.section_name}>{section.section_name}</option>
             )
@@ -136,16 +115,16 @@ class AddItem extends Component {
         options = options.concat(moreOptions);
 
         let message = null;
-        if (this.state.authFlag) {
+        if (this.props.authFlag) {
             message = <p>Item added !!!</p>
         }
-        if (this.state.errorMessage) {
+        if (this.props.errorMessage) {
             message = <p>Cannot add section, try again!</p>
         }
 
         return (
             <div className="divStyle">
-                {redirectVar}
+                {/* {redirectVar} */}
                 <form onSubmit={this.addItem}>
                     <div className="card">
                         <div className="card-body">
@@ -206,4 +185,19 @@ class AddItem extends Component {
 
 }
 
-export default AddItem;
+const mapStateToProps = state => {
+    return { 
+        sections: state.ownerMenu.sections,
+        imageUrl: state.image.imageUrl,
+        errorMessage: state.ownerMenu.errorMessage,
+        authFlag: state.ownerMenu.authFlag
+    };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+    ownerSections: () => dispatch(ownerMenuActions.ownerSections()),
+    upload: data => dispatch(imageActions.upload(data)),
+    ownerAddItem: data => dispatch(ownerMenuActions.ownerAddItem(data))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddItem);

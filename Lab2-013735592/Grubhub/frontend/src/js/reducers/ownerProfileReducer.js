@@ -10,7 +10,9 @@ const initialState = {
     cuisine: "",
     rest_image: [],
     profile_image: [],
-    profileUpdated: false
+    profileUpdated: false,
+    imageUpdated: false,
+    restImageUpdated: false
 };
 
 const ownerProfileReducer = (state = initialState, action) => {
@@ -35,6 +37,18 @@ const ownerProfileReducer = (state = initialState, action) => {
                 profileUpdated: true
             });
 
+        case actionTypes.OWNER_UPDATE_PROFILE_IMAGE:
+            return Object.assign({}, state, {
+                updated: true,
+                imageUpdated: true
+            });
+
+        case actionTypes.OWNER_UPDATE_REST_IMAGE:
+            return Object.assign({}, state, {
+                updated: true,
+                restImageUpdated: true
+            });
+            
         default:
             break;
     }
