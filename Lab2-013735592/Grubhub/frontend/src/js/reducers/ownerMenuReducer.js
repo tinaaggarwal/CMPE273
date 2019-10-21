@@ -21,6 +21,16 @@ const ownerMenuReducer = (state = initialState, action) => {
                 items: action.payload
             });
 
+        case actionTypes.OWNER_ADD_ITEM_SUCCESS:
+            return Object.assign({}, state, {
+                authFlag: true
+            });
+
+        case actionTypes.OWNER_ADD_ITEM_FAIL:
+            return Object.assign({}, state, {
+                errorMessage: true
+            });
+
         case actionTypes.OWNER_DELETE_ITEM_SUCCESS:
             return Object.assign({}, state, {
                 deletedMessage: true

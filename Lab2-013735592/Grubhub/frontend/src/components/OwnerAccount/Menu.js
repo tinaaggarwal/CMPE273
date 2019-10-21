@@ -63,7 +63,7 @@ class Menu extends Component {
                                             <div className="itemDetails">
                                                 <h5 className="card-title">{item.item_name}</h5>
                                                 <h6 className="card-subtitle">{item.item_description}</h6>
-                                                <p className="card-text">{item.item_price}</p>
+                                                <p className="card-text">$ {item.item_price}</p>
                                                 <button onClick={this.submitDeleteItem} id={item.item_id} className="btn btn-link" type="button" name="Update">Delete</button>
                                             </div>
                                         </div>

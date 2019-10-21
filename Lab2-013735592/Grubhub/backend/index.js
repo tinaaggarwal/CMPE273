@@ -66,7 +66,7 @@ var storagePropFiles = multer.diskStorage({
 });
 
 // var rootDirectory = "public/images/";
-var rootDirectory = "/Users/tinaaggarwal/Documents/GitHub/CMPE273/Lab1-013735592/Grubhub/frontend/public/images/";
+var rootDirectory = "/Users/tinaaggarwal/Documents/GitHub/CMPE273/Lab2-013735592/Grubhub/frontend/public/images/";
 
 var uploadPropFiles = multer({
     storage: storagePropFiles

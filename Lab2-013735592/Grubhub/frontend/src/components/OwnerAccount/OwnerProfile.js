@@ -4,10 +4,9 @@ import './OwnerProfile.css';
 import EditProfile from './EditProfile';
 import ImageUploader from 'react-images-upload';
 import Image from 'react-bootstrap/Image';
-import cookie from 'react-cookies';
-import { Redirect } from 'react-router';
 import { ownerProfileActions } from '../../js/actions/index';
-import  { connect } from 'react-redux';
+import { imageActions } from '../../js/actions/index';
+import { connect } from 'react-redux';
 
 class OwnerProfile extends Component {
 
@@ -46,56 +45,38 @@ class OwnerProfile extends Component {
         this.props.ownerUpdate();
     }
 
-    componentWillReceiveProps(nextProps){
+    componentWillReceiveProps(nextProps) {
         if (nextProps.updated) {
-          this.setState({ 
-              firstName: nextProps.firstName,
-              lastName: nextProps.lastName,
-              email: nextProps.email,
-              phone: nextProps.phone,
-              restName: nextProps.restName,
-              cuisine: nextProps.cuisine,
-              rest_image: nextProps.rest_image,
-              email: nextProps.email
+            this.setState({
+                firstName: nextProps.firstName,
+                lastName: nextProps.lastName,
+                email: nextProps.email,
+                phone: nextProps.phone,
+                restName: nextProps.restName,
+                cuisine: nextProps.cuisine,
+                rest_image: nextProps.rest_image,
+                profile_image: nextProps.profile_image
             })
         }
-      }
+    }
 
     uploadProfileImage = () => {
         const uploaders = this.state.pictures.map(picture => {
             const data = new FormData();
             data.append("image", picture, picture.name);
             console.log(data)
-            // Make an AJAX upload request using Axios
-            return axios.post('http://localhost:3001/upload', data)
-                .then(response => {
-                    this.setState({ imageUrl: response.data.imageUrl });
-                }).then(() => {
+
+            this.props.upload(data)
+                .then(() => {
                     const data = {
-                        profile_image: this.state.imageUrl
+                        profile_image: this.props.imageUrl
                     }
-                    //set the with credentials to true
-                    axios.defaults.withCredentials = true;
-                    //make a post request with the user data
-                    axios.post('http://localhost:3001/ownerUpdateProfileImage', data)
-                        .then(response => {
-                            console.log("Status Code : ", response.status);
-                            if (response.status === 200) {
-                                this.setState({
-                                    authFlag: true
-                                })
-                            } else {
-                                this.setState({
-                                    authFlag: false
-                                })
-                            }
-                        });
+                    this.props.ownerUpdateProfileImage(data);
+
+                }).then(() => {
+                    window.location.reload();
                 });
         });
-        axios.all(uploaders).then(() => {
-            window.location.reload();
-        }).catch(err => alert(err.message));
-
     }
 
 
@@ -112,37 +93,18 @@ class OwnerProfile extends Component {
             const data = new FormData();
             data.append("image", picture, picture.name);
             console.log(data)
-            // Make an AJAX upload request using Axios
-            return axios.post('http://localhost:3001/upload', data)
-                .then(response => {
-                    this.setState({ imageUrl: response.data.imageUrl });
-                }).then(() => {
-                    const data = {
-                        rest_image: this.state.imageUrl
-                    }
-                    //set the with credentials to true
-                    axios.defaults.withCredentials = true;
-                    //make a post request with the user data
-                    axios.post('http://localhost:3001/ownerUpdateRestImage', data)
-                        .then(response => {
-                            console.log("Status Code : ", response.status);
-                            if (response.status === 200) {
-                                this.setState({
-                                    authFlag: true
-                                })
-                            } else {
-                                this.setState({
-                                    authFlag: false
-                                })
-                            }
-                        });
-                });
-        });
-        axios.all(uploaders).then(() => {
-            window.location.reload();
-            console.log('done')
-        }).catch(err => alert(err.message));
 
+            this.props.upload(data)
+                .then(() => {
+                    const data = {
+                        rest_image: this.props.imageUrl
+                    }
+                    this.props.ownerUpdateRestImage(data);
+
+                }).then(() => {
+                    window.location.reload();
+                });;
+        });
     }
 
 
@@ -225,7 +187,7 @@ class OwnerProfile extends Component {
         // }
 
         let profile_image = null;
-        if (this.state.profile_image === null) {
+        if (this.props.profile_image === null) {
             profile_image =
                 (
                     <div className="imageUploadPlaceholder">
@@ -242,11 +204,11 @@ class OwnerProfile extends Component {
                         />
                     </div>)
         } else {
-            profile_image = <Image src={this.state.profile_image} roundedCircle className="profileImage" />
+            profile_image = <Image src={this.props.profile_image} roundedCircle className="profileImage" />
         }
 
         let rest_image = null;
-        if (this.state.rest_image === null) {
+        if (this.props.rest_image === null) {
             rest_image =
                 (
                     <ImageUploader
@@ -262,7 +224,7 @@ class OwnerProfile extends Component {
                     />
                 )
         } else {
-            rest_image = <img src={this.state.rest_image} className="restImage" alt={"Restaurant"}/>
+            rest_image = <img src={this.props.rest_image} className="restImage" alt={"Restaurant"} />
         }
 
         return (
@@ -319,7 +281,7 @@ class OwnerProfile extends Component {
 }
 
 const mapStateToProps = state => {
-    return { 
+    return {
         updated: state.ownerProfile.updated,
         firstName: state.ownerProfile.firstName,
         lastName: state.ownerProfile.lastName,
@@ -328,14 +290,17 @@ const mapStateToProps = state => {
         restName: state.ownerProfile.restName,
         cuisine: state.ownerProfile.cuisine,
         rest_image: state.ownerProfile.rest_image,
-        profile_image: state.ownerProfile.profile_image
+        profile_image: state.ownerProfile.profile_image,
+        imageUrl: state.image.imageUrl,
     };
 };
 
 const mapDispatchToProps = (dispatch) => ({
     ownerUpdate: () => dispatch(ownerProfileActions.ownerUpdate()),
-    ownerUpdateProfile: data => dispatch(ownerProfileActions.ownerUpdateProfile(data))
-
+    ownerUpdateProfile: data => dispatch(ownerProfileActions.ownerUpdateProfile(data)),
+    upload: data => dispatch(imageActions.upload(data)),
+    ownerUpdateProfileImage: data => dispatch(ownerProfileActions.ownerUpdateProfileImage(data)),
+    ownerUpdateRestImage: data => dispatch(ownerProfileActions.ownerUpdateRestImage(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(OwnerProfile);

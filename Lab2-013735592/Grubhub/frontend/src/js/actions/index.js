@@ -8,6 +8,7 @@ import * as clientOrderActions from './clientOrderActions';
 import * as ownerProfileActions from './ownerProfileActions';
 import * as ownerOrderActions from './ownerOrderActions';
 import * as ownerMenuActions from './ownerMenuActions';
+import * as imageActions from './imageActions';
 
 export {
     clientActions,
@@ -19,5 +20,6 @@ export {
     clientOrderActions,
     ownerOrderActions,
     ownerProfileActions,
-    ownerMenuActions
+    ownerMenuActions,
+    imageActions
 };

@@ -33,6 +33,26 @@ export const ownerItemsList = () => {
     }
 }
 
+export const ownerAddItem = (payload) => {
+    return dispatch => {
+        console.log('payload', payload)
+        return axios.post(`${ROOT_URL}/ownerAddItem`, payload)
+            .then(response => {
+                console.log("Status Code : ", response.status);
+                if (response.status === 200) {
+                    dispatch({
+                        type: actionTypes.OWNER_ADD_ITEM_SUCCESS,
+                    });
+                } else {
+                    dispatch({
+                        type: actionTypes.OWNER_ADD_ITEM_FAIL,
+                    });
+                } 
+            });
+
+    }
+}
+
 export const ownerDeleteItem = (payload) => {
     return dispatch => {
         console.log('payload', payload)

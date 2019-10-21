@@ -34,3 +34,37 @@ export const ownerUpdateProfile = (payload) => {
 
     }
 }
+
+export const ownerUpdateProfileImage = (payload) => {
+    return dispatch => {
+        console.log('payload', payload)
+        return axios.post(`${ROOT_URL}/ownerUpdateProfileImage`, payload)
+            .then(response => {
+                console.log("Status Code : ", response.status);
+                if (response.status === 200) {
+                    dispatch({
+                        type: actionTypes.OWNER_UPDATE_PROFILE_IMAGE,
+                        payload: response.data
+                    });
+                } 
+            });
+
+    }
+}
+
+export const ownerUpdateRestImage = (payload) => {
+    return dispatch => {
+        console.log('payload', payload)
+        return axios.post(`${ROOT_URL}/ownerUpdateRestImage`, payload)
+            .then(response => {
+                console.log("Status Code : ", response.status);
+                if (response.status === 200) {
+                    dispatch({
+                        type: actionTypes.OWNER_UPDATE_REST_IMAGE,
+                        payload: response.data
+                    });
+                } 
+            });
+
+    }
+}

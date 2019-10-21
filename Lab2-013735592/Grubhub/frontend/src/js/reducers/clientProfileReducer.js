@@ -19,7 +19,8 @@ const initialState = {
     delivery_instructions: "",
     address_name: "",
     addressUpdated: false,
-    addressAdded: false
+    addressAdded: false,
+    imageUpdated: false
 };
 
 const clientProfileReducer = (state = initialState, action) => {
@@ -43,6 +44,12 @@ const clientProfileReducer = (state = initialState, action) => {
             return Object.assign({}, state, {
                 updated: true,
                 profile_image: (action.payload[0]).profile_image
+            });
+
+        case actionTypes.USER_UPDATE_PROFILE_IMAGE:
+            return Object.assign({}, state, {
+                updated: true,
+                imageUpdated: true
             });
 
         case actionTypes.USER_UPDATE_EMAIL:

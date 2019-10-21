@@ -7,6 +7,7 @@ import EditPassword from './EditProfile/EditPassword';
 import ImageUploader from 'react-images-upload';
 import Image from 'react-bootstrap/Image'
 import { clientProfileActions } from '../../js/actions/index';
+import { imageActions } from '../../js/actions/index';
 import  { connect } from 'react-redux';
 
 class Profile extends Component {
@@ -69,36 +70,17 @@ class Profile extends Component {
             const data = new FormData();
             data.append("image", picture, picture.name);
             console.log(data)
-            // Make an AJAX upload request using Axios
-            return axios.post('http://localhost:3001/upload', data)
-                .then(response => {
-                    this.setState({ imageUrl: response.data.imageUrl });
-                }).then(() => {
+            
+            this.props.upload(data)
+                .then(() => {
                     const data = {
-                        profile_image: this.state.imageUrl
+                        profile_image: this.props.imageUrl
                     }
-                    //set the with credentials to true
-                    axios.defaults.withCredentials = true;
-                    //make a post request with the user data
-                    axios.post('http://localhost:3001/userUpdateProfileImage', data)
-                        .then(response => {
-                            console.log("Status Code : ", response.status);
-                            if (response.status === 200) {
-                                this.setState({
-                                    authFlag: true
-                                })
-                            } else {
-                                this.setState({
-                                    authFlag: false
-                                })
-                            }
-                        });
+                    this.props.userUpdateProfileImage(data);
+                }).then(() => {
+                    window.location.reload();
                 });
         });
-        axios.all(uploaders).then(() => {
-            window.location.reload();
-        }).catch(err => alert(err.message));
-
     }
 
 
@@ -219,7 +201,7 @@ class Profile extends Component {
     render() {
 
         let profile_image = null;
-        if (this.state.profile_image === null) {
+        if (this.props.profile_image === null) {
             profile_image =
                 (
                     <div className="imageUploadPlaceholder">
@@ -236,7 +218,7 @@ class Profile extends Component {
                         />
                     </div>)
         } else {
-            profile_image = <Image src={this.state.profile_image} roundedCircle className="profileImage" />
+            profile_image = <Image src={this.props.profile_image} roundedCircle className="profileImage" />
         }
 
         return (
@@ -318,7 +300,8 @@ const mapStateToProps = state => {
         firstName: state.clientProfile.firstName,
         lastName: state.clientProfile.lastName,
         email: state.clientProfile.email,
-        profile_image: state.clientProfile.profile_image
+        profile_image: state.clientProfile.profile_image,
+        imageUrl: state.image.imageUrl
     };
 };
 
@@ -326,9 +309,10 @@ const mapDispatchToProps = (dispatch) => ({
     userUpdate: () => dispatch(clientProfileActions.userUpdate()),
     userUpdateName: data => dispatch(clientProfileActions.userUpdateName(data)),
     userProfileImage: () => dispatch(clientProfileActions.userProfileImage()),
+    userUpdateProfileImage: data => dispatch(clientProfileActions.userUpdateProfileImage(data)),
     userUpdateEmail: data => dispatch(clientProfileActions.userUpdateEmail(data)),
     userUpdatePassword: data => dispatch(clientProfileActions.userUpdatePassword(data)),
-
+    upload: data => dispatch(imageActions.upload(data))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
