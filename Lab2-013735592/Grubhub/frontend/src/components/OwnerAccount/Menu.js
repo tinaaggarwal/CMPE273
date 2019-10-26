@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import './OwnerProfile.css';
 import './Menu.css';
 import { ownerMenuActions } from '../../js/actions/index';
-import  { connect } from 'react-redux';
+import { connect } from 'react-redux';
+import Pagination from "react-js-pagination";
 
 class Menu extends Component {
 
@@ -10,8 +11,12 @@ class Menu extends Component {
         super(props);
         this.state = {
             sections: [],
-            items: []
+            items: [],
+            sectionsPerPage: 2,
+            activePage: 1
         }
+        this.handlePageChange = this.handlePageChange.bind(this);
+
     }
 
     componentDidMount() {
@@ -20,6 +25,13 @@ class Menu extends Component {
 
         this.props.ownerItemsList();
 
+    }
+
+    handlePageChange(pageNumber) {
+        console.log(`active page is ${pageNumber}`);
+        this.setState({
+            activePage: pageNumber
+        });
     }
 
     submitDeleteItem = (e) => {
@@ -48,7 +60,13 @@ class Menu extends Component {
             message = <p>Item successfully deleted!</p>
         }
 
-        const listItems = this.props.sections.map((section) =>
+        // Logic for displaying items
+        const indexOfLastItem = this.state.activePage * this.state.sectionsPerPage;
+        const indexOfFirstItem = indexOfLastItem - this.state.sectionsPerPage;
+        const currentSections = this.props.sections.slice(indexOfFirstItem, indexOfLastItem);
+
+
+        const listItems = currentSections.map((section) =>
             <li className="list-group-item" key={section.section_id}>
                 <h3>{section.section_name}</h3>
                 <p>{section.section_description}</p>
@@ -59,7 +77,7 @@ class Menu extends Component {
                                 <li className="list-group-item" key={item.item_id}>
                                     <div className="card">
                                         <div className="itemLayout">
-                                            <img className="itemImage" src={item.item_image} title={item.item_name}/>
+                                            <img className="itemImage" src={item.item_image} title={item.item_name} />
                                             <div className="itemDetails">
                                                 <h5 className="card-title">{item.item_name}</h5>
                                                 <h6 className="card-subtitle">{item.item_description}</h6>
@@ -83,13 +101,22 @@ class Menu extends Component {
                 <div className="card">
                     <ul className="list-group list-group-flush">{listItems}</ul>
                 </div>
+                <div>
+                    <Pagination
+                        activePage={this.state.activePage}
+                        itemsCountPerPage={2}
+                        totalItemsCount={this.props.sections.length}
+                        pageRangeDisplayed={5}
+                        onChange={this.handlePageChange}
+                    />
+                </div>
             </div>
         );
     }
 }
 
 const mapStateToProps = state => {
-    return { 
+    return {
         sections: state.ownerMenu.sections,
         items: state.ownerMenu.items,
         deletedMessage: state.ownerMenu.deletedMessage,

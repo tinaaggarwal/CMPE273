@@ -3,7 +3,8 @@ import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import './RestaurantMenu.css';
 import { restaurantMenuActions } from '../../js/actions/index';
-import  { connect } from 'react-redux';
+import { connect } from 'react-redux';
+import Pagination from "react-js-pagination";
 
 class RestaurantMenu extends Component {
 
@@ -17,11 +18,14 @@ class RestaurantMenu extends Component {
             item_name: "",
             item_price: "",
             authFlag: false,
-            addToCartSuccessful: false
+            addToCartSuccessful: false,
+            sectionsPerPage: 2,
+            activePage: 1
         }
 
         this.quantityChangeHandler = this.quantityChangeHandler.bind(this);
         this.addItemToCart = this.addItemToCart.bind(this);
+        this.handlePageChange = this.handlePageChange.bind(this);
 
     }
 
@@ -34,6 +38,13 @@ class RestaurantMenu extends Component {
         this.props.menuItems(data);
         this.props.menuSections(data);
 
+    }
+
+    handlePageChange(pageNumber) {
+        console.log(`active page is ${pageNumber}`);
+        this.setState({
+            activePage: pageNumber
+        });
     }
 
     quantityChangeHandler = (e) => {
@@ -68,7 +79,12 @@ class RestaurantMenu extends Component {
 
         const r_id = this.props.match.params.restaurantId;
 
-        const listItems = this.props.sections.map((section) => {
+        // Logic for displaying items
+        const indexOfLastItem = this.state.activePage * this.state.sectionsPerPage;
+        const indexOfFirstItem = indexOfLastItem - this.state.sectionsPerPage;
+        const currentSections = this.props.sections.slice(indexOfFirstItem, indexOfLastItem);
+
+        const listItems = currentSections.map((section) => {
             return (
                 <div className="card mb-3" key={section.section_id}>
                     <div className="sectionsLayout">
@@ -80,7 +96,7 @@ class RestaurantMenu extends Component {
                             return (
                                 <div className="card" key={item.item_id}>
                                     <div className="itemLayout">
-                                        <img className="itemImageLayout" src={item.item_image} title={item.item_name} alt={item.item_name}/>
+                                        <img className="itemImageLayout" src={item.item_image} title={item.item_name} alt={item.item_name} />
                                         <div className="itemDetails">
                                             <h5 className="card-title">{item.item_name}</h5>
                                             <h6 className="card-subtitle">{item.item_description}</h6>
@@ -122,6 +138,15 @@ class RestaurantMenu extends Component {
                             Go to cart
                         </div>
                         {listItems}
+                        <div>
+                            <Pagination
+                                activePage={this.state.activePage}
+                                itemsCountPerPage={2}
+                                totalItemsCount={this.props.sections.length}
+                                pageRangeDisplayed={5}
+                                onChange={this.handlePageChange}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -132,7 +157,7 @@ class RestaurantMenu extends Component {
 }
 
 const mapStateToProps = state => {
-    return { 
+    return {
         items: state.restaurantMenu.items,
         sections: state.restaurantMenu.sections
     };

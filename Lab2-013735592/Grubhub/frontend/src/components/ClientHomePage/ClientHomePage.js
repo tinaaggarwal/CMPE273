@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './ClientHomePage.css';
 import { homePageActions } from '../../js/actions/index';
-import  { connect } from 'react-redux';
+import { connect } from 'react-redux';
+import Pagination from "react-js-pagination";
 
 class ClientHomePage extends Component {
 
@@ -13,12 +14,15 @@ class ClientHomePage extends Component {
             cuisines: [],
             filterCuisine: "",
             searchItem: "",
-            authFlag: false
+            authFlag: false,
+            sectionsPerPage: 3,
+            activePage: 1
         }
 
         this.searchBoxChangeHandler = this.searchBoxChangeHandler.bind(this);
         this.cuisineFilterChangeHandler = this.cuisineFilterChangeHandler.bind(this);
         this.submitSearch = this.submitSearch.bind(this);
+        this.handlePageChange = this.handlePageChange.bind(this);
 
     }
 
@@ -30,6 +34,13 @@ class ClientHomePage extends Component {
 
         this.props.distinctCuisines();
 
+    }
+
+    handlePageChange(pageNumber) {
+        console.log(`active page is ${pageNumber}`);
+        this.setState({
+            activePage: pageNumber
+        });
     }
 
     submitSearch = (e) => {
@@ -63,6 +74,11 @@ class ClientHomePage extends Component {
         //     redirectVar = <Redirect to="/login" />
         // }
 
+        // Logic for displaying items
+        const indexOfLastItem = this.state.activePage * this.state.sectionsPerPage;
+        const indexOfFirstItem = indexOfLastItem - this.state.sectionsPerPage;
+        const currentRestaurants = this.props.restaurants.slice(indexOfFirstItem, indexOfLastItem);
+
         var options = [<option value="---" key="None">---</option>];
         var moreOptions = this.props.cuisines.map(cuisine => {
             return (
@@ -72,10 +88,10 @@ class ClientHomePage extends Component {
 
         options = options.concat(moreOptions);
 
-        const restaurantsList = this.props.restaurants.map((restaurant) =>
+        const restaurantsList = currentRestaurants.map((restaurant) =>
             <Link to={`/home/${restaurant.r_id}`} key={restaurant.r_id} className="nav-link">
                 <div className="card mb-3" >
-                    <img className="restImage" src={restaurant.rest_image} alt={restaurant.rest_image}/>
+                    <img className="restImage" src={restaurant.rest_image} alt={restaurant.rest_image} />
                     <div className="card-body">
                         <h5 className="card-title">{restaurant.rest_name}</h5>
                         <p className="card-text">{restaurant.cuisine}</p>
@@ -91,7 +107,7 @@ class ClientHomePage extends Component {
                 <div className="searchLayout">
                     <input type="text" className="form-control" name="searchBox" onChange={this.searchBoxChangeHandler} placeholder="Item name (E.g. Pizza)" />
                     <button onClick={this.submitSearch} className="searchbar">
-                        <img src="search.png" className="searchBtn" alt="Search"/>
+                        <img src="search.png" className="searchBtn" alt="Search" />
                     </button>
                     <select
                         id="cuisine"
@@ -103,13 +119,22 @@ class ClientHomePage extends Component {
                     </select>
                 </div>
                 {restaurantsList}
+                <div>
+                    <Pagination
+                        activePage={this.state.activePage}
+                        itemsCountPerPage={3}
+                        totalItemsCount={this.props.restaurants.length}
+                        pageRangeDisplayed={5}
+                        onChange={this.handlePageChange}
+                    />
+                </div>
             </div>
         );
     }
 }
 
 const mapStateToProps = state => {
-    return { 
+    return {
         restaurants: state.homePage.restaurants,
         cuisines: state.homePage.cuisines
     };
