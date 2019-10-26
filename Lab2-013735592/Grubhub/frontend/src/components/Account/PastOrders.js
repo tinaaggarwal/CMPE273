@@ -13,7 +13,7 @@ class PastOrders extends Component {
             order_ids: [],
             order_details: [],
             authFlag: false,
-            itemsPerPage: 4,
+            itemsPerPage: 3,
             activePage: 1
         }
         this.handlePageChange = this.handlePageChange.bind(this);

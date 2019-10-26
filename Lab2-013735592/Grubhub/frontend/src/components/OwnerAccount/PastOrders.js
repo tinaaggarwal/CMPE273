@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Orders from './Orders';
 import { ownerOrderActions } from '../../js/actions/index';
 import { connect } from 'react-redux';
+import Pagination from "react-js-pagination";
 
 class PastOrders extends Component {
 
@@ -11,8 +12,11 @@ class PastOrders extends Component {
             orders: [],
             order_ids: [],
             order_details: [],
-            authFlag: false
+            authFlag: false,
+            itemsPerPage: 3,
+            activePage: 1
         }
+        this.handlePageChange = this.handlePageChange.bind(this);
 
     }
 
@@ -24,13 +28,35 @@ class PastOrders extends Component {
 
     }
 
+    handlePageChange(pageNumber) {
+        console.log(`active page is ${pageNumber}`);
+        this.setState({
+            activePage: pageNumber
+        });
+    }
+
     render() {
+        // Logic for displaying items
+        const indexOfLastItem = this.state.activePage * this.state.itemsPerPage;
+        const indexOfFirstItem = indexOfLastItem - this.state.itemsPerPage;
+        const currentItems = this.props.orders.slice(indexOfFirstItem, indexOfLastItem);
+
+
         return (
             <div className="container">
                 <Orders
-                    orders={this.props.orders}
+                    orders={currentItems}
                     order_details={this.props.order_details}
                     type="Past orders" />
+                <div>
+                    <Pagination
+                        activePage={this.state.activePage}
+                        itemsCountPerPage={3}
+                        totalItemsCount={this.props.orders.length}
+                        pageRangeDisplayed={5}
+                        onChange={this.handlePageChange}
+                    />
+                </div>
             </div>
         );
     }

@@ -13,7 +13,7 @@ class UpcomingOrders extends Component {
             order_ids: [],
             order_details: [],
             authFlag: false,
-            itemsPerPage: 4,
+            itemsPerPage: 3,
             activePage: 1
         }
 
