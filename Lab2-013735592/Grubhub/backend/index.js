@@ -11,6 +11,12 @@ var mysql = require('mysql');
 const multer = require('multer');
 var fs = require('fs');
 
+var mongoose = require('mongoose');
+var clientRouter = require('./routes/clientRoutes');
+var ownerRouter = require('./routes/ownerRoutes');
+
+require('dotenv').config();
+
 // var pool = mysql.createPool({
 //     connectionLimit: 100,
 //     host: 'localhost',
@@ -20,15 +26,35 @@ var fs = require('fs');
 //     debug: false
 // })
 
-var pool = mysql.createPool({
-    connectionLimit: 100,
-    port: '3306',
-    host: 'grubhub.cv9vraaep5ay.us-west-2.rds.amazonaws.com',
-    user: 'admin',
-    password: 'Tina.1234',
-    database: 'grubhub',
-    debug: false
+const uri = 'mongodb+srv://root:root.1234@grubhub-u2eiw.mongodb.net/test?retryWrites=true&w=majority';
+mongoose.connect(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
+
+const connection  = mongoose.connection;
+connection.once('open', () => {
+    console.log('MongoDB connection established successfully');
 })
+
+// const uri = process.env.ATLAS_URI;
+
+// mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true});
+
+// const connection = mongoose.connection;
+
+// connection.once('open', () => {
+//     console.log('MongoDB connection established successfully');
+// })
+// var pool = mysql.createPool({
+//     connectionLimit: 100,
+//     port: '3306',
+//     host: 'grubhub.cv9vraaep5ay.us-west-2.rds.amazonaws.com',
+//     user: 'admin',
+//     password: 'Tina.1234',
+//     database: 'grubhub',
+//     debug: false
+// })
 
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
@@ -82,6 +108,9 @@ app.use(function (req, res, next) {
     next();
 });
 
+app.use('/', clientRouter);
+app.use('/', ownerRouter);
+
 //Route to handle Post Request Call
 app.post('/clientLogin', function (req, res) {
 
@@ -119,28 +148,6 @@ app.post('/clientLogin', function (req, res) {
                     res.end("Successful Login");
                 }
             });
-        }
-    });
-
-});
-
-app.post('/clientSignup', function (req, res) {
-    console.log("Inside Client Create Request Handler");
-    var sql = "INSERT INTO client_signup VALUES ( " +
-        mysql.escape(req.body.firstName) + " , " + mysql.escape(req.body.lastName) + " , " + mysql.escape(req.body.email) + " , " +
-        mysql.escape(req.body.password) + " ) ";
-    console.log(sql);
-    pool.query(sql, function (err, result) {
-        if (err) {
-            res.writeHead(400, {
-                'Content-Type': 'text/plain'
-            })
-            res.end("Error While Signing up Client");
-        } else {
-            res.writeHead(200, {
-                'Content-Type': 'text/plain'
-            })
-            res.end('Client Created Successfully');
         }
     });
 });
@@ -185,27 +192,6 @@ app.post('/ownerLogin', function (req, res) {
         }
     });
 
-});
-
-app.post('/ownerSignup', function (req, res) {
-    console.log("Inside Owner Create Request Handler");
-    var sql = "INSERT INTO owner_signup (first_name, last_name, owner_email, restaurant_name, restaurant_zip_code, password) VALUES ( " +
-        mysql.escape(req.body.firstName) + " , " + mysql.escape(req.body.lastName) + " , " + mysql.escape(req.body.email) + " , " + mysql.escape(req.body.restaurantName) + " , " + mysql.escape(req.body.restaurantZipCode) + " , " + mysql.escape(req.body.password) + " ) ";
-    console.log(sql);
-
-    pool.query(sql, function (err, result) {
-        if (err) {
-            res.writeHead(400, {
-                'Content-Type': 'text/plain'
-            })
-            res.end("Error While Signing up Owner");
-        } else {
-            res.writeHead(200, {
-                'Content-Type': 'text/plain'
-            })
-            res.end('Owner Created Successfully');
-        }
-    });
 });
 
 app.get('/userUpdate', function (req, res) {
