@@ -21,14 +21,14 @@ const ownerProfileReducer = (state = initialState, action) => {
         case actionTypes.OWNER_DETAILS_FOR_UPDATE:
             return Object.assign({}, state, {
                 updated: true,
-                firstName: (action.payload[0]).first_name,
-                lastName: (action.payload[0]).last_name,
-                email: (action.payload[0]).owner_email,
-                phone: (action.payload[0]).phone,
-                restName: (action.payload[0]).rest_name,
-                cuisine: (action.payload[0]).cuisine,
-                rest_image: (action.payload[0]).rest_image,
-                profile_image: (action.payload[0]).profile_image
+                firstName: action.payload.first_name,
+                lastName: action.payload.last_name,
+                email: action.payload.owner_email,
+                phone: action.payload.phone,
+                restName: action.payload.rest_name,
+                cuisine: action.payload.cuisine,
+                rest_image: action.payload.rest_image,
+                profile_image: action.payload.profile_image
             });
 
         case actionTypes.OWNER_UPDATE_PROFILE:

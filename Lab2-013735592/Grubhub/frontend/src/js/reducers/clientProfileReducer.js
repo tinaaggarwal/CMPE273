@@ -29,9 +29,9 @@ const clientProfileReducer = (state = initialState, action) => {
         case actionTypes.USER_DETAILS_FOR_UPDATE:
             return Object.assign({}, state, {
                 updated: true,
-                firstName: (action.payload[0]).first_name,
-                lastName: (action.payload[0]).last_name,
-                email: (action.payload[0]).client_email
+                firstName: action.payload.first_name,
+                lastName: action.payload.last_name,
+                email: action.payload.client_email
             });
 
         case actionTypes.USER_UPDATE_NAME:
