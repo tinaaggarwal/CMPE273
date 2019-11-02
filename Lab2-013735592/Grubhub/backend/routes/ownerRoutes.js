@@ -10,7 +10,7 @@ router.route('/ownerSignup').post((req, res) => {
     const zip_code = req.body.restaurantZipCode;
     const password = req.body.password;
 
-    Restaurants.create({
+    const newOwner = new Restaurants({
         first_name,
         last_name,
         owner_email,
@@ -18,6 +18,8 @@ router.route('/ownerSignup').post((req, res) => {
         zip_code,
         password
     })
+
+    newOwner.save()
     .then(() => res.json('Owner added!'))
     .catch(err => res.status(400).json('Error: '+err));
 });

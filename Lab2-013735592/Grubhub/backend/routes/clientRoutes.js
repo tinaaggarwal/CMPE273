@@ -14,14 +14,23 @@ router.route('/clientSignup').post((req, res) => {
     const last_name = req.body.lastName;
     const client_email = req.body.email;
     const password = req.body.password;
-    // const newUser = new Client({first_name});
-    //Save - save to the MongoDB Atlas Database
-    Client.create({
+
+    const newClient = new Client({
         first_name,
         last_name,
         client_email,
         password
     })
+
+    // const newUser = new Client({first_name});
+    //Save - save to the MongoDB Atlas Database
+    // Client.save({
+    //     first_name,
+    //     last_name,
+    //     client_email,
+    //     password
+    // })
+    newClient.save()
     .then(() => res.json('User added!'))
     .catch(err => res.status(400).json('Error: '+err));
 });
