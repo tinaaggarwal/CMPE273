@@ -14,9 +14,6 @@ var mongoose = require('mongoose');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 
-var clientRouter = require('./routes/clientRoutes');
-var ownerRouter = require('./routes/ownerRoutes');
-
 require('dotenv').config();
 
 var mongoose = require('mongoose');
@@ -87,7 +84,7 @@ var sessionResponse = "";
 var orderId;
 var id;
 var nextOrderId;
-var imageId;
+var imageId = 'images';
 
 var storagePropFiles = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -120,25 +117,6 @@ app.use(function (req, res, next) {
 app.use('/', clientRouter);
 app.use('/', ownerRouter);
 
-app.post('/userUpdateProfileImage', function (req, res) {
-    console.log("Inside Update profile image Handler");
-    var sql = "UPDATE client_update SET profile_image = '" + req.body.profile_image + "'  WHERE client_email = '" + clientEmail + "'";
-    console.log(sql)
-    pool.query(sql, function (err, result) {
-        if (err) {
-            res.writeHead(400, {
-                'Content-Type': 'text/plain'
-            })
-            res.end("Error While updating name");
-        } else {
-            res.writeHead(200, {
-                'Content-Type': 'text/plain'
-            })
-            res.end('user profile image added Successfully');
-        }
-    });
-});
-
 app.post('/upload', uploadPropFiles.single('image'), (req, res) => {
     console.log(req.file.filename)
 
@@ -165,65 +143,6 @@ function createDirectory(imageId) {
 
 // Owner
 
-app.post('/ownerUpdateProfile', function (req, res) {
-    console.log("Inside Update name Handler");
-    // var sql = "UPDATE client_update SET first_name = '"+req.body.first_name+"', last_name = '"+req.body.last_name+"'  WHERE client_email = '"+clientEmail+"'" ;
-    var sql = "UPDATE owner_profile SET first_name = '" + req.body.first_name + "', last_name = '" + req.body.last_name
-        + "', owner_email = '" + req.body.owner_email + "', phone = '" + req.body.phone + "', rest_name = '" + req.body.rest_name
-        + "', cuisine = '" + req.body.cuisine + "'  WHERE owner_email = '" + sessionResponse[0].owner_email + "'";
-    console.log(sql)
-    pool.query(sql, function (err, result) {
-        if (err) {
-            res.writeHead(400, {
-                'Content-Type': 'text/plain'
-            })
-            res.end("Error While updating name");
-        } else {
-            res.writeHead(200, {
-                'Content-Type': 'text/plain'
-            })
-            res.end('Owner Name updated Successfully');
-        }
-    });
-});
-
-app.post('/ownerUpdateProfileImage', function (req, res) {
-    console.log("Inside Update profile image for owner Handler");
-    var sql = "UPDATE owner_profile SET profile_image = '" + req.body.profile_image + "'  WHERE r_id = " + sessionResponse[0].r_id;
-    console.log(sql)
-    pool.query(sql, function (err, result) {
-        if (err) {
-            res.writeHead(400, {
-                'Content-Type': 'text/plain'
-            })
-            res.end("Error While updating name");
-        } else {
-            res.writeHead(200, {
-                'Content-Type': 'text/plain'
-            })
-            res.end('Profile image added Successfully');
-        }
-    });
-});
-
-app.post('/ownerUpdateRestImage', function (req, res) {
-    console.log("Inside Update profile image for owner Handler");
-    var sql = "UPDATE owner_profile SET rest_image = '" + req.body.rest_image + "'  WHERE r_id = " + sessionResponse[0].r_id;
-    console.log(sql)
-    pool.query(sql, function (err, result) {
-        if (err) {
-            res.writeHead(400, {
-                'Content-Type': 'text/plain'
-            })
-            res.end("Error While updating name");
-        } else {
-            res.writeHead(200, {
-                'Content-Type': 'text/plain'
-            })
-            res.end('Restaurant image added Successfully');
-        }
-    });
-});
 
 app.post('/ownerAddSection', function (req, res) {
     console.log("Inside Insert Section Handler");

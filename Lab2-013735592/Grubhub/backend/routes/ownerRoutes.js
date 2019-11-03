@@ -10,6 +10,12 @@ router.route('/ownerSignup').post((req, res) => {
     const restaurant_name = req.body.restaurantName;
     const zip_code = req.body.restaurantZipCode;
     const password = req.body.password;
+    const profile_image = null;
+    const phone = null;
+    const rest_image = null;
+    const cuisine = null;
+    const menu = [];
+    const orders = [];
 
     const newOwner = new Restaurants({
         first_name,
@@ -17,7 +23,13 @@ router.route('/ownerSignup').post((req, res) => {
         owner_email,
         restaurant_name,
         zip_code,
-        password
+        password,
+        profile_image,
+        phone,
+        rest_image,
+        cuisine,
+        menu,
+        orders
     })
 
     newOwner.save()
@@ -61,5 +73,86 @@ router.route('/ownerUpdate').get((req, res) => {
     })
     .catch(err => res.status(400).json('Error: '+err));
 });
+
+router.route('/ownerUpdateProfile').post((req, res) => {
+    console.log("Inside Update Restaurant details Handler");
+    const { first_name, last_name, owner_email, phone, restaurant_name, cuisine } = req.body;
+
+    Restaurants.findOneAndUpdate(
+        {
+            _id: owner_id
+        },
+        {
+            first_name: first_name,
+            last_name: last_name,
+            owner_email,
+            phone,
+            restaurant_name,
+            cuisine
+        },
+        {
+            new: true,
+            runValidators: true,
+            upsert: true,
+            useFindAndModify: false
+        }).then((user) => {
+            console.log('user name updated')
+            res.code = "200";
+            res.send({ user });
+        }, (err) => {
+            res.code = "400";
+            res.send("Bad Request");
+        })
+})
+
+router.route('/ownerUpdateProfileImage').post((req, res) => {
+    console.log("Inside Update profile image for owner Handler");
+    const { profile_image } = req.body;
+    Restaurants.findOneAndUpdate(
+        {
+            _id: owner_id
+        },
+        {
+            profile_image
+        },
+        {
+            new: true,
+            runValidators: true,
+            upsert: true,
+            useFindAndModify: false
+        }).then((user) => {
+            console.log('Profile image added Successfully')
+            res.code = "200";
+            res.send({ user });
+        }, (err) => {
+            res.code = "400";
+            res.send("Bad Request");
+        })
+})
+
+router.route('/ownerUpdateRestImage').post((req, res) => {
+    console.log("Inside Update restaurant image for owner Handler");
+    const { rest_image } = req.body;
+    Restaurants.findOneAndUpdate(
+        {
+            _id: owner_id
+        },
+        {
+            rest_image
+        },
+        {
+            new: true,
+            runValidators: true,
+            upsert: true,
+            useFindAndModify: false
+        }).then((user) => {
+            console.log('Restaurant image added Successfully')
+            res.code = "200";
+            res.send({ user });
+        }, (err) => {
+            res.code = "400";
+            res.send("Bad Request");
+        })
+})
 
 module.exports = router;

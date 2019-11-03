@@ -25,7 +25,7 @@ const ownerProfileReducer = (state = initialState, action) => {
                 lastName: action.payload.last_name,
                 email: action.payload.owner_email,
                 phone: action.payload.phone,
-                restName: action.payload.rest_name,
+                restName: action.payload.restaurant_name,
                 cuisine: action.payload.cuisine,
                 rest_image: action.payload.rest_image,
                 profile_image: action.payload.profile_image

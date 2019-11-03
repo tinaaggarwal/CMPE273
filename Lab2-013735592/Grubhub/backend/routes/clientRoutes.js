@@ -246,4 +246,29 @@ router.route('/userUpdateAddress').post((req, res) => {
         })
 })
 
+router.route('/userUpdateProfileImage').post((req, res) => {
+    console.log("Inside Update profile image Handler");
+    const { profile_image } = req.body;
+    Client.findOneAndUpdate(
+        {
+            _id: client_id
+        },
+        {
+            profile_image
+        },
+        {
+            new: true,
+            runValidators: true,
+            upsert: true,
+            useFindAndModify: false
+        }).then((user) => {
+            console.log('Profile image added Successfully')
+            res.code = "200";
+            res.send({ user });
+        }, (err) => {
+            res.code = "400";
+            res.send("Bad Request");
+        })
+})
+
 module.exports = router;
