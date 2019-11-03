@@ -143,27 +143,27 @@ function createDirectory(imageId) {
 
 // Owner
 
-app.post('/ownerDeleteSection', function (req, res) {
-    console.log("Inside Delete Section Handler");
-    console.log(req.body)
+// app.post('/ownerDeleteSection', function (req, res) {
+//     console.log("Inside Delete Section Handler");
+//     console.log(req.body)
 
-    var sql = "DELETE FROM menu_table WHERE section_id = " + mysql.escape(req.body.deleteId);
-    console.log(sql)
+//     var sql = "DELETE FROM menu_table WHERE section_id = " + mysql.escape(req.body.deleteId);
+//     console.log(sql)
 
-    pool.query(sql, function (err, result) {
-        if (err) {
-            res.writeHead(400, {
-                'Content-Type': 'text/plain'
-            })
-            res.end("Error While deleting section");
-        } else {
-            res.writeHead(200, {
-                'Content-Type': 'text/plain'
-            })
-            res.end('section deleted Successfully');
-        }
-    });
-});
+//     pool.query(sql, function (err, result) {
+//         if (err) {
+//             res.writeHead(400, {
+//                 'Content-Type': 'text/plain'
+//             })
+//             res.end("Error While deleting section");
+//         } else {
+//             res.writeHead(200, {
+//                 'Content-Type': 'text/plain'
+//             })
+//             res.end('section deleted Successfully');
+//         }
+//     });
+// });
 
 
 app.post('/ownerAddItem', function (req, res) {
