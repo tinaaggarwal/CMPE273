@@ -19,6 +19,12 @@ var ownerRouter = require('./routes/ownerRoutes');
 
 require('dotenv').config();
 
+var mongoose = require('mongoose');
+var clientRouter = require('./routes/clientRoutes');
+var ownerRouter = require('./routes/ownerRoutes');
+
+require('dotenv').config();
+
 // var pool = mysql.createPool({
 //     connectionLimit: 100,
 //     host: 'localhost',
@@ -113,7 +119,6 @@ app.use(function (req, res, next) {
 
 app.use('/', clientRouter);
 app.use('/', ownerRouter);
-
 
 app.post('/userUpdateProfileImage', function (req, res) {
     console.log("Inside Update profile image Handler");
