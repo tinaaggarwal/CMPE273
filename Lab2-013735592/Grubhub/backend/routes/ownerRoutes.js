@@ -205,15 +205,61 @@ router.route('/ownerUpdateSection').post((req, res) => {
     console.log('req.body....', req.body)
     const { section_name, section_description, section_id } = req.body;
 
-    Restaurants.updateOne({'menu._id': section_id}, {'$set': {
-        'menu.$.section_name': section_name,
-        'menu.$.section_description': section_description
-    }}).then(section => {
+    Restaurants.updateOne({ 'menu._id': section_id }, {
+        '$set': {
+            'menu.$.section_name': section_name,
+            'menu.$.section_description': section_description
+        }
+    }).then(section => {
         console.log('section', section);
         res.code = "200";
         res.send(section);
     })
-    .catch(err => res.status(400).json('Error: ' + err));
+        .catch(err => res.status(400).json('Error: ' + err));
 })
+
+// router.route('/ownerDeleteSection').post((req, res) => {
+//     console.log("Inside delete Section Handler");
+//     console.log('req.body....', req.body)
+//     const { section_name, section_description, section_id } = req.body;
+
+//     // Restaurants.deleteOne({ 'menu._id': section_id }, {
+//     //     '$set': {
+//     //         'menu.$.section_name': section_name,
+//     //         'menu.$.section_description': section_description
+//     //     }
+//     // }
+//     // Restaurants.updateOne(
+//     //     {
+//     //         // _id: owner_id
+//     //         'menu._id': section_id
+//     //     },
+//     //     {
+//     //         '$pull': {
+//     //             'menu._id': req.body
+//     //         }
+//     //     }
+
+//     Restaurants.updateOne(
+//         {
+//             '_id': owner_id
+//         },
+//         {
+//             $pull: {
+//                 "menu": {
+//                     '_id': section_id
+//                 }
+//             }
+//         },
+//         false,
+//         true
+//     )
+//     .then(section => {
+//         console.log('section', section);
+//         res.code = "200";
+//         res.send(section);
+//     })
+//     .catch(err => res.status(400).json('Error: ' + err));
+// })
 
 module.exports = router;
