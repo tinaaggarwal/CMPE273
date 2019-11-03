@@ -31,19 +31,14 @@ const clientProfileReducer = (state = initialState, action) => {
                 updated: true,
                 firstName: action.payload.first_name,
                 lastName: action.payload.last_name,
-                email: action.payload.client_email
+                email: action.payload.client_email,
+                profile_image: action.payload.profile_image
             });
 
         case actionTypes.USER_UPDATE_NAME:
             return Object.assign({}, state, {
                 updated: true,
                 nameUpdated: true
-            });
-
-        case actionTypes.USER_PROFILE_IMAGE:
-            return Object.assign({}, state, {
-                updated: true,
-                profile_image: action.payload.profile_image
             });
 
         case actionTypes.USER_UPDATE_PROFILE_IMAGE:

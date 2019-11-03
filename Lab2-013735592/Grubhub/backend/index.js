@@ -114,38 +114,6 @@ app.use(function (req, res, next) {
 app.use('/', clientRouter);
 app.use('/', ownerRouter);
 
-// app.get('/userProfileImage', function (req, res) {
-//     console.log(clientEmail)
-//     var sql = "SELECT profile_image from client_update where client_email = '" + clientEmail + "'";
-//     console.log(sql)
-//     pool.getConnection(function (err, pool) {
-//         if (err) {
-//             res.writeHead(400, {
-//                 'Content-Type': 'text/plain'
-//             })
-//             res.end("Could Not Get Connection ");
-//         } else {
-//             pool.query(sql, function (err, result) {
-//                 if (err) {
-//                     res.writeHead(400, {
-//                         'Content-Type': 'text/plain'
-//                     })
-//                     res.end("Could Not Get Connection Object");
-//                 } else {
-//                     res.writeHead(200, {
-//                         'Content-Type': 'application/json'
-//                     })
-//                     console.log(result);
-//                     console.log((result[0]).first_name);
-//                     console.log(JSON.stringify(result));
-//                     res.end(JSON.stringify(result));
-
-//                 }
-//             });
-//         }
-//     })
-
-// })
 
 app.post('/userUpdateProfileImage', function (req, res) {
     console.log("Inside Update profile image Handler");

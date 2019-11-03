@@ -49,9 +49,7 @@ class Profile extends Component {
     componentDidMount() {
 
         this.props.userUpdate();
-
-        this.props.userProfileImage();
-
+        
     }
 
     componentWillReceiveProps(nextProps){
@@ -200,6 +198,7 @@ class Profile extends Component {
 
     render() {
 
+        console.log(this.props.profile_image);
         let profile_image = null;
         if (this.props.profile_image === null) {
             profile_image =
