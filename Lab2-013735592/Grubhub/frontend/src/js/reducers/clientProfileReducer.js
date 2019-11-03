@@ -31,19 +31,14 @@ const clientProfileReducer = (state = initialState, action) => {
                 updated: true,
                 firstName: action.payload.first_name,
                 lastName: action.payload.last_name,
-                email: action.payload.client_email
+                email: action.payload.client_email,
+                profile_image: action.payload.profile_image
             });
 
         case actionTypes.USER_UPDATE_NAME:
             return Object.assign({}, state, {
                 updated: true,
                 nameUpdated: true
-            });
-
-        case actionTypes.USER_PROFILE_IMAGE:
-            return Object.assign({}, state, {
-                updated: true,
-                profile_image: (action.payload[0]).profile_image
             });
 
         case actionTypes.USER_UPDATE_PROFILE_IMAGE:
@@ -67,15 +62,15 @@ const clientProfileReducer = (state = initialState, action) => {
         case actionTypes.USER_ADDRESS_FOR_UPDATE:
             return Object.assign({}, state, {
                 updated: true,
-                street_address: (action.payload[0]).street_address,
-                apt: (action.payload[0]).apt,
-                city: (action.payload[0]).city,
-                state: (action.payload[0]).state,
-                zip_code: (action.payload[0]).zip_code,
-                phone: (action.payload[0]).phone,
-                cross_street: (action.payload[0]).cross_street,
-                delivery_instructions: (action.payload[0]).delivery_instructions,
-                address_name: (action.payload[0]).address_name
+                street_address: action.payload.street_address,
+                apt: action.payload.apt,
+                city: action.payload.city,
+                state: action.payload.state,
+                zip_code: action.payload.zip_code,
+                phone: action.payload.phone,
+                cross_street: action.payload.cross_street,
+                delivery_instructions: action.payload.delivery_instructions,
+                address_name: action.payload.address_name
             });
 
         case actionTypes.USER_UPDATE_ADDRESS:

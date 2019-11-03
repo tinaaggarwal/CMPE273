@@ -35,21 +35,6 @@ export const userUpdateName = (payload) => {
     }
 }
 
-export const userProfileImage = () => {
-    return dispatch => {
-        return axios.get(`${ROOT_URL}/userProfileImage`)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    dispatch({
-                        type: actionTypes.USER_PROFILE_IMAGE,
-                        payload: response.data
-                    });
-                }
-            });
-    }
-}
-
 export const userUpdateProfileImage = (payload) => {
     return dispatch => {
         console.log('payload', payload)

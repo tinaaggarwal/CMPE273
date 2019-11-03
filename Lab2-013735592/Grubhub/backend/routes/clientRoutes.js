@@ -16,12 +16,34 @@ router.route('/clientSignup').post((req, res) => {
     const last_name = req.body.lastName;
     const client_email = req.body.email;
     const password = req.body.password;
+    const street_address = null;
+    const apt = null;
+    const city = null;
+    const state = null;
+    const zip_code = null;
+    const phone = null;
+    const cross_street = null;
+    const delivery_instructions = null;
+    const address_name = null;
+    const profile_image = null;
+    const orders = [];
 
     const newClient = new Client({
         first_name,
         last_name,
         client_email,
-        password
+        password,
+        street_address,
+        apt,
+        city,
+        state,
+        zip_code,
+        phone,
+        cross_street,
+        delivery_instructions,
+        address_name,
+        profile_image,
+        orders
     })
 
     newClient.save()
@@ -58,12 +80,170 @@ router.route('/userUpdate').get((req, res) => {
     Client.findOne({
         _id: client_id
     })
-    .then(client => {
-        console.log('owner', client);
-        res.code = "200";
-        res.send(client);
-    })
-    .catch(err => res.status(400).json('Error: '+err));
+        .then(client => {
+            console.log('client', client);
+            res.code = "200";
+            res.send(client);
+        })
+        .catch(err => res.status(400).json('Error: ' + err));
 });
+
+router.route('/userUpdateName').post((req, res) => {
+    console.log("Inside Update name Handler");
+    const { first_name, last_name } = req.body;
+
+    Client.findOneAndUpdate(
+        {
+            _id: client_id
+        },
+        {
+            first_name: first_name,
+            last_name: last_name
+        },
+        {
+            new: true,
+            runValidators: true,
+            upsert: true,
+            useFindAndModify: false
+        }).then((user) => {
+            console.log('user name updated')
+            res.code = "200";
+            res.send({ user });
+        }, (err) => {
+            res.code = "400";
+            res.send("Bad Request");
+        })
+})
+
+router.route('/userUpdateEmail').post((req, res) => {
+    console.log("Inside Update email Handler");
+    const { client_email } = req.body;
+
+    Client.findOneAndUpdate(
+        {
+            _id: client_id
+        },
+        {
+            client_email
+        },
+        {
+            new: true,
+            runValidators: true,
+            upsert: true,
+            useFindAndModify: false
+        }).then((user) => {
+            console.log('user email updated')
+            res.code = "200";
+            res.send({ user });
+        }, (err) => {
+            res.code = "400";
+            res.send("Bad Request");
+        })
+})
+
+router.route('/userUpdatePassword').post((req, res) => {
+    console.log("Inside Update password Handler");
+    const { newPassword, confirmPassword } = req.body;
+    Client.findOneAndUpdate(
+        {
+            _id: client_id
+        },
+        {
+            password: newPassword
+        },
+        {
+            new: true,
+            runValidators: true,
+            upsert: true,
+            useFindAndModify: false
+        }).then((user) => {
+            console.log('user password updated')
+            res.code = "200";
+            res.send({ user });
+        }, (err) => {
+            res.code = "400";
+            res.send("Bad Request");
+        })
+})
+
+router.route('/addressUpdate').get((req, res) => {
+    console.log('Inside client address profile part')
+    console.log(client_id);
+    Client.findOne({
+        _id: client_id
+    })
+        .then(client => {
+            console.log('client', client);
+            res.code = "200";
+            res.send(client);
+        })
+        .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/userAddAddress').post((req, res) => {
+    console.log("Inside Add user address Handler");
+    const { street_address, apt, city, state, zip_code, phone, cross_street, delivery_instructions, address_name } = req.body;
+    Client.findOneAndUpdate(
+        {
+            _id: client_id
+        },
+        {
+            street_address,
+            apt,
+            city,
+            state,
+            zip_code,
+            phone,
+            cross_street,
+            delivery_instructions,
+            address_name
+        },
+        {
+            new: true,
+            runValidators: true,
+            upsert: true,
+            useFindAndModify: false
+        }).then((user) => {
+            console.log('user address added')
+            res.code = "200";
+            res.send({ user });
+        }, (err) => {
+            res.code = "400";
+            res.send("Bad Request");
+        })
+})
+
+router.route('/userUpdateAddress').post((req, res) => {
+    console.log("Inside Add user address Handler");
+    const { street_address, apt, city, state, zip_code, phone, cross_street, delivery_instructions, address_name } = req.body;
+    Client.findOneAndUpdate(
+        {
+            _id: client_id
+        },
+        {
+            street_address,
+            apt,
+            city,
+            state,
+            zip_code,
+            phone,
+            cross_street,
+            delivery_instructions,
+            address_name
+        },
+        {
+            new: true,
+            runValidators: true,
+            upsert: true,
+            useFindAndModify: false
+        }).then((user) => {
+            console.log('user address updated')
+            res.code = "200";
+            res.send({ user });
+        }, (err) => {
+            res.code = "400";
+            res.send("Bad Request");
+        })
+})
 
 module.exports = router;
