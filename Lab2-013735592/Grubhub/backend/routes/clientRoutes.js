@@ -262,7 +262,7 @@ router.route('/userUpdateProfileImage').post((req, res) => {
             upsert: true,
             useFindAndModify: false
         }).then((user) => {
-            console.log('user profile image updated')
+            console.log('Profile image added Successfully')
             res.code = "200";
             res.send({ user });
         }, (err) => {
