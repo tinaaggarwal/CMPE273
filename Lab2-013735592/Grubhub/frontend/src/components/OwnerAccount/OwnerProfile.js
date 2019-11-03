@@ -169,7 +169,7 @@ class OwnerProfile extends Component {
             last_name: this.state.lastName,
             owner_email: this.state.email,
             phone: this.state.phone,
-            rest_name: this.state.restName,
+            restaurant_name: this.state.restName,
             cuisine: this.state.cuisine
         }
 
