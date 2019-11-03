@@ -13,7 +13,6 @@ const initialState = {
     profileUpdated: false,
     imageUpdated: false,
     restImageUpdated: false
-    
 };
 
 const ownerProfileReducer = (state = initialState, action) => {
