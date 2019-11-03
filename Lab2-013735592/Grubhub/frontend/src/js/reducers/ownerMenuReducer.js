@@ -13,7 +13,7 @@ const ownerMenuReducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.OWNER_SECTIONS:
             return Object.assign({}, state, {
-                sections: action.payload
+                sections: action.payload.menu
             });
 
         case actionTypes.OWNER_ITEMS:

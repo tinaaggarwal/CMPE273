@@ -33,8 +33,8 @@ router.route('/ownerSignup').post((req, res) => {
     })
 
     newOwner.save()
-    .then(() => res.json('Owner added!'))
-    .catch(err => res.status(400).json('Error: '+err));
+        .then(() => res.json('Owner added!'))
+        .catch(err => res.status(400).json('Error: ' + err));
 });
 
 router.route('/ownerLogin').post((req, res) => {
@@ -66,12 +66,12 @@ router.route('/ownerUpdate').get((req, res) => {
     Restaurants.findOne({
         _id: owner_id
     })
-    .then(owner => {
-        console.log('owner', owner);
-        res.code = "200";
-        res.send(owner);
-    })
-    .catch(err => res.status(400).json('Error: '+err));
+        .then(owner => {
+            console.log('owner', owner);
+            res.code = "200";
+            res.send(owner);
+        })
+        .catch(err => res.status(400).json('Error: ' + err));
 });
 
 router.route('/ownerUpdateProfile').post((req, res) => {
@@ -153,6 +153,67 @@ router.route('/ownerUpdateRestImage').post((req, res) => {
             res.code = "400";
             res.send("Bad Request");
         })
+})
+
+router.route('/ownerSections').get((req, res) => {
+    console.log('Inside Owner Sections get Request Handler')
+    Restaurants.findOne({
+        _id: owner_id
+    },
+        'menu'
+    )
+        .then(owner => {
+            console.log('owner', owner);
+            res.code = "200";
+            res.send(owner);
+        })
+        .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/ownerAddSection').post((req, res) => {
+    console.log("Inside Insert Section Handler");
+    const { section_name, section_description } = req.body;
+    Restaurants.findOneAndUpdate(
+        {
+            _id: owner_id
+        },
+        {
+            $push: {
+                menu: {
+                    section_name,
+                    section_description
+                }
+            }
+        },
+        {
+            new: true,
+            upsert: true,
+            setDefaultsOnInsert: true,
+            useFindAndModify: false
+        }).then((user) => {
+            console.log('Section added Successfully')
+            res.code = "200";
+            res.send({ user });
+        }, (err) => {
+            res.code = "400";
+            res.send("Bad Request");
+        })
+})
+
+router.route('/ownerUpdateSection').post((req, res) => {
+    console.log("Inside update Section Handler");
+    console.log('req.body....', req.body)
+    const { section_name, section_description, section_id } = req.body;
+
+    Restaurants.updateOne({'menu._id': section_id}, {'$set': {
+        'menu.$.section_name': section_name,
+        'menu.$.section_description': section_description
+    }}).then(section => {
+        console.log('section', section);
+        res.code = "200";
+        res.send(section);
+    })
+    .catch(err => res.status(400).json('Error: ' + err));
 })
 
 module.exports = router;

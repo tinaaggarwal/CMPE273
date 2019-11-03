@@ -59,9 +59,9 @@ class Sections extends Component {
         if(e.target.name == 'Update') {
 
             const sectionToEdit = this.props.sections.filter(section => {
-                return section.section_id == e.target.id;
+                return section._id == e.target.id;
               });
-
+              
             this.setState({
                 editSectionID: e.target.id,
                 sectionName: sectionToEdit[0].section_name,
@@ -139,11 +139,11 @@ class Sections extends Component {
 
         if (this.props.sections.length > 0) {
             sectionsList = this.props.sections.map((section) =>
-                <li className="list-group-item" key={section.section_id}>
+                <li className="list-group-item" key={section._id}>
                     <p>{section.section_name}</p>
                     <p>{section.section_description}</p>
-                    <button onClick={this.btnTypeClicked} id={section.section_id} className="btn btn-link" type="button" name="Update">Edit</button>
-                    <button onClick={this.submitDeleteSection} id={section.section_id} className="btn btn-link" type="button" name="Delete">Delete</button>
+                    <button onClick={this.btnTypeClicked} id={section._id} className="btn btn-link" type="button" name="Update">Edit</button>
+                    <button onClick={this.submitDeleteSection} id={section._id} className="btn btn-link" type="button" name="Delete">Delete</button>
                 </li>
             );
         }
