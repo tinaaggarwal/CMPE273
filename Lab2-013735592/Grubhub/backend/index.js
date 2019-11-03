@@ -14,9 +14,6 @@ var mongoose = require('mongoose');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 
-var clientRouter = require('./routes/clientRoutes');
-var ownerRouter = require('./routes/ownerRoutes');
-
 require('dotenv').config();
 
 var mongoose = require('mongoose');
@@ -87,7 +84,7 @@ var sessionResponse = "";
 var orderId;
 var id;
 var nextOrderId;
-var imageId;
+var imageId = 'images';
 
 var storagePropFiles = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -119,25 +116,6 @@ app.use(function (req, res, next) {
 
 app.use('/', clientRouter);
 app.use('/', ownerRouter);
-
-app.post('/userUpdateProfileImage', function (req, res) {
-    console.log("Inside Update profile image Handler");
-    var sql = "UPDATE client_update SET profile_image = '" + req.body.profile_image + "'  WHERE client_email = '" + clientEmail + "'";
-    console.log(sql)
-    pool.query(sql, function (err, result) {
-        if (err) {
-            res.writeHead(400, {
-                'Content-Type': 'text/plain'
-            })
-            res.end("Error While updating name");
-        } else {
-            res.writeHead(200, {
-                'Content-Type': 'text/plain'
-            })
-            res.end('user profile image added Successfully');
-        }
-    });
-});
 
 app.post('/upload', uploadPropFiles.single('image'), (req, res) => {
     console.log(req.file.filename)
