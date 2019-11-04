@@ -35,14 +35,9 @@ export const menuSections = (payload) => {
 
 export const addItemToCart = (payload) => {
     return dispatch => {
-        return axios.post(`${ROOT_URL}/addItemToCart`, payload)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    dispatch({
-                        type: actionTypes.ADD_TO_CART,
-                    });
-                }
-            });
+        dispatch({
+            type: actionTypes.ADD_TO_CART,
+            payload
+        });
     }
 }

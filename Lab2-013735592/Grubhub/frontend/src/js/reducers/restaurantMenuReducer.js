@@ -3,10 +3,12 @@ import actionTypes from '../constants/index';
 const initialState = {
     items: [],
     sections: [],
-    addToCartSuccessful: false
+    addToCartSuccessful: false,
+    cart: []
 };
 
 const restaurantMenuReducer = (state = initialState, action) => {
+    let cartItem = initialState.cart;
     switch (action.type) {
         case actionTypes.MENU_ITEMS:
             return Object.assign({}, state, {
@@ -19,8 +21,10 @@ const restaurantMenuReducer = (state = initialState, action) => {
             });
 
         case actionTypes.ADD_TO_CART:
+            cartItem.push(action.payload)
             return Object.assign({}, state, {
-                addToCartSuccessful: true
+                addToCartSuccessful: true,
+                cart: cartItem
             });
 
         default:

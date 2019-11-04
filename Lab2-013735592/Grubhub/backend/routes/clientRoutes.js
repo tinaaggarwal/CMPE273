@@ -276,10 +276,10 @@ router.route('/restaurantList').get((req, res) => {
     console.log('Inside get restaurant list Request Handler')
     Restaurants.find({
     }).then(restaurants => {
-            console.log('restaurants', restaurants);
-            res.code = "200";
-            res.send(restaurants);
-        })
+        console.log('restaurants', restaurants);
+        res.code = "200";
+        res.send(restaurants);
+    })
 
         .catch(err => res.status(400).json('Error: ' + err));
 });
@@ -290,13 +290,48 @@ router.route('/menuItems').post((req, res) => {
     Restaurants.findOne({
         _id: req.body.r_id
     }).then(restaurant => {
-            console.log('restaurant    ', restaurant);
-            console.log('menu', restaurant.menu);
-            res.code = "200";
-            res.send(restaurant.menu);
-        })
+        console.log('restaurant    ', restaurant);
+        console.log('menu', restaurant.menu);
+        res.code = "200";
+        res.send(restaurant.menu);
+    })
 
         .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/submitOrder').post((req, res) => {
+    console.log('r_id  :   ', req.body.r_id)
+    console.log('Inside submit order Request Handler')
+    Restaurants.findOne({
+        _id: req.body.r_id
+    }).then(restaurant => {
+        Client.findOne({
+            _id: client_id
+        }).then(client => {
+            restaurant.orders.push({
+                item: req.body.item,
+                client_email: client.client_email,
+                status: 'New',
+                order_bill: req.body.cart_totalPrice
+            });
+            restaurant.save().then(() => {
+                client.orders.push({
+                    item: req.body.item,
+                    restaurant_name: restaurant.restaurant_name,
+                    status: 'New',
+                    order_bill: req.body.cart_totalPrice
+                });
+                client.save().then(() => {
+                    // console.log('    ', restaurant);
+                    // console.log('menu', restaurant.menu);
+                    res.code = "200";
+                    res.send('Order placed');
+                })
+            })
+
+        })
+
+    }).catch(err => res.status(400).json('Error: ' + err));
 });
 
 module.exports = router;
