@@ -143,27 +143,27 @@ function createDirectory(imageId) {
 
 // Owner
 
-// app.post('/ownerDeleteSection', function (req, res) {
-//     console.log("Inside Delete Section Handler");
-//     console.log(req.body)
+app.post('/ownerDeleteSection', function (req, res) {
+    console.log("Inside Delete Section Handler");
+    console.log(req.body)
 
-//     var sql = "DELETE FROM menu_table WHERE section_id = " + mysql.escape(req.body.deleteId);
-//     console.log(sql)
+    var sql = "DELETE FROM menu_table WHERE section_id = " + mysql.escape(req.body.deleteId);
+    console.log(sql)
 
-//     pool.query(sql, function (err, result) {
-//         if (err) {
-//             res.writeHead(400, {
-//                 'Content-Type': 'text/plain'
-//             })
-//             res.end("Error While deleting section");
-//         } else {
-//             res.writeHead(200, {
-//                 'Content-Type': 'text/plain'
-//             })
-//             res.end('section deleted Successfully');
-//         }
-//     });
-// });
+    pool.query(sql, function (err, result) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-Type': 'text/plain'
+            })
+            res.end("Error While deleting section");
+        } else {
+            res.writeHead(200, {
+                'Content-Type': 'text/plain'
+            })
+            res.end('section deleted Successfully');
+        }
+    });
+});
 
 
 app.post('/ownerDeleteItem', function (req, res) {
@@ -187,37 +187,6 @@ app.post('/ownerDeleteItem', function (req, res) {
         }
     });
 });
-
-// Client side to view restaurants and order items
-
-// app.get('/restaurantList', function (req, res) {
-//     console.log("Inside clients homepage get restaurants list Request Handler");
-
-//     var sql = "SELECT rest_name, rest_image, cuisine, rest_zip_code, r_id from owner_profile";
-//     pool.getConnection(function (err, pool) {
-//         if (err) {
-//             res.writeHead(400, {
-//                 'Content-Type': 'text/plain'
-//             })
-//             res.end("Could Not Get Connection Object");
-//         } else {
-//             pool.query(sql, function (err, result) {
-//                 if (err) {
-//                     res.writeHead(400, {
-//                         'Content-Type': 'text/plain'
-//                     })
-//                     res.end("Could Not Get Connection Object");
-//                 } else {
-//                     res.writeHead(200, {
-//                         'Content-Type': 'application/json'
-//                     })
-//                     console.log(result)
-//                     res.end(JSON.stringify(result));
-//                 }
-//             });
-//         }
-//     })
-// });
 
 app.post('/searchItem', function (req, res) {
     console.log("Inside get all menu sections for client Handler");
@@ -259,46 +228,6 @@ app.post('/searchItem', function (req, res) {
     });
 });
 
-// app.get('/nextOrderId', function (req, res) {
-//     console.log("Inside clients homepage get id for next order Request Handler");
-
-//     var sql = "SELECT MAX(order_id) FROM order_details_table";
-//     console.log(sql);
-
-//     pool.getConnection(function (err, pool) {
-//         if (err) {
-//             res.writeHead(400, {
-//                 'Content-Type': 'text/plain'
-//             })
-//             res.end("Could Not Get Connection Object");
-//         } else {
-//             pool.query(sql, function (err, result) {
-//                 if (err) {
-//                     res.writeHead(400, {
-//                         'Content-Type': 'text/plain'
-//                     })
-//                     res.end("Could Not Get Connection Object");
-//                 } else {
-//                     res.writeHead(200, {
-//                         'Content-Type': 'application/json'
-//                     })
-
-//                     orderId = JSON.stringify(result);
-//                     console.log(orderId)
-//                     orderId = JSON.parse(orderId);
-//                     id = Object.values(orderId[0]);
-//                     nextOrderId = id[0];
-//                     nextOrderId = nextOrderId + 1
-//                     // res.end(JSON.stringify(result));
-//                     res.send(nextOrderId)
-
-//                 }
-//             });
-//         }
-//     })
-
-// });
-
 app.get('/distinctCuisines', function (req, res) {
     console.log("Inside clients homepage get list of distinct cuisines for dropdown filter Request Handler");
 
@@ -329,34 +258,13 @@ app.get('/distinctCuisines', function (req, res) {
     })
 });
 
-// NOT CHANGED YET
-// app.post('/menuSections', function (req, res) {
-//     console.log("Inside get all menu sections for client Handler");
 
-//     console.log(req.body)
-//     var sql = "SELECT section_name, section_description, section_id from menu_table WHERE r_id = " + mysql.escape(req.body.r_id);
-//     console.log(sql)
+// app.post('/updateOrderStatus', function (req, res) {
+//     console.log("Inside update order status Request Handler");
+//     console.log('status....', req.body.status)
+//     console.log('order id to update ....', req.body.orderIdToUpdate)
 
-//     pool.query(sql, function (err, result) {
-//         if (err) {
-//             res.writeHead(400, {
-//                 'Content-Type': 'text/plain'
-//             })
-//             res.end("Error While deleting section");
-//         } else {
-//             res.writeHead(200, {
-//                 'Content-Type': 'text/plain'
-//             })
-//             console.log(result)
-//             res.end(JSON.stringify(result));
-//         }
-//     });
-// });
-
-// app.post('/menuItems', function (req, res) {
-//     console.log("Inside get all menu items for client Handler");
-//     console.log(req.body)
-//     var sql = "SELECT item_table.section_id, item_table.item_id, item_table.item_name, item_table.item_image, item_table.item_description, item_table.item_price from item_table, menu_table WHERE item_table.section_id = menu_table.section_id AND menu_table.r_id = " + mysql.escape(req.body.r_id);
+//     var sql = "UPDATE order_table SET status = " + mysql.escape(req.body.status) + " WHERE order_id = " + req.body.orderIdToUpdate;
 
 //     console.log(sql)
 
@@ -365,205 +273,15 @@ app.get('/distinctCuisines', function (req, res) {
 //             res.writeHead(400, {
 //                 'Content-Type': 'text/plain'
 //             })
-//             res.end("Error While deleting section");
+//             res.end("Could Not Get Connection Object");
 //         } else {
 //             res.writeHead(200, {
 //                 'Content-Type': 'text/plain'
 //             })
-//             console.log(result)
-//             res.end(JSON.stringify(result));
+//             res.end('Order status updated Successfully');
 //         }
 //     });
-
 // });
-
-
-
-
-
-
-app.get('/upcomingOrdersForClient', function (req, res) {
-    console.log("Inside get client's upcoming orders Request Handler");
-
-    var sql = "SELECT order_id, client_email, client_address, order_bill, order_table.r_id, rest_name, status from order_table, owner_profile where client_email = " + mysql.escape(sessionResponse[0].client_email) + " and status not in ('Delivered', 'Cancelled') and order_table.r_id = owner_profile.r_id "
-    console.log(sql);
-    pool.getConnection(function (err, pool) {
-        if (err) {
-            res.writeHead(400, {
-                'Content-Type': 'text/plain'
-            })
-            res.end("Could Not Get Connection Object");
-        } else {
-            pool.query(sql, function (err, result) {
-                if (err) {
-                    res.writeHead(400, {
-                        'Content-Type': 'text/plain'
-                    })
-                    res.end("Could Not Get Connection Object");
-                } else {
-                    res.writeHead(200, {
-                        'Content-Type': 'application/json'
-                    })
-
-                    res.end(JSON.stringify(result));
-
-                }
-            });
-        }
-    })
-
-});
-
-app.get('/pastOrdersForClient', function (req, res) {
-    console.log("Inside get client's upcoming orders Request Handler");
-
-    var sql = "SELECT order_id, client_email, client_address, order_bill, order_table.r_id, rest_name, status from order_table, owner_profile where client_email = " + mysql.escape(sessionResponse[0].client_email) + " and status in ('Delivered', 'Cancelled') and order_table.r_id = owner_profile.r_id order by order_id desc"
-    console.log(sql);
-    pool.getConnection(function (err, pool) {
-        if (err) {
-            res.writeHead(400, {
-                'Content-Type': 'text/plain'
-            })
-            res.end("Could Not Get Connection Object");
-        } else {
-            pool.query(sql, function (err, result) {
-                if (err) {
-                    res.writeHead(400, {
-                        'Content-Type': 'text/plain'
-                    })
-                    res.end("Could Not Get Connection Object");
-                } else {
-                    res.writeHead(200, {
-                        'Content-Type': 'application/json'
-                    })
-
-                    res.end(JSON.stringify(result));
-
-                }
-            });
-        }
-    })
-
-});
-
-app.get('/upcomingOrdersForOwner', function (req, res) {
-    console.log("Inside get owner's upcoming orders Request Handler");
-
-    var sql = "SELECT * from order_table where r_id = " + sessionResponse[0].r_id + " and status  not in ('Delivered', 'Cancelled')";
-    console.log(sql);
-    pool.getConnection(function (err, pool) {
-        if (err) {
-            res.writeHead(400, {
-                'Content-Type': 'text/plain'
-            })
-            res.end("Could Not Get Connection Object");
-        } else {
-            pool.query(sql, function (err, result) {
-                if (err) {
-                    res.writeHead(400, {
-                        'Content-Type': 'text/plain'
-                    })
-                    res.end("Could Not Get Connection Object");
-                } else {
-                    res.writeHead(200, {
-                        'Content-Type': 'application/json'
-                    })
-
-                    res.end(JSON.stringify(result));
-
-                }
-            });
-        }
-    })
-
-});
-
-app.get('/pastOrdersForOwner', function (req, res) {
-    console.log("Inside get owner's past orders Request Handler");
-
-    var sql = "SELECT * from order_table where r_id = " + sessionResponse[0].r_id + " and status in ('Delivered', 'Cancelled') order by order_id desc";
-    console.log(sql);
-    pool.getConnection(function (err, pool) {
-        if (err) {
-            res.writeHead(400, {
-                'Content-Type': 'text/plain'
-            })
-            res.end("Could Not Get Connection Object");
-        } else {
-            pool.query(sql, function (err, result) {
-                if (err) {
-                    res.writeHead(400, {
-                        'Content-Type': 'text/plain'
-                    })
-                    res.end("Could Not Get Connection Object");
-                } else {
-                    res.writeHead(200, {
-                        'Content-Type': 'application/json'
-                    })
-
-                    res.end(JSON.stringify(result));
-
-                }
-            });
-        }
-    })
-
-});
-
-app.post('/itemsInOrders', function (req, res) {
-    console.log("Inside get orders with list of items Request Handler");
-    console.log('array of orderids..........', req.body.order_ids)
-
-    if (req.body.order_ids.length === 0) {
-        console.log('empty order ids array')
-        res.writeHead(204, {
-            'Content-Type': 'text/plain'
-        })
-        res.end('No upcoming orders')
-    } else {
-        var sql = "SELECT order_details_table.order_id, order_details_table.item_id, item_table.item_image, order_details_table.item_name, order_details_table.item_quantity, order_details_table.item_total_price from order_details_table, item_table WHERE order_id in (" + req.body.order_ids + ") and order_details_table.item_id = item_table.item_id";
-
-        console.log(sql)
-
-        pool.query(sql, function (err, result) {
-            if (err) {
-                res.writeHead(400, {
-                    'Content-Type': 'text/plain'
-                })
-                res.end("Could Not Get Connection Object");
-            } else {
-                res.writeHead(200, {
-                    'Content-Type': 'application/json'
-                })
-                res.end(JSON.stringify(result));
-            }
-        });
-    }
-});
-
-app.post('/updateOrderStatus', function (req, res) {
-    console.log("Inside update order status Request Handler");
-    console.log('status....', req.body.status)
-    console.log('order id to update ....', req.body.orderIdToUpdate)
-
-    var sql = "UPDATE order_table SET status = " + mysql.escape(req.body.status) + " WHERE order_id = " + req.body.orderIdToUpdate;
-
-    console.log(sql)
-
-    pool.query(sql, function (err, result) {
-        if (err) {
-            res.writeHead(400, {
-                'Content-Type': 'text/plain'
-            })
-            res.end("Could Not Get Connection Object");
-        } else {
-            res.writeHead(200, {
-                'Content-Type': 'text/plain'
-            })
-            res.end('Order status updated Successfully');
-        }
-    });
-});
 
 //start your server on port 3001
 app.listen(3001);

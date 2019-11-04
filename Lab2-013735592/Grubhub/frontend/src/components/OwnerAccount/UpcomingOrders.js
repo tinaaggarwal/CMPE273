@@ -24,9 +24,10 @@ class UpcomingOrders extends Component {
 
     componentDidMount() {
 
-        this.props.upcomingOrdersForOwner().then(() => {
-            this.props.itemsInOrders(this.props.order_ids)
-        });
+        this.props.upcomingOrdersForOwner();
+        // .then(() => {
+        //     this.props.itemsInOrders(this.props.order_ids)
+        // });
 
     }
 
@@ -41,7 +42,8 @@ class UpcomingOrders extends Component {
 
         const data = {
             status: e.target.value,
-            orderIdToUpdate: e.target.id
+            orderIdToUpdate: e.target.id,
+            type: 'Restaurant'
         }
 
         this.props.updateOrderStatus(data);
@@ -54,7 +56,8 @@ class UpcomingOrders extends Component {
 
         const data = {
             status: 'Cancelled',
-            orderIdToUpdate: e.target.id
+            orderIdToUpdate: e.target.id,
+            type: 'Restaurant'
         }
 
         this.props.updateOrderStatus(data);
