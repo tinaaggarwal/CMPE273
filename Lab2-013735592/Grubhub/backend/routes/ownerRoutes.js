@@ -219,50 +219,6 @@ router.route('/ownerUpdateSection').post((req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 })
 
-// router.route('/ownerDeleteSection').post((req, res) => {
-//     console.log("Inside delete Section Handler");
-//     console.log('req.body....', req.body)
-//     const { section_name, section_description, section_id } = req.body;
-
-//     // Restaurants.deleteOne({ 'menu._id': section_id }, {
-//     //     '$set': {
-//     //         'menu.$.section_name': section_name,
-//     //         'menu.$.section_description': section_description
-//     //     }
-//     // }
-//     // Restaurants.updateOne(
-//     //     {
-//     //         // _id: owner_id
-//     //         'menu._id': section_id
-//     //     },
-//     //     {
-//     //         '$pull': {
-//     //             'menu._id': req.body
-//     //         }
-//     //     }
-
-//     Restaurants.updateOne(
-//         {
-//             '_id': owner_id
-//         },
-//         {
-//             $pull: {
-//                 "menu": {
-//                     '_id': section_id
-//                 }
-//             }
-//         },
-//         false,
-//         true
-//     )
-//     .then(section => {
-//         console.log('section', section);
-//         res.code = "200";
-//         res.send(section);
-//     })
-//     .catch(err => res.status(400).json('Error: ' + err));
-// })
-
 router.route('/ownerAddItem').post((req, res) => {
     console.log("Inside Insert Item Handler");
     const { section_id, item_name, item_description, item_image, item_price } = req.body;
@@ -297,6 +253,36 @@ router.route('/ownerItemsList').get((req, res) => {
             res.code = "200";
             res.send(owner.menu);
         })
+
+        .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/upcomingOrdersForOwner').get((req, res) => {
+    console.log('Inside get upcoming orders list for owner Request Handler')
+    Restaurants.findOne({
+        _id: owner_id
+    }).then(owner => {
+        console.log('owner orders', owner.orders);
+        let upcoming = owner.orders.filter(order => order.status !== 'Delivered' && order.status !== 'Cancelled')
+        console.log(upcoming);
+        res.code = "200";
+        res.send(upcoming);
+    })
+
+        .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/pastOrdersForOwner').get((req, res) => {
+    console.log('Inside get past orders list for owner Request Handler')
+    Restaurants.findOne({
+        _id: owner_id
+    }).then(owner => {
+        console.log('owner orders', owner.orders);
+        let upcoming = owner.orders.filter(order => order.status === 'Delivered' || order.status === 'Cancelled')
+        console.log(upcoming);
+        res.code = "200";
+        res.send(upcoming);
+    })
 
         .catch(err => res.status(400).json('Error: ' + err));
 });

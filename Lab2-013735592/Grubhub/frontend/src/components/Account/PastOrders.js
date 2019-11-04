@@ -22,9 +22,10 @@ class PastOrders extends Component {
 
     componentDidMount() {
 
-        this.props.pastOrdersForClient().then(() => {
-            this.props.itemsInOrders(this.props.order_ids)
-        });
+        this.props.pastOrdersForClient();
+        // .then(() => {
+        //     this.props.itemsInOrders(this.props.order_ids)
+        // });
 
     }
     handlePageChange(pageNumber) {

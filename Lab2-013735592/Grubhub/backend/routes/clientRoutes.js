@@ -1,5 +1,6 @@
 const router = require('express').Router();
 let Client = require('../models/client');
+var _ = require('lodash');
 let Restaurants = require('../models/restaurant');
 
 let client_id = '';
@@ -322,8 +323,6 @@ router.route('/submitOrder').post((req, res) => {
                     order_bill: req.body.cart_totalPrice
                 });
                 client.save().then(() => {
-                    // console.log('    ', restaurant);
-                    // console.log('menu', restaurant.menu);
                     res.code = "200";
                     res.send('Order placed');
                 })
@@ -332,6 +331,76 @@ router.route('/submitOrder').post((req, res) => {
         })
 
     }).catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/upcomingOrdersForClient').get((req, res) => {
+    console.log('Inside get upcoming orders list for client Request Handler')
+    Client.findOne({
+        _id: client_id
+    }).then(client => {
+        console.log('client orders', client.orders);
+        let upcoming = client.orders.filter(order => order.status !== 'Delivered' && order.status !== 'Cancelled')
+        console.log(upcoming);
+        res.code = "200";
+        res.send(upcoming);
+    })
+
+        .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/pastOrdersForClient').get((req, res) => {
+    console.log('Inside get past orders list for client Request Handler')
+    Client.findOne({
+        _id: client_id
+    }).then(client => {
+        console.log('client orders', client.orders);
+        let upcoming = client.orders.filter(order => order.status === 'Delivered' || order.status === 'Cancelled')
+        console.log(upcoming);
+        res.code = "200";
+        res.send(upcoming);
+    })
+
+        .catch(err => res.status(400).json('Error: ' + err));
+});
+
+
+router.route('/updateOrderStatus').post((req, res) => {
+    console.log('Inside update status Request Handler');
+    console.log('req.body...', req.body);
+    if(req.body.type === 'Client'){
+        Client.findOne({
+            _id: client_id,
+            'orders._id': req.body.orderIdToUpdate
+        }).then(client => {
+            const order = _.find(client.orders, (order) => order.id === req.body.orderIdToUpdate);
+            order.status = req.body.status;
+            client.save().then(()=> {
+                res.code = "200";
+                res.send('Order status updated');
+            })
+        })
+    } else {
+        Restaurants.findOne({
+            'orders._id': req.body.orderIdToUpdate
+        }).then(restaurant => {
+            const order = _.find(restaurant.orders, (order) => order.id === req.body.orderIdToUpdate);
+            order.status = req.body.status;
+            restaurant.save().then(()=> {
+                res.code = "200";
+                res.send('Order status updated');
+            })
+        })
+    }
+    // Restaurants.findOne({
+    //     _id: req.body.r_id
+    // }).then(restaurant => {
+    //     console.log('restaurant    ', restaurant);
+    //     console.log('menu', restaurant.menu);
+    //     res.code = "200";
+    //     res.send(restaurant.menu);
+    // })
+
+    //     .catch(err => res.status(400).json('Error: ' + err));
 });
 
 module.exports = router;
