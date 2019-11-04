@@ -50,6 +50,7 @@ class Menu extends Component {
 
     render() {
 
+        console.log('items', this.props.items)
         let message = null;
 
         if (this.props.errorMessage) {
@@ -66,8 +67,16 @@ class Menu extends Component {
         const currentSections = this.props.sections.slice(indexOfFirstItem, indexOfLastItem);
 
 
+        // let list = null;
+        // if (this.props.items.menu) {
+        //     list = this.props.items.menu.map((section) => {
+        //         console.log('map new list', section)
+
+        //     });
+        // }
+
         const listItems = currentSections.map((section) =>
-            <li className="list-group-item" key={section.section_id}>
+            <li className="list-group-item" key={section._id}>
                 <h3>{section.section_name}</h3>
                 <p>{section.section_description}</p>
                 <ul className="list-group list-group-flush">
@@ -101,6 +110,7 @@ class Menu extends Component {
                 <div className="card">
                     <ul className="list-group list-group-flush">{listItems}</ul>
                 </div>
+                {/* {list} */}
                 <div>
                     <Pagination
                         activePage={this.state.activePage}

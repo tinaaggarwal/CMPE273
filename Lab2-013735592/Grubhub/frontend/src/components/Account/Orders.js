@@ -23,7 +23,7 @@ class Orders extends Component {
                                 : null}
                         </div>
                         <p>Delivery address : {order.client_address}</p>
-                        <p>Restaurant : {order.rest_name}</p>
+                        <p>Restaurant : {order.restaurant_name}</p>
                         <p>Order total : ${order.order_bill}</p>
                         <p>Status : {order.status}</p>
                         {this.props.order_details.map((item) => {

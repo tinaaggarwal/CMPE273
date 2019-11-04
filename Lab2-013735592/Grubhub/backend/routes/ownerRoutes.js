@@ -1,4 +1,5 @@
 const router = require('express').Router();
+var _ = require('lodash');
 let Restaurants = require('../models/restaurant');
 let owner_id = '';
 
@@ -261,5 +262,43 @@ router.route('/ownerUpdateSection').post((req, res) => {
 //     })
 //     .catch(err => res.status(400).json('Error: ' + err));
 // })
+
+router.route('/ownerAddItem').post((req, res) => {
+    console.log("Inside Insert Item Handler");
+    const { section_id, item_name, item_description, item_image, item_price } = req.body;
+    Restaurants.findOne({
+        _id: owner_id,
+    }).then(restaurant => {
+        const section = _.find(restaurant.menu, (section) => section.id === section_id)
+        section.item.push({
+            item_name: item_name,
+            item_description: item_description,
+            item_image: item_image,
+            item_price: item_price
+        })
+        restaurant.save().then(() => {
+            console.log('Item added Successfully')
+            res.code = "200";
+            res.send({ user });
+        }, (err) => {
+            res.code = "400";
+            res.send("Bad Request");
+        })
+
+    })
+})
+
+router.route('/ownerItemsList').get((req, res) => {
+    console.log('Inside Owner items list Request Handler')
+    Restaurants.findOne({
+        _id: owner_id
+    }).then(owner => {
+            console.log('owner', owner.menu);
+            res.code = "200";
+            res.send(owner.menu);
+        })
+
+        .catch(err => res.status(400).json('Error: ' + err));
+});
 
 module.exports = router;

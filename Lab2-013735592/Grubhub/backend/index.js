@@ -166,65 +166,6 @@ function createDirectory(imageId) {
 // });
 
 
-app.post('/ownerAddItem', function (req, res) {
-    console.log("Inside Insert Item Handler");
-    console.log(req.body)
-
-    var sql = "INSERT INTO item_table (section_id, item_name, item_image, item_description, item_price) VALUES ( " +
-        mysql.escape(req.body.section_id) + " , " + mysql.escape(req.body.item_name) + " , " +
-        mysql.escape(req.body.item_image) + " , " + mysql.escape(req.body.item_description) + " , " +
-        mysql.escape(req.body.item_price) + " ) ";
-
-    console.log(sql)
-    pool.query(sql, function (err, result) {
-        if (err) {
-            res.writeHead(400, {
-                'Content-Type': 'text/plain'
-            })
-            res.end("Error While updating address");
-        } else {
-            res.writeHead(200, {
-                'Content-Type': 'text/plain'
-            })
-            res.end('Item added Successfully');
-        }
-    });
-});
-
-app.get('/ownerItemsList', function (req, res) {
-    console.log(sessionResponse[0])
-    console.log("Inside Owner Sections get items Request Handler");
-
-    var sql = "SELECT item_table.section_id, item_table.item_id, item_table.item_name, item_table.item_image, item_table.item_description, item_table.item_price from item_table, menu_table WHERE item_table.section_id = menu_table.section_id AND menu_table.r_id = " + sessionResponse[0].r_id;
-
-    console.log(sql);
-    pool.getConnection(function (err, pool) {
-        if (err) {
-            res.writeHead(400, {
-                'Content-Type': 'text/plain'
-            })
-            res.end("Could Not Get Connection Object");
-        } else {
-            pool.query(sql, function (err, result) {
-                if (err) {
-                    res.writeHead(400, {
-                        'Content-Type': 'text/plain'
-                    })
-                    res.end("Could Not Get Connection Object");
-                } else {
-                    res.writeHead(200, {
-                        'Content-Type': 'application/json'
-                    })
-
-                    res.end(JSON.stringify(result));
-
-                }
-            });
-        }
-    })
-
-});
-
 app.post('/ownerDeleteItem', function (req, res) {
     console.log("Inside Delete Item Handler");
     console.log(req.body)
@@ -249,34 +190,34 @@ app.post('/ownerDeleteItem', function (req, res) {
 
 // Client side to view restaurants and order items
 
-app.get('/restaurantList', function (req, res) {
-    console.log("Inside clients homepage get restaurants list Request Handler");
+// app.get('/restaurantList', function (req, res) {
+//     console.log("Inside clients homepage get restaurants list Request Handler");
 
-    var sql = "SELECT rest_name, rest_image, cuisine, rest_zip_code, r_id from owner_profile";
-    pool.getConnection(function (err, pool) {
-        if (err) {
-            res.writeHead(400, {
-                'Content-Type': 'text/plain'
-            })
-            res.end("Could Not Get Connection Object");
-        } else {
-            pool.query(sql, function (err, result) {
-                if (err) {
-                    res.writeHead(400, {
-                        'Content-Type': 'text/plain'
-                    })
-                    res.end("Could Not Get Connection Object");
-                } else {
-                    res.writeHead(200, {
-                        'Content-Type': 'application/json'
-                    })
-                    console.log(result)
-                    res.end(JSON.stringify(result));
-                }
-            });
-        }
-    })
-});
+//     var sql = "SELECT rest_name, rest_image, cuisine, rest_zip_code, r_id from owner_profile";
+//     pool.getConnection(function (err, pool) {
+//         if (err) {
+//             res.writeHead(400, {
+//                 'Content-Type': 'text/plain'
+//             })
+//             res.end("Could Not Get Connection Object");
+//         } else {
+//             pool.query(sql, function (err, result) {
+//                 if (err) {
+//                     res.writeHead(400, {
+//                         'Content-Type': 'text/plain'
+//                     })
+//                     res.end("Could Not Get Connection Object");
+//                 } else {
+//                     res.writeHead(200, {
+//                         'Content-Type': 'application/json'
+//                     })
+//                     console.log(result)
+//                     res.end(JSON.stringify(result));
+//                 }
+//             });
+//         }
+//     })
+// });
 
 app.post('/searchItem', function (req, res) {
     console.log("Inside get all menu sections for client Handler");
@@ -318,45 +259,45 @@ app.post('/searchItem', function (req, res) {
     });
 });
 
-app.get('/nextOrderId', function (req, res) {
-    console.log("Inside clients homepage get id for next order Request Handler");
+// app.get('/nextOrderId', function (req, res) {
+//     console.log("Inside clients homepage get id for next order Request Handler");
 
-    var sql = "SELECT MAX(order_id) FROM order_details_table";
-    console.log(sql);
+//     var sql = "SELECT MAX(order_id) FROM order_details_table";
+//     console.log(sql);
 
-    pool.getConnection(function (err, pool) {
-        if (err) {
-            res.writeHead(400, {
-                'Content-Type': 'text/plain'
-            })
-            res.end("Could Not Get Connection Object");
-        } else {
-            pool.query(sql, function (err, result) {
-                if (err) {
-                    res.writeHead(400, {
-                        'Content-Type': 'text/plain'
-                    })
-                    res.end("Could Not Get Connection Object");
-                } else {
-                    res.writeHead(200, {
-                        'Content-Type': 'application/json'
-                    })
+//     pool.getConnection(function (err, pool) {
+//         if (err) {
+//             res.writeHead(400, {
+//                 'Content-Type': 'text/plain'
+//             })
+//             res.end("Could Not Get Connection Object");
+//         } else {
+//             pool.query(sql, function (err, result) {
+//                 if (err) {
+//                     res.writeHead(400, {
+//                         'Content-Type': 'text/plain'
+//                     })
+//                     res.end("Could Not Get Connection Object");
+//                 } else {
+//                     res.writeHead(200, {
+//                         'Content-Type': 'application/json'
+//                     })
 
-                    orderId = JSON.stringify(result);
-                    console.log(orderId)
-                    orderId = JSON.parse(orderId);
-                    id = Object.values(orderId[0]);
-                    nextOrderId = id[0];
-                    nextOrderId = nextOrderId + 1
-                    // res.end(JSON.stringify(result));
-                    res.send(nextOrderId)
+//                     orderId = JSON.stringify(result);
+//                     console.log(orderId)
+//                     orderId = JSON.parse(orderId);
+//                     id = Object.values(orderId[0]);
+//                     nextOrderId = id[0];
+//                     nextOrderId = nextOrderId + 1
+//                     // res.end(JSON.stringify(result));
+//                     res.send(nextOrderId)
 
-                }
-            });
-        }
-    })
+//                 }
+//             });
+//         }
+//     })
 
-});
+// });
 
 app.get('/distinctCuisines', function (req, res) {
     console.log("Inside clients homepage get list of distinct cuisines for dropdown filter Request Handler");
@@ -388,52 +329,53 @@ app.get('/distinctCuisines', function (req, res) {
     })
 });
 
-app.post('/menuSections', function (req, res) {
-    console.log("Inside get all menu sections for client Handler");
+// NOT CHANGED YET
+// app.post('/menuSections', function (req, res) {
+//     console.log("Inside get all menu sections for client Handler");
 
-    console.log(req.body)
-    var sql = "SELECT section_name, section_description, section_id from menu_table WHERE r_id = " + mysql.escape(req.body.r_id);
-    console.log(sql)
+//     console.log(req.body)
+//     var sql = "SELECT section_name, section_description, section_id from menu_table WHERE r_id = " + mysql.escape(req.body.r_id);
+//     console.log(sql)
 
-    pool.query(sql, function (err, result) {
-        if (err) {
-            res.writeHead(400, {
-                'Content-Type': 'text/plain'
-            })
-            res.end("Error While deleting section");
-        } else {
-            res.writeHead(200, {
-                'Content-Type': 'text/plain'
-            })
-            console.log(result)
-            res.end(JSON.stringify(result));
-        }
-    });
-});
+//     pool.query(sql, function (err, result) {
+//         if (err) {
+//             res.writeHead(400, {
+//                 'Content-Type': 'text/plain'
+//             })
+//             res.end("Error While deleting section");
+//         } else {
+//             res.writeHead(200, {
+//                 'Content-Type': 'text/plain'
+//             })
+//             console.log(result)
+//             res.end(JSON.stringify(result));
+//         }
+//     });
+// });
 
-app.post('/menuItems', function (req, res) {
-    console.log("Inside get all menu items for client Handler");
-    console.log(req.body)
-    var sql = "SELECT item_table.section_id, item_table.item_id, item_table.item_name, item_table.item_image, item_table.item_description, item_table.item_price from item_table, menu_table WHERE item_table.section_id = menu_table.section_id AND menu_table.r_id = " + mysql.escape(req.body.r_id);
+// app.post('/menuItems', function (req, res) {
+//     console.log("Inside get all menu items for client Handler");
+//     console.log(req.body)
+//     var sql = "SELECT item_table.section_id, item_table.item_id, item_table.item_name, item_table.item_image, item_table.item_description, item_table.item_price from item_table, menu_table WHERE item_table.section_id = menu_table.section_id AND menu_table.r_id = " + mysql.escape(req.body.r_id);
 
-    console.log(sql)
+//     console.log(sql)
 
-    pool.query(sql, function (err, result) {
-        if (err) {
-            res.writeHead(400, {
-                'Content-Type': 'text/plain'
-            })
-            res.end("Error While deleting section");
-        } else {
-            res.writeHead(200, {
-                'Content-Type': 'text/plain'
-            })
-            console.log(result)
-            res.end(JSON.stringify(result));
-        }
-    });
+//     pool.query(sql, function (err, result) {
+//         if (err) {
+//             res.writeHead(400, {
+//                 'Content-Type': 'text/plain'
+//             })
+//             res.end("Error While deleting section");
+//         } else {
+//             res.writeHead(200, {
+//                 'Content-Type': 'text/plain'
+//             })
+//             console.log(result)
+//             res.end(JSON.stringify(result));
+//         }
+//     });
 
-});
+// });
 
 app.post('/addItemToCart', function (req, res) {
     console.log("Inside add items to cart client Handler");

@@ -89,11 +89,11 @@ class ClientHomePage extends Component {
         options = options.concat(moreOptions);
 
         const restaurantsList = currentRestaurants.map((restaurant) =>
-            <Link to={`/home/${restaurant.r_id}`} key={restaurant.r_id} className="nav-link">
+            <Link to={`/home/${restaurant._id}`} key={restaurant._id} className="nav-link">
                 <div className="card mb-3" >
                     <img className="restImage" src={restaurant.rest_image} alt={restaurant.rest_image} />
                     <div className="card-body">
-                        <h5 className="card-title">{restaurant.rest_name}</h5>
+                        <h5 className="card-title">{restaurant.restaurant_name}</h5>
                         <p className="card-text">{restaurant.cuisine}</p>
                         <p className="card-text"><small className="text-muted">{restaurant.rest_zip_code}</small></p>
                     </div>

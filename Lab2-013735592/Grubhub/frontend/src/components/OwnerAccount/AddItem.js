@@ -55,12 +55,12 @@ class AddItem extends Component {
 
         var sectionID = this.props.sections.filter(section => {
             if (e.target.value === section.section_name) {
-                return section.section_id;
+                return section._id;
             }
         });
-
+        console.log(sectionID)
         this.setState({
-            section_id: sectionID[0].section_id
+            section_id: sectionID[0]._id
         })
 
     }
@@ -80,7 +80,7 @@ class AddItem extends Component {
             const data = new FormData();
             data.append("image", picture, picture.name);
             console.log(data)
-
+            
             this.props.upload(data)
                 .then(() => {
                     const data = {

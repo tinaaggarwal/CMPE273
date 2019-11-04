@@ -1,5 +1,6 @@
 const router = require('express').Router();
 let Client = require('../models/client');
+let Restaurants = require('../models/restaurant');
 
 let client_id = '';
 
@@ -270,5 +271,32 @@ router.route('/userUpdateProfileImage').post((req, res) => {
             res.send("Bad Request");
         })
 })
+
+router.route('/restaurantList').get((req, res) => {
+    console.log('Inside get restaurant list Request Handler')
+    Restaurants.find({
+    }).then(restaurants => {
+            console.log('restaurants', restaurants);
+            res.code = "200";
+            res.send(restaurants);
+        })
+
+        .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/menuItems').post((req, res) => {
+    console.log('r_id  :   ', req.body.r_id)
+    console.log('Inside get menu items list Request Handler')
+    Restaurants.findOne({
+        _id: req.body.r_id
+    }).then(restaurant => {
+            console.log('restaurant    ', restaurant);
+            console.log('menu', restaurant.menu);
+            res.code = "200";
+            res.send(restaurant.menu);
+        })
+
+        .catch(err => res.status(400).json('Error: ' + err));
+});
 
 module.exports = router;
