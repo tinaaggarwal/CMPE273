@@ -21,7 +21,7 @@ class Menu extends Component {
 
     componentDidMount() {
 
-        this.props.ownerSections();
+        // this.props.ownerSections();
 
         this.props.ownerItemsList();
 
@@ -64,7 +64,7 @@ class Menu extends Component {
         // Logic for displaying items
         const indexOfLastItem = this.state.activePage * this.state.sectionsPerPage;
         const indexOfFirstItem = indexOfLastItem - this.state.sectionsPerPage;
-        const currentSections = this.props.sections.slice(indexOfFirstItem, indexOfLastItem);
+        const currentSections = this.props.items.slice(indexOfFirstItem, indexOfLastItem);
 
 
         // let list = null;
@@ -80,10 +80,10 @@ class Menu extends Component {
                 <h3>{section.section_name}</h3>
                 <p>{section.section_description}</p>
                 <ul className="list-group list-group-flush">
-                    {this.props.items.map((item) => {
-                        if (item.section_id === section.section_id) {
+                    {section.item.map((item) => {
+                        // if (item.section_id === section.section_id) {
                             return (
-                                <li className="list-group-item" key={item.item_id}>
+                                <li className="list-group-item" key={item._id}>
                                     <div className="card">
                                         <div className="itemLayout">
                                             <img className="itemImage" src={item.item_image} title={item.item_name} />
@@ -91,14 +91,14 @@ class Menu extends Component {
                                                 <h5 className="card-title">{item.item_name}</h5>
                                                 <h6 className="card-subtitle">{item.item_description}</h6>
                                                 <p className="card-text">$ {item.item_price}</p>
-                                                <button onClick={this.submitDeleteItem} id={item.item_id} className="btn btn-link" type="button" name="Update">Delete</button>
+                                                <button onClick={this.submitDeleteItem} id={item._id} className="btn btn-link" type="button" name="Update">Delete</button>
                                             </div>
                                         </div>
                                     </div>
 
                                 </li>
                             );
-                        }
+                        // }
                     })}
                 </ul>
             </li>
@@ -115,7 +115,7 @@ class Menu extends Component {
                     <Pagination
                         activePage={this.state.activePage}
                         itemsCountPerPage={2}
-                        totalItemsCount={this.props.sections.length}
+                        totalItemsCount={this.props.items.length}
                         pageRangeDisplayed={5}
                         onChange={this.handlePageChange}
                     />

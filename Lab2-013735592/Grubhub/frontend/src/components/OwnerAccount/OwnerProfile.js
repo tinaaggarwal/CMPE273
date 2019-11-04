@@ -185,7 +185,7 @@ class OwnerProfile extends Component {
         // if (!cookie.load('cookie')) {
         //     redirectVar = <Redirect to="/" />
         // }
-
+        
         let profile_image = null;
         if (this.props.profile_image === null) {
             profile_image =

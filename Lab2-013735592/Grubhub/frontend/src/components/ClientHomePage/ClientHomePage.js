@@ -30,8 +30,6 @@ class ClientHomePage extends Component {
 
         this.props.restaurantList();
 
-        this.props.nextOrderId();
-
         this.props.distinctCuisines();
 
     }
@@ -95,7 +93,7 @@ class ClientHomePage extends Component {
                     <div className="card-body">
                         <h5 className="card-title">{restaurant.restaurant_name}</h5>
                         <p className="card-text">{restaurant.cuisine}</p>
-                        <p className="card-text"><small className="text-muted">{restaurant.rest_zip_code}</small></p>
+                        <p className="card-text"><small className="text-muted">{restaurant.zip_code}</small></p>
                     </div>
                 </div>
             </Link>
