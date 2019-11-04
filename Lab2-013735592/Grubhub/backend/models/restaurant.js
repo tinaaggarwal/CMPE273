@@ -47,10 +47,10 @@ const restaurantsSchema = new Schema({
                 type : String
             },
             item_description : {
-                type : Number
+                type : String
             },
             item_image : {
-                type : Number
+                type : String
             },
             item_price : {
                 type : Number
