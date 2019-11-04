@@ -26,9 +26,16 @@ class Cart extends Component {
             r_id: this.props.match.params.restaurantId
         });
 
-        this.props.cartItems();
+        let cartTotal = 0;
+        for (var item of this.props.cart) {
+            cartTotal += (item.item_price * item.item_quantity)
+        }
+        this.setState({
+            cart_total: cartTotal
+        })
+        // this.props.cartItems();
 
-        this.props.cartTotal();
+        // this.props.cartTotal();
 
     }
 
@@ -36,15 +43,17 @@ class Cart extends Component {
         //prevent page from refresh
         e.preventDefault();
         const data = {
-            order_id: this.props.orderId,
+            // order_id: this.props.orderId,
+            item: this.props.cart,
             r_id: this.state.r_id,
-            cart_totalPrice: this.props.cart_totalPrice
+            // cart_totalPrice: this.props.cart_totalPrice
+            cart_totalPrice: this.state.cart_total
         }
         this.props.submitOrder(data);
     };
 
     render() {
-
+        
         let redirectVar = null;
 
         if(this.props.emptyCart) {
@@ -61,8 +70,8 @@ class Cart extends Component {
             redirectVar = <Redirect to={{
                 pathname: "/orderPlaced",
                 state: {
-                    order_id: this.props.orderId,
-                    cart_totalPrice: this.props.cart_totalPrice
+                    // order_id: this.props.orderId,
+                    cart_totalPrice: this.state.cart_total
                 }
             }}
             />
@@ -78,14 +87,14 @@ class Cart extends Component {
                     <div className="card-body">
                         <h5 className="card-title">Order items</h5>
                         {
-                            this.props.items.map((item) => {
+                            this.props.cart.map((item) => {
                                 return (
-                                    <li className="list-group-item" key={item.item_id}>
+                                    <li className="list-group-item" key={item.item_name}>
                                         {/* <div className="card"> */}
                                         {/* <img className="card-img-top" src="..." alt="Card image cap"> */}
                                         <h5 className="card-text">{item.item_name}</h5>
                                         <h6 className="card-text">Quantity: {item.item_quantity}</h6>
-                                        <p className="card-text">Total Price: {item.item_total_price}</p>
+                                        <p className="card-text">Total Price: {item.item_price * item.item_quantity}</p>
                                         {/* </div> */}
                                     </li>
                                 );
@@ -93,7 +102,7 @@ class Cart extends Component {
                             )}
                     </div>
                     <div className="card-footer text-muted">
-                        Total: {this.state.cart_totalPrice}
+                        Total: {this.state.cart_total}
                         <br />
                         <button onClick={this.submitOrder} className="btn btn-success" type="button" name="Order">Place Order</button>
                     </div>
@@ -110,7 +119,8 @@ const mapStateToProps = state => {
         orderId: state.cart.orderId,
         cart_totalPrice: state.cart.cart_totalPrice,
         emptyCart: state.cart.emptyCart,
-        orderSubmitted: state.cart.orderSubmitted
+        orderSubmitted: state.cart.orderSubmitted,
+        cart: state.restaurantMenu.cart
     };
 };
 

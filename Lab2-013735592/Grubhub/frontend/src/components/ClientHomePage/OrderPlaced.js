@@ -21,7 +21,7 @@ class OrderPlaced extends Component {
                         Congratulations!!!!! Your Order has been placed
                     </div>
                     <div className="card-body">
-                        <h5 className="card-title">Order ID : {this.props.location.state.order_id}</h5>
+                        {/* <h5 className="card-title">Order ID : {this.props.location.state.order_id}</h5> */}
                         <p className="card-text">Order Total : {this.props.location.state.cart_totalPrice}</p>
                     </div>
                 </>

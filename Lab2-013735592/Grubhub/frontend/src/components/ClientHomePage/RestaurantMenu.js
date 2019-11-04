@@ -36,7 +36,7 @@ class RestaurantMenu extends Component {
         }
 
         this.props.menuItems(data);
-        this.props.menuSections(data);
+        // this.props.menuSections(data);
 
     }
 
@@ -54,7 +54,7 @@ class RestaurantMenu extends Component {
 
         this.setState({
             item_quantity: e.target.value,
-            item_id: item.item_id,
+            // item_id: item.item_id,
             item_name: e.target.name,
             item_price: item.item_price
         })
@@ -65,7 +65,7 @@ class RestaurantMenu extends Component {
         e.preventDefault();
         const data = {
             item_quantity: this.state.item_quantity,
-            item_id: this.state.item_id,
+            // item_id: this.state.item_id,
             item_name: this.state.item_name,
             item_price: this.state.item_price
         }
@@ -82,19 +82,18 @@ class RestaurantMenu extends Component {
         // Logic for displaying items
         const indexOfLastItem = this.state.activePage * this.state.sectionsPerPage;
         const indexOfFirstItem = indexOfLastItem - this.state.sectionsPerPage;
-        const currentSections = this.props.sections.slice(indexOfFirstItem, indexOfLastItem);
+        const currentSections = this.props.items.slice(indexOfFirstItem, indexOfLastItem);
 
         const listItems = currentSections.map((section) => {
             return (
-                <div className="card mb-3" key={section.section_id}>
+                <div className="card mb-3" key={section._id}>
                     <div className="sectionsLayout">
                         <h3>{section.section_name}</h3>
                         <p>{section.section_description}</p>
                     </div>
-                    {this.props.items.map((item) => {
-                        if (item.section_id === section.section_id) {
+                    {section.item.map((item) => {
                             return (
-                                <div className="card" key={item.item_id}>
+                                <div className="card" key={item._id}>
                                     <div className="itemLayout">
                                         <img className="itemImageLayout" src={item.item_image} title={item.item_name} alt={item.item_name} />
                                         <div className="itemDetails">
@@ -120,7 +119,6 @@ class RestaurantMenu extends Component {
                                     </div>
                                 </div>
                             );
-                        }
                     })}
                 </div>
             )
@@ -142,7 +140,7 @@ class RestaurantMenu extends Component {
                             <Pagination
                                 activePage={this.state.activePage}
                                 itemsCountPerPage={2}
-                                totalItemsCount={this.props.sections.length}
+                                totalItemsCount={this.props.items.length}
                                 pageRangeDisplayed={5}
                                 onChange={this.handlePageChange}
                             />
