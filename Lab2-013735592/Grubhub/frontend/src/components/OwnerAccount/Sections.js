@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import SectionsModal from './SectionsModal';
 import './OwnerProfile.css';
 import { ownerMenuActions } from '../../js/actions/index';
-import  { connect } from 'react-redux';
+import { connect } from 'react-redux';
 
 class Sections extends Component {
 
@@ -56,12 +56,12 @@ class Sections extends Component {
 
     btnTypeClicked = (e) => {
 
-        if(e.target.name == 'Update') {
+        if (e.target.name == 'Update') {
 
             const sectionToEdit = this.props.sections.filter(section => {
                 return section._id == e.target.id;
-              });
-              
+            });
+
             this.setState({
                 editSectionID: e.target.id,
                 sectionName: sectionToEdit[0].section_name,
@@ -82,7 +82,7 @@ class Sections extends Component {
             section_name: this.state.sectionName,
             section_description: this.state.sectionDescription
         }
-        
+
         this.props.ownerAddSection(data);
 
         this.showSectionsModal();
@@ -97,10 +97,10 @@ class Sections extends Component {
             section_name: this.state.sectionName,
             section_description: this.state.sectionDescription
         }
-        this.props.ownerUpdateSection(data);
-
-        this.showSectionsModal();
-        window.location.reload();
+        this.props.ownerUpdateSection(data).then(() => {
+            this.showSectionsModal();
+                window.location.reload();
+            })
     };
 
     submitDeleteSection = (e) => {
@@ -120,11 +120,11 @@ class Sections extends Component {
 
         let sectionsList;
         let message = null;
-        
+
         if (this.props.authFlag) {
             message = <p>Section added !!!</p>
         }
-        
+
         if (this.props.errorMessage) {
             message = <p>Failed, try again!</p>
         }
@@ -180,7 +180,7 @@ class Sections extends Component {
 }
 
 const mapStateToProps = state => {
-    return { 
+    return {
         sections: state.ownerMenu.sections,
         deletedMessage: state.ownerMenu.deletedMessage,
         errorMessage: state.ownerMenu.errorMessage,

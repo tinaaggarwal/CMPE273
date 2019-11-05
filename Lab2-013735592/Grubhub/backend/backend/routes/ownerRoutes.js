@@ -190,31 +190,31 @@ router.route('/ownerSections').get((req, res) => {
 router.route('/ownerAddSection').post((req, res) => {
     console.log("Inside Insert Section Handler");
     const { section_name, section_description } = req.body;
-    Restaurants.findOneAndUpdate(
-        {
-            _id: owner_id
-        },
-        {
-            $push: {
-                menu: {
-                    section_name,
-                    section_description
-                }
-            }
-        },
-        {
-            new: true,
-            upsert: true,
-            setDefaultsOnInsert: true,
-            useFindAndModify: false
-        }).then((user) => {
-            console.log('Section added Successfully')
-            res.code = "200";
-            res.send({ user });
-        }, (err) => {
-            res.code = "400";
-            res.send("Bad Request");
-        })
+
+    let msg = {
+        section_name: section_name,
+        section_description: section_description,
+        owner_id: owner_id
+    }
+    kafka.make_request('owner_add_section', msg, function (err, results) {
+        console.log('in result');
+        console.log(results);
+
+        if (err) {
+            console.log('Unable to get owner details, The restaurant is not valid', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('The restaurant is not valid');
+        }
+        else {
+            console.log('Owner restaurant section added successfully', results);
+            res.writeHead(200, {
+                'Content-type': 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+    });
 })
 
 router.route('/ownerUpdateSection').post((req, res) => {
@@ -222,17 +222,31 @@ router.route('/ownerUpdateSection').post((req, res) => {
     console.log('req.body....', req.body)
     const { section_name, section_description, section_id } = req.body;
 
-    Restaurants.updateOne({ 'menu._id': section_id }, {
-        '$set': {
-            'menu.$.section_name': section_name,
-            'menu.$.section_description': section_description
+    let msg = {
+        section_name: section_name,
+        section_description: section_description,
+        section_id: section_id,
+        owner_id: owner_id
+    }
+    kafka.make_request('owner_update_section', msg, function (err, results) {
+        console.log('in result');
+        console.log(results);
+
+        if (err) {
+            console.log('Unable to get owner details, The restaurant is not valid', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('The restaurant is not valid');
         }
-    }).then(section => {
-        console.log('section', section);
-        res.code = "200";
-        res.send(section);
-    })
-        .catch(err => res.status(400).json('Error: ' + err));
+        else {
+            console.log('Owner restaurant section updated successfully', results);
+            res.writeHead(200, {
+                'Content-type': 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+    });
 })
 
 router.route('/ownerAddItem').post((req, res) => {
