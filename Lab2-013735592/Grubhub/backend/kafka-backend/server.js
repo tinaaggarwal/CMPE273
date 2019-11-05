@@ -7,6 +7,9 @@ var UserUpdate = require('./services/userUpdate');
 var UserUpdateName = require('./services/userUpdateName');
 var UserUpdateEmail = require('./services/userUpdateEmail');
 var UserUpdatePassword = require('./services/userUpdatePassword');
+var AddressUpdate = require('./services/addressUpdate');
+var UserAddAddress = require('./services/userAddAddress');
+var UserUpdateAddress = require('./services/userUpdateAddress');
 
 // owner topic files
 var OwnerLogin = require('./services/ownerLogin');
@@ -54,7 +57,9 @@ handleTopicRequest("user_update", UserUpdate)
 handleTopicRequest("user_update_name", UserUpdateName)
 handleTopicRequest("user_update_email", UserUpdateEmail)
 handleTopicRequest("user_update_password", UserUpdatePassword)
-
+handleTopicRequest("address_update", AddressUpdate)
+handleTopicRequest("user_add_address", UserAddAddress)
+handleTopicRequest("user_update_address", UserUpdateAddress)
 
 // owner topics
 handleTopicRequest("owner_login", OwnerLogin)

@@ -174,81 +174,100 @@ router.route('/userUpdatePassword').post((req, res) => {
 router.route('/addressUpdate').get((req, res) => {
     console.log('Inside client address profile part')
     console.log(client_id);
-    Client.findOne({
-        _id: client_id
-    })
-        .then(client => {
-            console.log('client', client);
-            res.code = "200";
-            res.send(client);
-        })
-        .catch(err => res.status(400).json('Error: ' + err));
+
+    kafka.make_request('address_update', client_id, function (err, results) {
+        console.log('in result of user update');
+
+        if (err) {
+            console.log('Unable to get user details', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('Error in get connections');
+        }
+        else {
+            console.log('Get user address data sucesssful.', results);
+            res.writeHead(200, {
+                'Content-type': 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+
+    });
 });
 
 router.route('/userAddAddress').post((req, res) => {
     console.log("Inside Add user address Handler");
     const { street_address, apt, city, state, zip_code, phone, cross_street, delivery_instructions, address_name } = req.body;
-    Client.findOneAndUpdate(
-        {
-            _id: client_id
-        },
-        {
-            street_address,
-            apt,
-            city,
-            state,
-            zip_code,
-            phone,
-            cross_street,
-            delivery_instructions,
-            address_name
-        },
-        {
-            new: true,
-            runValidators: true,
-            upsert: true,
-            useFindAndModify: false
-        }).then((user) => {
-            console.log('user address added')
-            res.code = "200";
-            res.send({ user });
-        }, (err) => {
-            res.code = "400";
-            res.send("Bad Request");
-        })
+    
+    let msg = {
+        street_address: street_address,
+        apt: apt,
+        city: city,
+        state: state,
+        zip_code: zip_code,
+        phone: phone,
+        cross_street: cross_street,
+        delivery_instructions: delivery_instructions,
+        address_name: address_name,
+        client_id: client_id
+    }
+    kafka.make_request('user_add_address', msg, function (err, results) {
+        console.log('in result');
+        console.log(results);
+
+        if (err) {
+            console.log('Unable to get user details, The user is not valid', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('The user is not valid');
+        }
+        else {
+            console.log('Client address added successfully', results);
+            res.writeHead(200, {
+                'Content-type': 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+    });
 })
 
 router.route('/userUpdateAddress').post((req, res) => {
     console.log("Inside Add user address Handler");
     const { street_address, apt, city, state, zip_code, phone, cross_street, delivery_instructions, address_name } = req.body;
-    Client.findOneAndUpdate(
-        {
-            _id: client_id
-        },
-        {
-            street_address,
-            apt,
-            city,
-            state,
-            zip_code,
-            phone,
-            cross_street,
-            delivery_instructions,
-            address_name
-        },
-        {
-            new: true,
-            runValidators: true,
-            upsert: true,
-            useFindAndModify: false
-        }).then((user) => {
-            console.log('user address updated')
-            res.code = "200";
-            res.send({ user });
-        }, (err) => {
-            res.code = "400";
-            res.send("Bad Request");
-        })
+    
+    let msg = {
+        street_address: street_address,
+        apt: apt,
+        city: city,
+        state: state,
+        zip_code: zip_code,
+        phone: phone,
+        cross_street: cross_street,
+        delivery_instructions: delivery_instructions,
+        address_name: address_name,
+        client_id: client_id
+    }
+    kafka.make_request('user_update_address', msg, function (err, results) {
+        console.log('in result');
+        console.log(results);
+
+        if (err) {
+            console.log('Unable to get user details, The user is not valid', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('The user is not valid');
+        }
+        else {
+            console.log('Client address updated successfully', results);
+            res.writeHead(200, {
+                'Content-type': 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+    });
 })
 
 router.route('/userUpdateProfileImage').post((req, res) => {
