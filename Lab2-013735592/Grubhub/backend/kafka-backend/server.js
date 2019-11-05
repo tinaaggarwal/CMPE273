@@ -4,6 +4,9 @@ var connection = new require('./kafka/Connection');
 var ClientLogin = require('./services/clientLogin');
 var ClientSignup = require('./services/clientSignup');
 var UserUpdate = require('./services/userUpdate');
+var UserUpdateName = require('./services/userUpdateName');
+var UserUpdateEmail = require('./services/userUpdateEmail');
+var UserUpdatePassword = require('./services/userUpdatePassword');
 
 // owner topic files
 var OwnerLogin = require('./services/ownerLogin');
@@ -48,6 +51,9 @@ function handleTopicRequest(topic_name, fname) {
 handleTopicRequest("client_login", ClientLogin)
 handleTopicRequest("client_signup", ClientSignup)
 handleTopicRequest("user_update", UserUpdate)
+handleTopicRequest("user_update_name", UserUpdateName)
+handleTopicRequest("user_update_email", UserUpdateEmail)
+handleTopicRequest("user_update_password", UserUpdatePassword)
 
 
 // owner topics

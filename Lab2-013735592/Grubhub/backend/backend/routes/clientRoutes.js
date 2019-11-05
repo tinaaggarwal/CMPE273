@@ -64,17 +64,17 @@ router.route('/userUpdate').get((req, res) => {
     kafka.make_request('user_update', client_id, function (err, results) {
         console.log('in result of user update');
 
-        if(err){
+        if (err) {
             console.log('Unable to get user details', err);
             res.writeHead(400, {
                 'Content-type': 'text/plain'
             });
             res.end('Error in get connections');
         }
-        else{
+        else {
             console.log('Get user data sucesssful.', results);
-            res.writeHead(200,{
-                'Content-type' : 'application/json'
+            res.writeHead(200, {
+                'Content-type': 'application/json'
             });
             res.end(JSON.stringify(results));
         }
@@ -86,78 +86,89 @@ router.route('/userUpdateName').post((req, res) => {
     console.log("Inside Update name Handler");
     const { first_name, last_name } = req.body;
 
-    Client.findOneAndUpdate(
-        {
-            _id: client_id
-        },
-        {
-            first_name: first_name,
-            last_name: last_name
-        },
-        {
-            new: true,
-            runValidators: true,
-            upsert: true,
-            useFindAndModify: false
-        }).then((user) => {
-            console.log('user name updated')
-            res.code = "200";
-            res.send({ user });
-        }, (err) => {
-            res.code = "400";
-            res.send("Bad Request");
-        })
+    let msg = {
+        first_name: first_name,
+        last_name: last_name,
+        client_id: client_id
+    }
+    kafka.make_request('user_update_name', msg, function (err, results) {
+        console.log('in result');
+        console.log(results);
+
+        if (err) {
+            console.log('Unable to get user details, The user is not valid', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('The user is not valid');
+        }
+        else {
+            console.log('Client name updated successfully', results);
+            res.writeHead(200, {
+                'Content-type': 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+    });
 })
 
 router.route('/userUpdateEmail').post((req, res) => {
     console.log("Inside Update email Handler");
     const { client_email } = req.body;
 
-    Client.findOneAndUpdate(
-        {
-            _id: client_id
-        },
-        {
-            client_email
-        },
-        {
-            new: true,
-            runValidators: true,
-            upsert: true,
-            useFindAndModify: false
-        }).then((user) => {
-            console.log('user email updated')
-            res.code = "200";
-            res.send({ user });
-        }, (err) => {
-            res.code = "400";
-            res.send("Bad Request");
-        })
+    let msg = {
+        client_email: client_email,
+        client_id: client_id
+    }
+    kafka.make_request('user_update_email', msg, function (err, results) {
+        console.log('in result');
+        console.log(results);
+
+        if (err) {
+            console.log('Unable to get user details, The user is not valid', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('The user is not valid');
+        }
+        else {
+            console.log('Client email updated successfully', results);
+            res.writeHead(200, {
+                'Content-type': 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+    });
 })
 
 router.route('/userUpdatePassword').post((req, res) => {
     console.log("Inside Update password Handler");
     const { newPassword, confirmPassword } = req.body;
-    Client.findOneAndUpdate(
-        {
-            _id: client_id
-        },
-        {
-            password: newPassword
-        },
-        {
-            new: true,
-            runValidators: true,
-            upsert: true,
-            useFindAndModify: false
-        }).then((user) => {
-            console.log('user password updated')
-            res.code = "200";
-            res.send({ user });
-        }, (err) => {
-            res.code = "400";
-            res.send("Bad Request");
-        })
+
+
+    let msg = {
+        newPassword: newPassword,
+        client_id: client_id
+    }
+    kafka.make_request('user_update_password', msg, function (err, results) {
+        console.log('in result');
+        console.log(results);
+
+        if (err) {
+            console.log('Unable to get user details, The user is not valid', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('The user is not valid');
+        }
+        else {
+            console.log('Client password updated successfully', results);
+            res.writeHead(200, {
+                'Content-type': 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+    });
 })
 
 router.route('/addressUpdate').get((req, res) => {
