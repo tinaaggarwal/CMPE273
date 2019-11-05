@@ -1,11 +1,13 @@
+var express = require('express');
+var app = express();
 const router = require('express').Router();
 let Client = require('../models/client');
 var _ = require('lodash');
 let Restaurants = require('../models/restaurant');
-
+var kafka = require('../kafka/client');
 let client_id = '';
 
-//Find - Mongoose method that gets the list of all users from MongoDB Atlas
+// Find - Mongoose method that gets the list of all users from MongoDB Atlas
 // router.route('/').get((req, res) => {
 //     Client.find()
 //     .then(client => res.json(client))
@@ -13,82 +15,72 @@ let client_id = '';
 // });
 
 router.route('/clientSignup').post((req, res) => {
-    console.log("Inside Client Create Request Handler");
-    const first_name = req.body.firstName;
-    const last_name = req.body.lastName;
-    const client_email = req.body.email;
-    const password = req.body.password;
-    const street_address = null;
-    const apt = null;
-    const city = null;
-    const state = null;
-    const zip_code = null;
-    const phone = null;
-    const cross_street = null;
-    const delivery_instructions = null;
-    const address_name = null;
-    const profile_image = null;
-    const orders = [];
 
-    const newClient = new Client({
-        first_name,
-        last_name,
-        client_email,
-        password,
-        street_address,
-        apt,
-        city,
-        state,
-        zip_code,
-        phone,
-        cross_street,
-        delivery_instructions,
-        address_name,
-        profile_image,
-        orders
-    })
+    kafka.make_request('client_signup', req.body, function (err, results) {
+        console.log('in result');
+        console.log(results);
+        if (err) {
+            console.log("Error");
+        } else if (results.code === 400) {
+            console.log("hello:", results);
+            res.status(400).send(results.msg);
+        }
+        else if (results.code === 200) {
+            console.log("success");
 
-    newClient.save()
-        .then(() => res.json('User added!'))
-        .catch(err => res.status(400).json('Error: ' + err));
+            res.status(200).send(results.msg);
+
+        }
+
+    });
 });
 
-router.route('/clientLogin').post((req, res) => {
-    console.log("Inside Client Login Post Request");
 
-    client_email = req.body.email;
-    const password = req.body.password;
-    Client.findOne({
-        client_email,
-        password
-    }).then(user => {
-        if (!user) {
-            return new Error("User Login failed!");
+router.route('/clientLogin').post((req, res) => {
+
+    kafka.make_request('client_login', req.body, function (err, results) {
+        console.log('in result');
+        console.log(results);
+        if (err) {
+            console.log("Error");
+        } else if (results.code === 400) {
+            console.log("hello:", results);
+            res.status(400).send(results.msg);
         }
-        console.log('user', user);
-        // res.cookie('cookie', 'client', { maxAge: 900000, httpOnly: false, path: '/' });
-        console.log('req.session', req.session);
-        req.session.user = user;
-        client_id = req.session.user._id;
-        console.log(req.session.user);
-        console.log(req.session.user._id);
-        res.end("Successful Login");
-    }).catch(err => res.status(400).json('Error: ' + err));
+        else if (results.code === 200) {
+            console.log("success");
+            req.session.user = results.user;
+            console.log(req.session.user._id);
+            client_id = req.session.user._id;
+            res.status(200).send(results.msg);
+        }
+    });
 });
 
 router.route('/userUpdate').get((req, res) => {
-    console.log('Inside client profile')
+    console.log('Inside user update fetch client profile')
     console.log(client_id);
-    Client.findOne({
-        _id: client_id
-    })
-        .then(client => {
-            console.log('client', client);
-            res.code = "200";
-            res.send(client);
-        })
-        .catch(err => res.status(400).json('Error: ' + err));
-});
+
+    kafka.make_request('user_update', client_id, function (err, results) {
+        console.log('in result of user update');
+
+        if(err){
+            console.log('Unable to get user details', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('Error in get connections');
+        }
+        else{
+            console.log('Get user data sucesssful.', results);
+            res.writeHead(200,{
+                'Content-type' : 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+
+    });
+})
 
 router.route('/userUpdateName').post((req, res) => {
     console.log("Inside Update name Handler");
@@ -367,14 +359,14 @@ router.route('/pastOrdersForClient').get((req, res) => {
 router.route('/updateOrderStatus').post((req, res) => {
     console.log('Inside update status Request Handler');
     console.log('req.body...', req.body);
-    if(req.body.type === 'Client'){
+    if (req.body.type === 'Client') {
         Client.findOne({
             _id: client_id,
             'orders._id': req.body.orderIdToUpdate
         }).then(client => {
             const order = _.find(client.orders, (order) => order.id === req.body.orderIdToUpdate);
             order.status = req.body.status;
-            client.save().then(()=> {
+            client.save().then(() => {
                 res.code = "200";
                 res.send('Order status updated');
             })
@@ -385,7 +377,7 @@ router.route('/updateOrderStatus').post((req, res) => {
         }).then(restaurant => {
             const order = _.find(restaurant.orders, (order) => order.id === req.body.orderIdToUpdate);
             order.status = req.body.status;
-            restaurant.save().then(()=> {
+            restaurant.save().then(() => {
                 res.code = "200";
                 res.send('Order status updated');
             })
