@@ -137,7 +137,7 @@ class Sections extends Component {
             message = <p>Section successfully deleted!</p>
         }
 
-        if (this.props.sections.length > 0) {
+        if (this.props.sections && this.props.sections.length > 0) {
             sectionsList = this.props.sections.map((section) =>
                 <li className="list-group-item" key={section._id}>
                     <p>{section.section_name}</p>

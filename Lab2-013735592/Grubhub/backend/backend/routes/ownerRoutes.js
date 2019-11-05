@@ -166,17 +166,25 @@ router.route('/ownerUpdateRestImage').post((req, res) => {
 
 router.route('/ownerSections').get((req, res) => {
     console.log('Inside Owner Sections get Request Handler')
-    Restaurants.findOne({
-        _id: owner_id
-    },
-        'menu'
-    )
-        .then(owner => {
-            console.log('owner', owner);
-            res.code = "200";
-            res.send(owner);
-        })
-        .catch(err => res.status(400).json('Error: ' + err));
+
+    kafka.make_request('owner_sections', owner_id, function (err, results) {
+        console.log('in result of owner sections');
+
+        if (err) {
+            console.log('Unable to get restaurant details', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('Error in get connections');
+        }
+        else {
+            console.log('Get list of sections in menu for owner succesuful.', results);
+            res.writeHead(200, {
+                'Content-type': 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+    });
 });
 
 router.route('/ownerAddSection').post((req, res) => {
@@ -256,7 +264,7 @@ router.route('/ownerItemsList').get((req, res) => {
     console.log('Inside Owner items list Request Handler')
 
     kafka.make_request('owner_items_list', owner_id, function (err, results) {
-        console.log('in result of user update');
+        console.log('in result of owner items list');
 
         if (err) {
             console.log('Unable to get restaurant details', err);
