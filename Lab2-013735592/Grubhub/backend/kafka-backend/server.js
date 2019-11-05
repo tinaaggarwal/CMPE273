@@ -10,6 +10,9 @@ var UserUpdatePassword = require('./services/userUpdatePassword');
 var AddressUpdate = require('./services/addressUpdate');
 var UserAddAddress = require('./services/userAddAddress');
 var UserUpdateAddress = require('./services/userUpdateAddress');
+var UserUpdateProfileImage = require('./services/userUpdateProfileImage');
+var RestaurantList = require('./services/restaurantList');
+var MenuItems = require('./services/menuItems');
 
 // owner topic files
 var OwnerLogin = require('./services/ownerLogin');
@@ -60,6 +63,9 @@ handleTopicRequest("user_update_password", UserUpdatePassword)
 handleTopicRequest("address_update", AddressUpdate)
 handleTopicRequest("user_add_address", UserAddAddress)
 handleTopicRequest("user_update_address", UserUpdateAddress)
+handleTopicRequest("user_update_profile_image", UserUpdateProfileImage)
+handleTopicRequest("restaurant_list", RestaurantList)
+handleTopicRequest("menu_items", MenuItems)
 
 // owner topics
 handleTopicRequest("owner_login", OwnerLogin)

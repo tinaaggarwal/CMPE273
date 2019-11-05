@@ -273,53 +273,84 @@ router.route('/userUpdateAddress').post((req, res) => {
 router.route('/userUpdateProfileImage').post((req, res) => {
     console.log("Inside Update profile image Handler");
     const { profile_image } = req.body;
-    Client.findOneAndUpdate(
-        {
-            _id: client_id
-        },
-        {
-            profile_image
-        },
-        {
-            new: true,
-            runValidators: true,
-            upsert: true,
-            useFindAndModify: false
-        }).then((user) => {
-            console.log('Profile image added Successfully')
-            res.code = "200";
-            res.send({ user });
-        }, (err) => {
-            res.code = "400";
-            res.send("Bad Request");
-        })
+
+    let msg = {
+        profile_image: profile_image,
+        client_id: client_id
+    }
+    kafka.make_request('user_update_profile_image', msg, function (err, results) {
+        console.log('in result');
+        console.log(results);
+
+        if (err) {
+            console.log('Unable to get user details, The user is not valid', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('The user is not valid');
+        }
+        else {
+            console.log('Client profile_image added successfully', results);
+            res.writeHead(200, {
+                'Content-type': 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+    });
 })
 
 router.route('/restaurantList').get((req, res) => {
     console.log('Inside get restaurant list Request Handler')
-    Restaurants.find({
-    }).then(restaurants => {
-        console.log('restaurants', restaurants);
-        res.code = "200";
-        res.send(restaurants);
-    })
 
-        .catch(err => res.status(400).json('Error: ' + err));
+    kafka.make_request('restaurant_list', client_id, function (err, results) {
+        console.log('in result of user update');
+
+        if (err) {
+            console.log('Unable to get user details', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('Error in get connections');
+        }
+        else {
+            console.log('Get list of restaurants succesuful.', results);
+            res.writeHead(200, {
+                'Content-type': 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+
+    });
 });
 
 router.route('/menuItems').post((req, res) => {
     console.log('r_id  :   ', req.body.r_id)
     console.log('Inside get menu items list Request Handler')
-    Restaurants.findOne({
-        _id: req.body.r_id
-    }).then(restaurant => {
-        console.log('restaurant    ', restaurant);
-        console.log('menu', restaurant.menu);
-        res.code = "200";
-        res.send(restaurant.menu);
-    })
 
-        .catch(err => res.status(400).json('Error: ' + err));
+
+    let msg = {
+        r_id: req.body.r_id
+    }
+
+    kafka.make_request('menu_items', msg, function (err, results) {
+        console.log('in result');
+        console.log(results);
+
+        if (err) {
+            console.log('Unable to get restaurant details, The restaurant is not valid', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('The restaurant is not valid');
+        }
+        else {
+            console.log('Get list of menu items for a restaurant successful', results);
+            res.writeHead(200, {
+                'Content-type': 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+    });
 });
 
 router.route('/submitOrder').post((req, res) => {
