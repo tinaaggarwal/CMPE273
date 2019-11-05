@@ -252,26 +252,34 @@ router.route('/ownerUpdateSection').post((req, res) => {
 router.route('/ownerAddItem').post((req, res) => {
     console.log("Inside Insert Item Handler");
     const { section_id, item_name, item_description, item_image, item_price } = req.body;
-    Restaurants.findOne({
-        _id: owner_id,
-    }).then(restaurant => {
-        const section = _.find(restaurant.menu, (section) => section.id === section_id)
-        section.item.push({
-            item_name: item_name,
-            item_description: item_description,
-            item_image: item_image,
-            item_price: item_price
-        })
-        restaurant.save().then(() => {
-            console.log('Item added Successfully')
-            res.code = "200";
-            res.send({ user });
-        }, (err) => {
-            res.code = "400";
-            res.send("Bad Request");
-        })
 
-    })
+    let msg = {
+        item_name: item_name,
+        item_description: item_description,
+        item_image: item_image,
+        item_price: item_price,
+        section_id: section_id,
+        owner_id: owner_id
+    }
+    kafka.make_request('owner_add_item', msg, function (err, results) {
+        console.log('in result');
+        console.log(results);
+
+        if (err) {
+            console.log('Unable to get owner details, The restaurant is not valid', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('The restaurant is not valid');
+        }
+        else {
+            console.log('Owner restaurant item added to menu successfully', results);
+            res.writeHead(200, {
+                'Content-type': 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+    });
 })
 
 router.route('/ownerItemsList').get((req, res) => {
