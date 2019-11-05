@@ -2,78 +2,74 @@ const router = require('express').Router();
 var _ = require('lodash');
 let Restaurants = require('../models/restaurant');
 let owner_id = '';
+var kafka = require('../kafka/client');
 
 router.route('/ownerSignup').post((req, res) => {
-    console.log("Inside Owner Create Request Handler");
-    const first_name = req.body.firstName;
-    const last_name = req.body.lastName;
-    const owner_email = req.body.email;
-    const restaurant_name = req.body.restaurantName;
-    const zip_code = req.body.restaurantZipCode;
-    const password = req.body.password;
-    const profile_image = null;
-    const phone = null;
-    const rest_image = null;
-    const cuisine = null;
-    const menu = [];
-    const orders = [];
 
-    const newOwner = new Restaurants({
-        first_name,
-        last_name,
-        owner_email,
-        restaurant_name,
-        zip_code,
-        password,
-        profile_image,
-        phone,
-        rest_image,
-        cuisine,
-        menu,
-        orders
-    })
+    kafka.make_request('owner_signup', req.body, function (err, results) {
+        console.log('in result');
+        console.log(results);
+        if (err) {
+            console.log("Error");
+        } else if (results.code === 400) {
+            console.log("hello:", results);
+            res.status(400).send(results.msg);
+        }
+        else if (results.code === 200) {
+            console.log("success");
 
-    newOwner.save()
-        .then(() => res.json('Owner added!'))
-        .catch(err => res.status(400).json('Error: ' + err));
+            res.status(200).send(results.msg);
+
+        }
+
+    });
 });
 
 router.route('/ownerLogin').post((req, res) => {
-    console.log("Inside Owner Login Post Request");
 
-    owner_email = req.body.email;
-    const password = req.body.password;
-    Restaurants.findOne({
-        owner_email,
-        password
-    }).then(user => {
-        if (!user) {
-            return new Error("Owner Login failed!");
+    kafka.make_request('owner_login', req.body, function (err, results) {
+        console.log('in result');
+        console.log(results);
+        if (err) {
+            console.log("Error");
+        } else if (results.code === 400) {
+            console.log("hello:", results);
+            res.status(400).send(results.msg);
         }
-        console.log('user', user);
-        // res.cookie('cookie', 'owner', { maxAge: 900000, httpOnly: false, path: '/' });
-        console.log('req.session', req.session);
-        req.session.user = user;
-        owner_id = req.session.user._id;
-        console.log(req.session.user);
-        console.log(req.session.user._id);
-        res.end("Successful Login");
-    }).catch(err => res.status(400).json('Error: ' + err));
+        else if (results.code === 200) {
+            console.log("success");
+            req.session.user = results.user;
+            console.log(req.session.user._id);
+            owner_id = req.session.user._id;
+            res.status(200).send(results.msg);
+        }
+    });
 });
 
 router.route('/ownerUpdate').get((req, res) => {
-    console.log('Inside owner profile')
+    console.log('Inside owner update fetch client profile')
     console.log(owner_id);
-    Restaurants.findOne({
-        _id: owner_id
-    })
-        .then(owner => {
-            console.log('owner', owner);
-            res.code = "200";
-            res.send(owner);
-        })
-        .catch(err => res.status(400).json('Error: ' + err));
-});
+
+    kafka.make_request('owner_update', owner_id, function (err, results) {
+        console.log('in result of owner update');
+
+        if(err){
+            console.log('Unable to get owner details', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('Error in get connections');
+        }
+        else{
+            console.log('Get owner data sucesssful.', results);
+            res.writeHead(200,{
+                'Content-type' : 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+
+    });
+})
 
 router.route('/ownerUpdateProfile').post((req, res) => {
     console.log("Inside Update Restaurant details Handler");
