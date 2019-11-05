@@ -23,6 +23,7 @@ var OwnerUpdate = require('./services/ownerUpdate');
 var OwnerUpdateProfile = require('./services/ownerUpdateProfile');
 var OwnerUpdateProfileImage = require('./services/ownerUpdateProfileImage');
 var OwnerUpdateRestImage = require('./services/ownerUpdateRestImage');
+var OwnerSections = require('./services/ownerSections');
 
 var OwnerItemsList = require('./services/ownerItemsList');
 var UpcomingOrdersForOwner = require('./services/upcomingOrdersForOwner');
@@ -85,6 +86,7 @@ handleTopicRequest("owner_update", OwnerUpdate)
 handleTopicRequest("owner_update_profile", OwnerUpdateProfile)
 handleTopicRequest("owner_update_profile_image", OwnerUpdateProfileImage)
 handleTopicRequest("owner_update_rest_image", OwnerUpdateRestImage)
+handleTopicRequest("owner_sections", OwnerSections)
 
 handleTopicRequest("owner_items_list", OwnerItemsList)
 handleTopicRequest("upcoming_orders_for_owner", UpcomingOrdersForOwner)
