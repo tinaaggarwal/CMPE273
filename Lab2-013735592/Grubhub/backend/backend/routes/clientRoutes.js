@@ -356,34 +356,33 @@ router.route('/menuItems').post((req, res) => {
 router.route('/submitOrder').post((req, res) => {
     console.log('r_id  :   ', req.body.r_id)
     console.log('Inside submit order Request Handler')
-    Restaurants.findOne({
-        _id: req.body.r_id
-    }).then(restaurant => {
-        Client.findOne({
-            _id: client_id
-        }).then(client => {
-            restaurant.orders.push({
-                item: req.body.item,
-                client_email: client.client_email,
-                status: 'New',
-                order_bill: req.body.cart_totalPrice
+    
+    let msg = {
+        r_id: req.body.r_id,
+        client_id: client_id,
+        item: req.body.item,
+        order_bill: req.body.cart_totalPrice
+    }
+
+    kafka.make_request('submit_order', msg, function (err, results) {
+        console.log('in result');
+        console.log(results);
+
+        if (err) {
+            console.log('Unable to place order', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
             });
-            restaurant.save().then(() => {
-                client.orders.push({
-                    item: req.body.item,
-                    restaurant_name: restaurant.restaurant_name,
-                    status: 'New',
-                    order_bill: req.body.cart_totalPrice
-                });
-                client.save().then(() => {
-                    res.code = "200";
-                    res.send('Order placed');
-                })
-            })
-
-        })
-
-    }).catch(err => res.status(400).json('Error: ' + err));
+            res.end('Unable to place order');
+        }
+        else {
+            console.log('Order placed successfully', results);
+            res.writeHead(200, {
+                'Content-type': 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+    });
 });
 
 router.route('/upcomingOrdersForClient').get((req, res) => {
@@ -438,40 +437,32 @@ router.route('/pastOrdersForClient').get((req, res) => {
 router.route('/updateOrderStatus').post((req, res) => {
     console.log('Inside update status Request Handler');
     console.log('req.body...', req.body);
-    if (req.body.type === 'Client') {
-        Client.findOne({
-            _id: client_id,
-            'orders._id': req.body.orderIdToUpdate
-        }).then(client => {
-            const order = _.find(client.orders, (order) => order.id === req.body.orderIdToUpdate);
-            order.status = req.body.status;
-            client.save().then(() => {
-                res.code = "200";
-                res.send('Order status updated');
-            })
-        })
-    } else {
-        Restaurants.findOne({
-            'orders._id': req.body.orderIdToUpdate
-        }).then(restaurant => {
-            const order = _.find(restaurant.orders, (order) => order.id === req.body.orderIdToUpdate);
-            order.status = req.body.status;
-            restaurant.save().then(() => {
-                res.code = "200";
-                res.send('Order status updated');
-            })
-        })
-    }
-    // Restaurants.findOne({
-    //     _id: req.body.r_id
-    // }).then(restaurant => {
-    //     console.log('restaurant    ', restaurant);
-    //     console.log('menu', restaurant.menu);
-    //     res.code = "200";
-    //     res.send(restaurant.menu);
-    // })
 
-    //     .catch(err => res.status(400).json('Error: ' + err));
+    let msg = {
+        status: req.body.status,
+        orderIdToUpdate: req.body.orderIdToUpdate,
+        type: req.body.type,
+        client_id: client_id
+    }
+    kafka.make_request('update_order_status', msg, function (err, results) {
+        console.log('in result');
+        console.log(results);
+
+        if (err) {
+            console.log('Unable to get user/owner details', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('The user is not valid');
+        }
+        else {
+            console.log('order status updated successfully', results);
+            res.writeHead(200, {
+                'Content-type': 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+    });
 });
 
 module.exports = router;

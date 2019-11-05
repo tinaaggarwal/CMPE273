@@ -13,9 +13,10 @@ var UserUpdateAddress = require('./services/userUpdateAddress');
 var UserUpdateProfileImage = require('./services/userUpdateProfileImage');
 var RestaurantList = require('./services/restaurantList');
 var MenuItems = require('./services/menuItems');
+var SubmitOrder = require('./services/submitOrder')
 var UpcomingOrdersForClient = require('./services/upcomingOrdersForClient');
 var PastOrdersForClient = require('./services/pastOrdersForClient');
-
+var UpdateOrderStatus = require('./services/updateOrderStatus'); 
 // owner topic files
 var OwnerLogin = require('./services/ownerLogin');
 var OwnerSignup = require('./services/ownerSignup');
@@ -26,7 +27,7 @@ var OwnerUpdateRestImage = require('./services/ownerUpdateRestImage');
 var OwnerSections = require('./services/ownerSections');
 var OwnerAddSection = require('./services/ownerAddSection');
 var OwnerUpdateSection = require('./services/ownerUpdateSection');
-
+var OwnerAddItem = require('./services/ownerAddItem');
 var OwnerItemsList = require('./services/ownerItemsList');
 var UpcomingOrdersForOwner = require('./services/upcomingOrdersForOwner');
 var PastOrdersForOwner = require('./services/pastOrdersForOwner');
@@ -78,9 +79,10 @@ handleTopicRequest("user_update_address", UserUpdateAddress)
 handleTopicRequest("user_update_profile_image", UserUpdateProfileImage)
 handleTopicRequest("restaurant_list", RestaurantList)
 handleTopicRequest("menu_items", MenuItems)
+handleTopicRequest("submit_order", SubmitOrder)
 handleTopicRequest("upcoming_orders_for_client", UpcomingOrdersForClient)
 handleTopicRequest("past_orders_for_client", PastOrdersForClient)
-
+handleTopicRequest("update_order_status", UpdateOrderStatus)
 // owner topics
 handleTopicRequest("owner_login", OwnerLogin)
 handleTopicRequest("owner_signup", OwnerSignup)
@@ -91,7 +93,7 @@ handleTopicRequest("owner_update_rest_image", OwnerUpdateRestImage)
 handleTopicRequest("owner_sections", OwnerSections)
 handleTopicRequest("owner_add_section", OwnerAddSection)
 handleTopicRequest("owner_update_section", OwnerUpdateSection)
-
+handleTopicRequest("owner_add_item", OwnerAddItem)
 handleTopicRequest("owner_items_list", OwnerItemsList)
 handleTopicRequest("upcoming_orders_for_owner", UpcomingOrdersForOwner)
 handleTopicRequest("past_orders_for_owner", PastOrdersForOwner)
