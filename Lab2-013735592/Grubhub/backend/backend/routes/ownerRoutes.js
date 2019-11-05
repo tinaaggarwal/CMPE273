@@ -255,32 +255,51 @@ router.route('/ownerItemsList').get((req, res) => {
 
 router.route('/upcomingOrdersForOwner').get((req, res) => {
     console.log('Inside get upcoming orders list for owner Request Handler')
-    Restaurants.findOne({
-        _id: owner_id
-    }).then(owner => {
-        console.log('owner orders', owner.orders);
-        let upcoming = owner.orders.filter(order => order.status !== 'Delivered' && order.status !== 'Cancelled')
-        console.log(upcoming);
-        res.code = "200";
-        res.send(upcoming);
-    })
 
-        .catch(err => res.status(400).json('Error: ' + err));
+    kafka.make_request('upcoming_orders_for_owner', owner_id, function (err, results) {
+        console.log('in result of user update');
+
+        if (err) {
+            console.log('Unable to get user details', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('Error in get connections');
+        }
+        else {
+            console.log('Get list of upcoming orders for owner succesuful.', results);
+            res.writeHead(200, {
+                'Content-type': 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+
+    });
 });
 
 router.route('/pastOrdersForOwner').get((req, res) => {
     console.log('Inside get past orders list for owner Request Handler')
-    Restaurants.findOne({
-        _id: owner_id
-    }).then(owner => {
-        console.log('owner orders', owner.orders);
-        let upcoming = owner.orders.filter(order => order.status === 'Delivered' || order.status === 'Cancelled')
-        console.log(upcoming);
-        res.code = "200";
-        res.send(upcoming);
-    })
 
-        .catch(err => res.status(400).json('Error: ' + err));
+    kafka.make_request('past_orders_for_owner', owner_id, function (err, results) {
+        console.log('in result of user update');
+
+        if (err) {
+            console.log('Unable to get user details', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('Error in get connections');
+        }
+        else {
+            console.log('Get list of past orders for owner succesuful.', results);
+            res.writeHead(200, {
+                'Content-type': 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+
+    });
+
 });
 
 module.exports = router;

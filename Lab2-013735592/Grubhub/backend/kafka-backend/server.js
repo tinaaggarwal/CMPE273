@@ -13,13 +13,16 @@ var UserUpdateAddress = require('./services/userUpdateAddress');
 var UserUpdateProfileImage = require('./services/userUpdateProfileImage');
 var RestaurantList = require('./services/restaurantList');
 var MenuItems = require('./services/menuItems');
-var PastOrdersForClient = require('./services/pastOrdersForClient');
 var UpcomingOrdersForClient = require('./services/upcomingOrdersForClient');
+var PastOrdersForClient = require('./services/pastOrdersForClient');
 
 // owner topic files
 var OwnerLogin = require('./services/ownerLogin');
 var OwnerSignup = require('./services/ownerSignup');
 var OwnerUpdate = require('./services/ownerUpdate');
+
+var UpcomingOrdersForOwner = require('./services/upcomingOrdersForOwner');
+var PastOrdersForOwner = require('./services/pastOrdersForOwner');
 
 var mongoose = require("mongoose");
 
@@ -68,10 +71,13 @@ handleTopicRequest("user_update_address", UserUpdateAddress)
 handleTopicRequest("user_update_profile_image", UserUpdateProfileImage)
 handleTopicRequest("restaurant_list", RestaurantList)
 handleTopicRequest("menu_items", MenuItems)
-handleTopicRequest("past_orders_for_client", PastOrdersForClient)
 handleTopicRequest("upcoming_orders_for_client", UpcomingOrdersForClient)
+handleTopicRequest("past_orders_for_client", PastOrdersForClient)
 
 // owner topics
 handleTopicRequest("owner_login", OwnerLogin)
 handleTopicRequest("owner_signup", OwnerSignup)
 handleTopicRequest("owner_update", OwnerUpdate)
+
+handleTopicRequest("upcoming_orders_for_owner", UpcomingOrdersForOwner)
+handleTopicRequest("past_orders_for_owner", PastOrdersForOwner)
