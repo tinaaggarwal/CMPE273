@@ -75,81 +75,93 @@ router.route('/ownerUpdateProfile').post((req, res) => {
     console.log("Inside Update Restaurant details Handler");
     const { first_name, last_name, owner_email, phone, restaurant_name, cuisine } = req.body;
 
-    Restaurants.findOneAndUpdate(
-        {
-            _id: owner_id
-        },
-        {
-            first_name: first_name,
-            last_name: last_name,
-            owner_email,
-            phone,
-            restaurant_name,
-            cuisine
-        },
-        {
-            new: true,
-            runValidators: true,
-            upsert: true,
-            useFindAndModify: false
-        }).then((user) => {
-            console.log('user name updated')
-            res.code = "200";
-            res.send({ user });
-        }, (err) => {
-            res.code = "400";
-            res.send("Bad Request");
-        })
+    let msg = {
+        first_name: first_name,
+        last_name: last_name,
+        owner_email: owner_email,
+        phone: phone,
+        restaurant_name: restaurant_name,
+        cuisine: cuisine,
+        owner_id: owner_id
+    }
+
+    kafka.make_request('owner_update_profile', msg, function (err, results) {
+        console.log('in result');
+        console.log(results);
+
+        if (err) {
+            console.log('Unable to get owner details, The restaurant is not valid', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('The restaurant is not valid');
+        }
+        else {
+            console.log('Owner profile updated successfully', results);
+            res.writeHead(200, {
+                'Content-type': 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+    });
 })
 
 router.route('/ownerUpdateProfileImage').post((req, res) => {
     console.log("Inside Update profile image for owner Handler");
     const { profile_image } = req.body;
-    Restaurants.findOneAndUpdate(
-        {
-            _id: owner_id
-        },
-        {
-            profile_image
-        },
-        {
-            new: true,
-            runValidators: true,
-            upsert: true,
-            useFindAndModify: false
-        }).then((user) => {
-            console.log('Profile image added Successfully')
-            res.code = "200";
-            res.send({ user });
-        }, (err) => {
-            res.code = "400";
-            res.send("Bad Request");
-        })
+
+    let msg = {
+        profile_image: profile_image,
+        owner_id: owner_id
+    }
+    kafka.make_request('owner_update_profile_image', msg, function (err, results) {
+        console.log('in result');
+        console.log(results);
+
+        if (err) {
+            console.log('Unable to get owner details, The restaurant is not valid', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('The restaurant is not valid');
+        }
+        else {
+            console.log('Owner profile_image added successfully', results);
+            res.writeHead(200, {
+                'Content-type': 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+    });
 })
 
 router.route('/ownerUpdateRestImage').post((req, res) => {
     console.log("Inside Update restaurant image for owner Handler");
     const { rest_image } = req.body;
-    Restaurants.findOneAndUpdate(
-        {
-            _id: owner_id
-        },
-        {
-            rest_image
-        },
-        {
-            new: true,
-            runValidators: true,
-            upsert: true,
-            useFindAndModify: false
-        }).then((user) => {
-            console.log('Restaurant image added Successfully')
-            res.code = "200";
-            res.send({ user });
-        }, (err) => {
-            res.code = "400";
-            res.send("Bad Request");
-        })
+    
+    let msg = {
+        rest_image: rest_image,
+        owner_id: owner_id
+    }
+    kafka.make_request('owner_update_rest_image', msg, function (err, results) {
+        console.log('in result');
+        console.log(results);
+
+        if (err) {
+            console.log('Unable to get owner details, The restaurant is not valid', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('The restaurant is not valid');
+        }
+        else {
+            console.log('Owner rest_image added successfully', results);
+            res.writeHead(200, {
+                'Content-type': 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+    });
 })
 
 router.route('/ownerSections').get((req, res) => {
@@ -242,25 +254,37 @@ router.route('/ownerAddItem').post((req, res) => {
 
 router.route('/ownerItemsList').get((req, res) => {
     console.log('Inside Owner items list Request Handler')
-    Restaurants.findOne({
-        _id: owner_id
-    }).then(owner => {
-            console.log('owner', owner.menu);
-            res.code = "200";
-            res.send(owner.menu);
-        })
 
-        .catch(err => res.status(400).json('Error: ' + err));
+    kafka.make_request('owner_items_list', owner_id, function (err, results) {
+        console.log('in result of user update');
+
+        if (err) {
+            console.log('Unable to get restaurant details', err);
+            res.writeHead(400, {
+                'Content-type': 'text/plain'
+            });
+            res.end('Error in get connections');
+        }
+        else {
+            console.log('Get list of items in menu for owner succesuful.', results);
+            res.writeHead(200, {
+                'Content-type': 'application/json'
+            });
+            res.end(JSON.stringify(results));
+        }
+
+    });
+
 });
 
 router.route('/upcomingOrdersForOwner').get((req, res) => {
     console.log('Inside get upcoming orders list for owner Request Handler')
 
     kafka.make_request('upcoming_orders_for_owner', owner_id, function (err, results) {
-        console.log('in result of user update');
+        console.log('in result of upcomingOrdersForOwner');
 
         if (err) {
-            console.log('Unable to get user details', err);
+            console.log('Unable to get restaurant details', err);
             res.writeHead(400, {
                 'Content-type': 'text/plain'
             });
@@ -281,10 +305,10 @@ router.route('/pastOrdersForOwner').get((req, res) => {
     console.log('Inside get past orders list for owner Request Handler')
 
     kafka.make_request('past_orders_for_owner', owner_id, function (err, results) {
-        console.log('in result of user update');
+        console.log('in result of pastOrdersForOwner');
 
         if (err) {
-            console.log('Unable to get user details', err);
+            console.log('Unable to get restaurant details', err);
             res.writeHead(400, {
                 'Content-type': 'text/plain'
             });
