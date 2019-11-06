@@ -77,35 +77,9 @@ app.use(session({
     activeDuration: 5 * 60 * 1000
 }));
 
-// app.use(bodyParser.urlencoded({
-//     extended: true
-//   }));
+
 app.use(bodyParser.json());
-// var clientEmail = "";
-// var ownerEmail = "";
-// var sessionResponse = "";
-// var orderId;
-// var id;
-// var nextOrderId;
-// var imageId = 'images';
 
-// var storagePropFiles = multer.diskStorage({
-//     destination: function (req, file, callback) {
-//         console.log("req.session.user is", JSON.stringify(req.params));
-//         callback(null, createDirectory(imageId));
-//     },
-//     filename: function (req, file, callback) {
-//         console.log("req", req.body);
-//         callback(null, file.originalname);
-//     }
-// });
-
-// // var rootDirectory = "public/images/";
-// var rootDirectory = "/Users/tinaaggarwal/Documents/GitHub/CMPE273/Lab2-013735592/Grubhub/frontend/public/images/";
-
-// var uploadPropFiles = multer({
-//     storage: storagePropFiles
-// });
 
 //Allow Access Control
 app.use(function (req, res, next) {
@@ -141,30 +115,6 @@ app.post('/upload', multerUploads, (req, res) => {
         }))
     }
 });
-
-// app.post('/upload', uploadPropFiles.single('image'), (req, res) => {
-//     console.log(req.file.filename)
-
-//     if (req.file)
-//         res.json({
-//             imageUrl: `/images/${imageId}/${req.file.filename}`
-//         });
-//     else
-//         res.status("409").json("No Files to Upload.")
-// });
-
-
-// function createDirectory(imageId) {
-//     if (!fs.existsSync(rootDirectory)) {
-//         fs.mkdirSync(rootDirectory);
-//     }
-//     let directory = rootDirectory + imageId;
-//     if (!fs.existsSync(directory)) {
-//         fs.mkdirSync(directory);
-//     }
-//     return directory;
-// }
-
 
 // Owner
 
