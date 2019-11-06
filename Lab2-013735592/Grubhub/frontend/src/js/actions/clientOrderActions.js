@@ -1,7 +1,7 @@
 import actionTypes from '../constants/index';
 import axios from 'axios';
 
-const ROOT_URL = "http://localhost:3001";
+const ROOT_URL = "http://34.221.70.150:3001";
 
 export const pastOrdersForClient = () => {
     return dispatch => {

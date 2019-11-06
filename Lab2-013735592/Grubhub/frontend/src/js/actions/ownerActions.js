@@ -3,7 +3,7 @@ import axios from 'axios';
 import setAuthToken1 from '../../setAuthToken1';
 import jwt_decode from 'jwt-decode';
 
-const ROOT_URL = "http://localhost:3001";
+const ROOT_URL = "http://34.221.70.150:3001";
 
 export const loginOwner = (payload, ownProps) => {
     return dispatch => {
