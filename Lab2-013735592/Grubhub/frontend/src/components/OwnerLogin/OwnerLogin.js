@@ -45,10 +45,18 @@ class OwnerLogin extends Component {
         this.props.loginOwner(data);
     }
 
+    componentDidMount() {
+        console.log("in component did mount");
+        if(this.props.authFlag.isAuthenticated) {
+            this.props.history.push('/ownerAccount');
+        }      
+            
+     } 
+
     render() {
         //redirect based on successful login
         let redirectVar = null;
-        if (this.props.authFlag) {
+        if (this.props.authFlag.isAuthenticated) {
             redirectVar = <Redirect to="/ownerAccount" />
         }
         return (
@@ -87,7 +95,8 @@ class OwnerLogin extends Component {
 
 const mapStateToProps = state => {
     return { 
-        authFlag: state.owner.authFlag
+        // authFlag: state.owner.authFlag
+        authFlag: state.auth1
     };
 };
 

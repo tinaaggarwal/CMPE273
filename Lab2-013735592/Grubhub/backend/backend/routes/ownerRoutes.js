@@ -36,12 +36,9 @@ router.route('/ownerLogin').post((req, res) => {
             console.log("hello:", results);
             res.status(400).send(results.msg);
         }
-        else if (results.code === 200) {
-            console.log("success");
-            req.session.user = results.user;
-            console.log(req.session.user._id);
-            owner_id = req.session.user._id;
-            res.status(200).send(results.msg);
+        else{
+            owner_id = results.payload.id;
+            res.send(results);
         }
     });
 });

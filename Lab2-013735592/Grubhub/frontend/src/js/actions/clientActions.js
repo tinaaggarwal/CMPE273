@@ -1,5 +1,7 @@
 import actionTypes from '../constants/index';
 import axios from 'axios';
+import setAuthToken from '../../setAuthToken';
+import jwt_decode from 'jwt-decode';
 
 const ROOT_URL = "http://localhost:3001";
 
@@ -11,24 +13,35 @@ export const loginClient = (payload, ownProps) => {
                 let data = {
                     client_email: payload.email
                 }
-                if (response.status === 200) {
-                    data.loginFlag = true;
-                    dispatch({
-                        type: actionTypes.LOGIN_USER,
-                        payload: data
-                    });
-                    // history.push(`/home`);
-                    // ownProps.history.push(`/home`);
-                } else {
-                    data.loginFlag = false;
-                    dispatch({
-                        type: actionTypes.LOGIN_USER,
-                        payload: data
-                    })
+                var decoded;
+                const { token } = response.data;
+                if (token !== "undefined") {
+                    console.log("token:", token);
+                    localStorage.setItem('jwtToken', token);
+                    setAuthToken(token);
+                    decoded = jwt_decode(token);
                 }
+                dispatch(setCurrentClient(decoded));
+
             });
 
     }
+}
+
+export const setCurrentClient = decoded => {
+    return {
+        type: actionTypes.SET_CURRENT_CLIENT,
+        payload: decoded
+    }
+}
+
+
+export const logoutClient = (history) => dispatch => {
+    localStorage.removeItem('jwtToken');
+    setAuthToken(false);
+    dispatch(setCurrentClient({}));
+    console.log("history:" + history);
+    history.push('/');
 }
 
 export const signupClient = (user, ownProps) => {

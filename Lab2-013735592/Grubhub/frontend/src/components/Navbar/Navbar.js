@@ -3,6 +3,10 @@ import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import './Navbar.css';
+import { clientActions } from '../../js/actions/index';
+import { ownerActions } from '../../js/actions/index';
+import { connect } from "react-redux";
+import { withRouter } from 'react-router-dom';
 
 //create the Navbar Component
 class Navbar extends Component {
@@ -14,29 +18,37 @@ class Navbar extends Component {
         }
 
         this.handleLogout = this.handleLogout.bind(this);
+        this.handleLogoutOwner = this.handleLogoutOwner.bind(this);
     }
-    //handle logout to destroy the cookie
+    //handle logout to remove token
     handleLogout = () => {
-        cookie.remove('cookie', { path: '/' })
+        // cookie.remove('cookie', { path: '/' })
+
+            console.log("history1:"+this.props.history);
+            console.log("history1:"+this.props.history.object);
+            this.props.logoutClient(this.props.history);
+    }
+
+    handleLogoutOwner = () => {
+        // cookie.remove('cookie', { path: '/' })
+
+            console.log("history1:"+this.props.history);
+            console.log("history1:"+this.props.history.object);
+            this.props.logoutOwner(this.props.history);
     }
 
     render() {
-        //if Cookie is set render Logout Button
         let navLogin = null;
-        if (cookie.load('cookie')) {
-            console.log("Able to read cookie");
+        if (this.props.auth && this.props.auth.isAuthenticated) {
 
             let homeLink = ""
             let accountLink = null
-            if (cookie.load('cookie') === 'owner') {
-                homeLink = "/ownerAccount";
-            } else {
+
                 homeLink = "/home";
                 accountLink =
                     <li className="nav-item ">
                         <a className="nav-link" href="/account">Account</a>
                     </li>
-            }
 
             navLogin = (
                 <>
@@ -52,6 +64,25 @@ class Navbar extends Component {
                     </li>
                 </>
             );
+        } else if (this.props.auth1 && this.props.auth1.isAuthenticated){
+            
+            let homeLink = ""
+            homeLink = "/ownerAccount";
+
+            navLogin = (
+                <>
+                    <li className="nav-item active">
+                        <a className="nav-link" href={homeLink}>Home</a>
+                    </li>
+                    <li className="nav-item">
+                        <a className="nav-link" href="/" onClick={this.handleLogoutOwner}>
+                            <span className="glyphicon glyphicon-user"></span>
+                            Logout
+                    </a>
+                    </li>
+                </>
+            );
+
         } else {
             //Else display login button
             console.log("Not Able to read cookie");
@@ -101,4 +132,14 @@ class Navbar extends Component {
     }
 }
 
-export default Navbar;
+const mapStateToProps = (state) => ({
+    auth: state.auth,
+    auth1: state.auth1
+})
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    logoutClient: () => dispatch(clientActions.logoutClient()),
+    logoutOwner: () => dispatch(ownerActions.logoutOwner())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Navbar));
