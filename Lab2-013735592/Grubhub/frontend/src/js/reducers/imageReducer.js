@@ -8,9 +8,9 @@ const imageReducer = (state = initialState, action) => {
     switch (action.type) {
         
         case actionTypes.UPLOAD_IMAGE:
-            console.log(action.payload.imageUrl)
+            console.log(action.payload.data.image)
             return Object.assign({}, state, {
-                imageUrl: action.payload.imageUrl
+                imageUrl: action.payload.data.image
             });
 
         default:
