@@ -12,6 +12,8 @@ import ownerProfile from './ownerProfileReducer';
 import ownerOrder from './ownerOrderReducer';
 import ownerMenu from './ownerMenuReducer';
 import image from './imageReducer';
+import auth from './authReducer';
+import auth1 from './authReducer1';
 
 const rootReducer = combineReducers({
     client,
@@ -24,7 +26,9 @@ const rootReducer = combineReducers({
     ownerOrder,
     ownerProfile,
     ownerMenu,
-    image
+    image,
+    auth,
+    auth1
 });
 
 export default rootReducer;

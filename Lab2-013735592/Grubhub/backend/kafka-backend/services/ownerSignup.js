@@ -2,6 +2,7 @@
 //const jwt = require('jsonwebtoken');
 //const validateRegisterInput = require('../validation/register');
 var { Restaurants } = require('../models/restaurant');
+const bcrypt = require('bcryptjs');
 var { mongoose } = require('../mongoose');
 
 function handle_request(msg, callback) {
@@ -50,14 +51,31 @@ function handle_request(msg, callback) {
                 orders
             })
 
-            newOwner.save().then((owner) => {
-                console.log('Profile data insert success');
-                res.msg = "Owner created successfully";
-                res.code = 200;
-                callback(null, res);
-            }, (err) => {
-                console.log('Error in creating user');
-                callback(err, null);
+            bcrypt.genSalt(10, (err, salt) => {
+                if (err) {
+                    console.log("error received");
+                    callback(err, "Error");
+                }
+                else {
+                    bcrypt.hash(newOwner.password, salt, (err, hash) => {
+                        if (err) {
+                            console.log("error received");
+                            callback(err, "Error");
+                        }
+
+                        else {
+                            console.log("inside last else");
+                            newOwner.password = hash;
+                            newOwner
+                                .save()
+                                .then(owner => {
+                                    res.msg = "Owner created successfully";
+                                    res.code = 200;
+                                    callback(null, res);
+                                });
+                        }
+                    });
+                }
             });
         }
     }

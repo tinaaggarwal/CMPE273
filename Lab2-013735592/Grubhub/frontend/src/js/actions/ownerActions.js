@@ -1,5 +1,7 @@
 import actionTypes from '../constants/index';
 import axios from 'axios';
+import setAuthToken1 from '../../setAuthToken1';
+import jwt_decode from 'jwt-decode';
 
 const ROOT_URL = "http://localhost:3001";
 
@@ -11,24 +13,34 @@ export const loginOwner = (payload, ownProps) => {
                 let data = {
                     owner_email: payload.email
                 }
-                if (response.status === 200) {
-                    data.loginFlag = true;
-                    dispatch({
-                        type: actionTypes.LOGIN_OWNER,
-                        payload: data
-                    });
-                    // history.push(`/home`);
-                    // ownProps.history.push(`/home`);
-                } else {
-                    data.loginFlag = false;
-                    dispatch({
-                        type: actionTypes.LOGIN_OWNER,
-                        payload: data
-                    })
+                var decoded;
+                const { token } = response.data;
+                if (token !== "undefined") {
+                    console.log("token:", token);
+                    localStorage.setItem('jwtToken1', token);
+                    setAuthToken1(token);
+                    decoded = jwt_decode(token);
                 }
+                dispatch(setCurrentOwner(decoded));
+
             });
 
     }
+}
+
+export const setCurrentOwner = decoded => {
+    return {
+        type: actionTypes.SET_CURRENT_OWNER,
+        payload: decoded
+    }
+}
+
+export const logoutOwner = (history) => dispatch => {
+    localStorage.removeItem('jwtToken1');
+    setAuthToken1(false);
+    dispatch(setCurrentOwner({}));
+    console.log("history:" + history);
+    history.push('/');
 }
 
 export const signupOwner = (user, ownProps) => {

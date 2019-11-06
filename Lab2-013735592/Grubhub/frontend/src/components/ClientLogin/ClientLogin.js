@@ -48,20 +48,18 @@ class ClientLogin extends Component {
         this.props.loginClient(payload);
 
     }
-
-    // componentWillReceiveProps(nextProps) {
-    //     console.log(nextProps);
-    //     let redirectVar = null;
-    //     if(nextProps.authFlag) {
-    //         // this.props.history.push('/home')
-    //         redirectVar = <Redirect to="/home" />
-    //     }
-    // }
+    componentDidMount() {
+        console.log("in component did mount");
+        if(this.props.authFlag.isAuthenticated) {
+            this.props.history.push('/home');
+        }      
+            
+     } 
 
     render() {
 
         let redirectVar = null;
-        if (this.props.authFlag) {
+        if (this.props.authFlag.isAuthenticated) {
             redirectVar = <Redirect to="/home" />
         }
 
@@ -100,7 +98,9 @@ class ClientLogin extends Component {
 
 const mapStateToProps = state => {
     return { 
-        authFlag: state.client.authFlag
+        //authFlag: state.client.authFlag
+        authFlag: state.auth
+
     };
 };
 

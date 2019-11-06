@@ -2,6 +2,7 @@
 //const jwt = require('jsonwebtoken');
 //const validateRegisterInput = require('../validation/register');
 var { Client } = require('../models/client');
+const bcrypt = require('bcryptjs');
 var { mongoose } = require('../mongoose');
 
 function handle_request(msg, callback) {
@@ -57,14 +58,31 @@ function handle_request(msg, callback) {
                 orders
             })
 
-            newClient.save().then((client) => {
-                console.log('Profile data insert success');
-                res.msg = "Client created successfully";
-                res.code = 200;
-                callback(null, res);
-            }, (err) => {
-                console.log('Error in creating user');
-                callback(err, null);
+            bcrypt.genSalt(10, (err, salt) => {
+                if (err) {
+                    console.log("error received");
+                    callback(err, "Error");
+                }
+                else {
+                    bcrypt.hash(newClient.password, salt, (err, hash) => {
+                        if (err) {
+                            console.log("error received");
+                            callback(err, "Error");
+                        }
+
+                        else {
+                            console.log("inside last else");
+                            newClient.password = hash;
+                            newClient
+                                .save()
+                                .then(client => {
+                                    res.msg = "Client created successfully";
+                                    res.code = 200;
+                                    callback(null, res);
+                                });
+                        }
+                    });
+                }
             });
         }
     }
