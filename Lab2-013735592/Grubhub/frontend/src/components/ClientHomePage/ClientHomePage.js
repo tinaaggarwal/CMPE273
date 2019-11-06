@@ -28,9 +28,15 @@ class ClientHomePage extends Component {
 
     componentDidMount() {
 
-        this.props.restaurantList();
-
-        this.props.distinctCuisines();
+        this.props.restaurantList().then(() => {
+            this.setState({
+                restaurants: this.props.restaurants,
+            })
+        }).then(() => {
+            this.setState({
+                cuisines: [...new Set(this.state.restaurants.map(restaurant => restaurant.cuisine))]
+            })
+        })
 
     }
 
@@ -47,12 +53,69 @@ class ClientHomePage extends Component {
             searchItem: this.state.searchItem,
             filterCuisine: this.state.filterCuisine
         }
-        this.props.searchItem(data);
+
+        let newRestsList = null
+        if (data.filterCuisine && data.filterCuisine !== '---') {
+            console.log('this.state.restaurants in filter cuisine', this.state.restaurants)
+            // this.state.restaurants.filter((restaurant) => {
+            //     if(restaurant.cuisine === data.filterCuisine) {
+            //         newRestsList.push(restaurant);
+            //     }
+            // }
+            this.setState({
+                restaurants: this.state.restaurants.filter((restaurant) => {
+                    return restaurant.cuisine === data.filterCuisine
+                })
+            })
+
+            // newRestsList = this.state.restaurants.filter((restaurant) => {
+            //     return restaurant.cuisine === data.filterCuisine
+            // });
+
+        }
+
+        if(!data.searchItem) {
+            this.setState({
+                restaurants: this.props.restaurants
+            })
+        }
+
+        let newRests = []
+        if (data.searchItem) {
+            console.log('this.state.restaurants in search box', this.state.restaurants)
+            if (this.state.restaurants && this.state.restaurants.length > 0) {
+                this.state.restaurants.map((restaurant) => {
+                    restaurant.menu.map((section) => {
+                        section.item.filter((item) => {
+                            if (item.item_name.includes(data.searchItem)) {
+                                console.log('restaurant', restaurant)
+                                newRests.push(restaurant);
+                            }
+                        })
+                    })
+                })
+            }
+            newRests = new Set(newRests);
+            newRestsList = Array.from(newRests);
+            console.log(newRestsList)
+            this.setState({
+                restaurants: newRestsList
+            })
+        }
+
+        // if(newRestsList.length === null){
+        //     this.setState({
+        //         restaurants: this.props.restaurants
+        //     })
+        // }
+        
+        // this.props.searchItem(data);
     };
 
     cuisineFilterChangeHandler = (e) => {
         this.setState({
-            filterCuisine: e.target.value
+            filterCuisine: e.target.value,
+            restaurants: this.props.restaurants
         },
             this.submitSearch
         );
@@ -66,21 +129,16 @@ class ClientHomePage extends Component {
 
     render() {
 
-        //if not logged in go to login page
-        let redirectVar = null;
-        // if (!cookie.load('cookie')) {
-        //     redirectVar = <Redirect to="/login" />
-        // }
 
         // Logic for displaying items
         const indexOfLastItem = this.state.activePage * this.state.sectionsPerPage;
         const indexOfFirstItem = indexOfLastItem - this.state.sectionsPerPage;
-        const currentRestaurants = this.props.restaurants.slice(indexOfFirstItem, indexOfLastItem);
+        const currentRestaurants = this.state.restaurants.slice(indexOfFirstItem, indexOfLastItem);
 
         var options = [<option value="---" key="None">---</option>];
-        var moreOptions = this.props.cuisines.map(cuisine => {
+        var moreOptions = this.state.cuisines.map(cuisine => {
             return (
-                <option value={cuisine.cuisine} key={cuisine.cuisine}>{cuisine.cuisine}</option>
+                <option value={cuisine} key={cuisine}>{cuisine}</option>
             )
         })
 
@@ -101,7 +159,6 @@ class ClientHomePage extends Component {
 
         return (
             <div className="container">
-                {redirectVar}
                 <div className="searchLayout">
                     <input type="text" className="form-control" name="searchBox" onChange={this.searchBoxChangeHandler} placeholder="Item name (E.g. Pizza)" />
                     <button onClick={this.submitSearch} className="searchbar">

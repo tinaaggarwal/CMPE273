@@ -83,10 +83,10 @@ class Sections extends Component {
             section_description: this.state.sectionDescription
         }
 
-        this.props.ownerAddSection(data);
-
-        this.showSectionsModal();
-        window.location.reload();
+        this.props.ownerAddSection(data).then(() => {
+            this.showSectionsModal();
+                window.location.reload();
+            })
     };
 
     updateSection = (e) => {
