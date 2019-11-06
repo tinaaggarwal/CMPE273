@@ -19,6 +19,7 @@ class UpcomingOrders extends Component {
 
         this.cancelBtnHandler = this.cancelBtnHandler.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
+        this.deliveredBtnHandler = this.deliveredBtnHandler.bind(this);
     }
 
     componentDidMount() {
@@ -51,6 +52,16 @@ class UpcomingOrders extends Component {
 
     }
 
+    deliveredBtnHandler = (e) => {
+        const data = {
+            status: 'Delivered',
+            orderIdToUpdate: e.target.id,
+            type: 'Client'
+        }
+        this.props.updateOrderStatus(data);
+        window.location.reload();
+    }
+
     render() {
 
         // Logic for displaying items
@@ -65,6 +76,7 @@ class UpcomingOrders extends Component {
                     order_details={this.props.order_details}
                     type="Upcoming orders"
                     cancelBtnHandler={this.cancelBtnHandler}
+                    deliveredBtnHandler={this.deliveredBtnHandler}
                 />
                 <div>
                     <Pagination

@@ -31,6 +31,7 @@ class Orders extends Component {
                                         {this.props.type === 'Upcoming orders' ?
                                             <div>
                                                 <button id={order._id} onClick={this.props.cancelBtnHandler} className="btn btn-danger" type="button">Cancel Order</button>
+                                                <button id={order._id} onClick={this.props.deliveredBtnHandler} className="btn btn-xs" type="button">.</button>
                                             </div>
                                             : null}
                                     </div>
@@ -79,7 +80,8 @@ Orders.propTypes = {
     type: PropTypes.string,
     orders: PropTypes.array,
     order_details: PropTypes.array,
-    cancelBtnHandler: PropTypes.func
+    cancelBtnHandler: PropTypes.func,
+    deliveredBtnHandler: PropTypes.func
 };
 
 export default Orders;
