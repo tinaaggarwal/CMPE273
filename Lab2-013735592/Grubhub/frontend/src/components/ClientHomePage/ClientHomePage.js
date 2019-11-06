@@ -54,61 +54,65 @@ class ClientHomePage extends Component {
             filterCuisine: this.state.filterCuisine
         }
 
-        let newRestsList = null
-        if (data.filterCuisine && data.filterCuisine !== '---') {
-            console.log('this.state.restaurants in filter cuisine', this.state.restaurants)
-            // this.state.restaurants.filter((restaurant) => {
-            //     if(restaurant.cuisine === data.filterCuisine) {
-            //         newRestsList.push(restaurant);
-            //     }
-            // }
-            this.setState({
-                restaurants: this.state.restaurants.filter((restaurant) => {
-                    return restaurant.cuisine === data.filterCuisine
-                })
-            })
+        console.log(data);
 
-            // newRestsList = this.state.restaurants.filter((restaurant) => {
-            //     return restaurant.cuisine === data.filterCuisine
-            // });
-
-        }
-
-        if(!data.searchItem) {
-            this.setState({
-                restaurants: this.props.restaurants
-            })
-        }
-
-        let newRests = []
-        if (data.searchItem) {
-            console.log('this.state.restaurants in search box', this.state.restaurants)
+        let newRestsList = []
+        if (data.searchItem && data.filterCuisine && data.filterCuisine !== '---') {
             if (this.state.restaurants && this.state.restaurants.length > 0) {
                 this.state.restaurants.map((restaurant) => {
                     restaurant.menu.map((section) => {
-                        section.item.filter((item) => {
+                        section.item.map((item) => {
                             if (item.item_name.includes(data.searchItem)) {
-                                console.log('restaurant', restaurant)
-                                newRests.push(restaurant);
+                                if (!newRestsList.includes(restaurant)) {
+                                    newRestsList.push(restaurant)
+                                }
                             }
                         })
                     })
                 })
             }
-            newRests = new Set(newRests);
-            newRestsList = Array.from(newRests);
-            console.log(newRestsList)
-            this.setState({
-                restaurants: newRestsList
-            })
+
+            console.log(newRestsList);
+            if (data.filterCuisine && data.filterCuisine !== '---') {
+                newRestsList = newRestsList.filter((restaurant) => {
+                    return restaurant.cuisine === data.filterCuisine
+                });
+
+                console.log('after filter...', newRestsList);
+            }
+        } else if (data.searchItem && (data.filterCuisine === "" || data.filterCuisine === '---')) {
+            if (this.state.restaurants && this.state.restaurants.length > 0) {
+                this.state.restaurants.map((restaurant) => {
+                    restaurant.menu.map((section) => {
+                        section.item.map((item) => {
+                            if (item.item_name.includes(data.searchItem)) {
+                                if (!newRestsList.includes(restaurant)) {
+                                    newRestsList.push(restaurant)
+                                }
+                            }
+                        })
+                    })
+                })
+            }
+
+            console.log('only search..', newRestsList);
+        } else if (data.searchItem === "" && data.filterCuisine && data.filterCuisine !== '---') {
+            if (data.filterCuisine && data.filterCuisine !== '---') {
+                newRestsList = this.state.restaurants.filter((restaurant) => {
+                    return restaurant.cuisine === data.filterCuisine
+                });
+
+                console.log('after only filter...', newRestsList);
+            }
+        } else {
+            newRestsList = this.state.restaurants;
+            console.log('no filter/search selected...', newRestsList);
         }
 
-        // if(newRestsList.length === null){
-        //     this.setState({
-        //         restaurants: this.props.restaurants
-        //     })
-        // }
-        
+        this.setState({
+            restaurants: newRestsList
+        })
+
         // this.props.searchItem(data);
     };
 
