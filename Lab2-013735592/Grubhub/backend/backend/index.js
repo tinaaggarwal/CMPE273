@@ -258,31 +258,6 @@ app.get('/distinctCuisines', function (req, res) {
     })
 });
 
-
-// app.post('/updateOrderStatus', function (req, res) {
-//     console.log("Inside update order status Request Handler");
-//     console.log('status....', req.body.status)
-//     console.log('order id to update ....', req.body.orderIdToUpdate)
-
-//     var sql = "UPDATE order_table SET status = " + mysql.escape(req.body.status) + " WHERE order_id = " + req.body.orderIdToUpdate;
-
-//     console.log(sql)
-
-//     pool.query(sql, function (err, result) {
-//         if (err) {
-//             res.writeHead(400, {
-//                 'Content-Type': 'text/plain'
-//             })
-//             res.end("Could Not Get Connection Object");
-//         } else {
-//             res.writeHead(200, {
-//                 'Content-Type': 'text/plain'
-//             })
-//             res.end('Order status updated Successfully');
-//         }
-//     });
-// });
-
 //start your server on port 3001
 app.listen(3001);
 console.log("Server Listening on port 3001");
