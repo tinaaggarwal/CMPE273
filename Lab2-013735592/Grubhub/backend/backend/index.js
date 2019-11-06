@@ -2,7 +2,10 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-
+var { urlencoded, json } = require('body-parser');
+var { resolve } = require('path');
+var { uploader, cloudinaryConfig } = require('./config/cloudinaryConfig');
+var { multerUploads, dataUri } = require('./Middleware/multer');
 var cookieParser = require('cookie-parser');
 var cors = require('cors');
 //app.set('view engine', 'ejs');
@@ -37,7 +40,7 @@ mongoose.connect(uri, {
     useUnifiedTopology: true
 });
 
-const connection  = mongoose.connection;
+const connection = mongoose.connection;
 connection.once('open', () => {
     console.log('MongoDB connection established successfully');
 })
@@ -78,31 +81,31 @@ app.use(session({
 //     extended: true
 //   }));
 app.use(bodyParser.json());
-var clientEmail = "";
-var ownerEmail = "";
-var sessionResponse = "";
-var orderId;
-var id;
-var nextOrderId;
-var imageId = 'images';
+// var clientEmail = "";
+// var ownerEmail = "";
+// var sessionResponse = "";
+// var orderId;
+// var id;
+// var nextOrderId;
+// var imageId = 'images';
 
-var storagePropFiles = multer.diskStorage({
-    destination: function (req, file, callback) {
-        console.log("req.session.user is", JSON.stringify(req.params));
-        callback(null, createDirectory(imageId));
-    },
-    filename: function (req, file, callback) {
-        console.log("req", req.body);
-        callback(null, file.originalname);
-    }
-});
+// var storagePropFiles = multer.diskStorage({
+//     destination: function (req, file, callback) {
+//         console.log("req.session.user is", JSON.stringify(req.params));
+//         callback(null, createDirectory(imageId));
+//     },
+//     filename: function (req, file, callback) {
+//         console.log("req", req.body);
+//         callback(null, file.originalname);
+//     }
+// });
 
-// var rootDirectory = "public/images/";
-var rootDirectory = "/Users/tinaaggarwal/Documents/GitHub/CMPE273/Lab2-013735592/Grubhub/frontend/public/images/";
+// // var rootDirectory = "public/images/";
+// var rootDirectory = "/Users/tinaaggarwal/Documents/GitHub/CMPE273/Lab2-013735592/Grubhub/frontend/public/images/";
 
-var uploadPropFiles = multer({
-    storage: storagePropFiles
-});
+// var uploadPropFiles = multer({
+//     storage: storagePropFiles
+// });
 
 //Allow Access Control
 app.use(function (req, res, next) {
@@ -117,28 +120,50 @@ app.use(function (req, res, next) {
 app.use('/', clientRouter);
 app.use('/', ownerRouter);
 
-app.post('/upload', uploadPropFiles.single('image'), (req, res) => {
-    console.log(req.file.filename)
-
-    if (req.file)
-        res.json({
-            imageUrl: `/images/${imageId}/${req.file.filename}`
-        });
-    else
-        res.status("409").json("No Files to Upload.")
+app.use('*', cloudinaryConfig);
+app.get('/*', (req, res) => res.sendFile(resolve(__dirname, '../public/index.html')));
+app.post('/upload', multerUploads, (req, res) => {
+    if (req.file) {
+        const file = dataUri(req).content;
+        return uploader.upload(file).then((result) => {
+            const image = result.url;
+            return res.status(200).json({
+                messge: 'Your image has been uploded successfully to cloudinary',
+                data: {
+                    image
+                }
+            })
+        }).catch((err) => res.status(400).json({
+            messge: 'someting went wrong while processing your request',
+            data: {
+                err
+            }
+        }))
+    }
 });
 
+// app.post('/upload', uploadPropFiles.single('image'), (req, res) => {
+//     console.log(req.file.filename)
 
-function createDirectory(imageId) {
-    if (!fs.existsSync(rootDirectory)) {
-        fs.mkdirSync(rootDirectory);
-    }
-    let directory = rootDirectory + imageId;
-    if (!fs.existsSync(directory)) {
-        fs.mkdirSync(directory);
-    }
-    return directory;
-}
+//     if (req.file)
+//         res.json({
+//             imageUrl: `/images/${imageId}/${req.file.filename}`
+//         });
+//     else
+//         res.status("409").json("No Files to Upload.")
+// });
+
+
+// function createDirectory(imageId) {
+//     if (!fs.existsSync(rootDirectory)) {
+//         fs.mkdirSync(rootDirectory);
+//     }
+//     let directory = rootDirectory + imageId;
+//     if (!fs.existsSync(directory)) {
+//         fs.mkdirSync(directory);
+//     }
+//     return directory;
+// }
 
 
 // Owner
