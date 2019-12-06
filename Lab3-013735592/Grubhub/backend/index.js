@@ -11,27 +11,27 @@ var mysql = require('mysql');
 const multer = require('multer');
 var fs = require('fs');
 
-// var pool = mysql.createPool({
-//     connectionLimit: 100,
-//     host: 'localhost',
-//     user: 'root',
-//     password: 'Tina.1234',
-//     database: 'grubhub',
-//     debug: false
-// })
-
 var pool = mysql.createPool({
     connectionLimit: 100,
-    port: '3306',
-    host: 'grubhub.cv9vraaep5ay.us-west-2.rds.amazonaws.com',
-    user: 'admin',
+    host: 'localhost',
+    user: 'root',
     password: 'Tina.1234',
     database: 'grubhub',
     debug: false
 })
 
+// var pool = mysql.createPool({
+//     connectionLimit: 100,
+//     port: '3306',
+//     host: 'grubhub.cv9vraaep5ay.us-west-2.rds.amazonaws.com',
+//     user: 'admin',
+//     password: 'Tina.1234',
+//     database: 'grubhub',
+//     debug: false
+// })
+
 //use cors to allow cross origin resource sharing
-app.use(cors({ origin: 'http://52.26.41.109:3000', credentials: true }));
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 //use express session to maintain session data
 app.use(session({
@@ -74,7 +74,7 @@ var uploadPropFiles = multer({
 
 //Allow Access Control
 app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://52.26.41.109:3000');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');

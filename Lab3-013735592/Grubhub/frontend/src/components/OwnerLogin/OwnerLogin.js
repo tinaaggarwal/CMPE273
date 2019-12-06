@@ -51,7 +51,7 @@ class OwnerLogin extends Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post('http://52.26.41.109:3001/ownerLogin', data)
+        axios.post('http://localhost:3001/ownerLogin', data)
             .then(response => {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {

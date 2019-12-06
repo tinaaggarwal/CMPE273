@@ -44,7 +44,7 @@ class Profile extends Component {
     }
 
     componentDidMount() {
-        axios.get('http://52.26.41.109:3001/userUpdate')
+        axios.get('http://localhost:3001/userUpdate')
             .then((response) => {
                 console.log((response.data))
                 this.setState({
@@ -54,7 +54,7 @@ class Profile extends Component {
                 });
             })
 
-        axios.get('http://52.26.41.109:3001/userProfileImage')
+        axios.get('http://localhost:3001/userProfileImage')
             .then((response) => {
                 console.log((response.data))
                 this.setState({
@@ -69,7 +69,7 @@ class Profile extends Component {
             data.append("image", picture, picture.name);
             console.log(data)
             // Make an AJAX upload request using Axios
-            return axios.post('http://52.26.41.109:3001/upload', data)
+            return axios.post('http://localhost:3001/upload', data)
                 .then(response => {
                     this.setState({ imageUrl: response.data.imageUrl });
                 }).then(() => {
@@ -79,7 +79,7 @@ class Profile extends Component {
                     //set the with credentials to true
                     axios.defaults.withCredentials = true;
                     //make a post request with the user data
-                    axios.post('http://52.26.41.109:3001/userUpdateProfileImage', data)
+                    axios.post('http://localhost:3001/userUpdateProfileImage', data)
                         .then(response => {
                             console.log("Status Code : ", response.status);
                             if (response.status === 200) {
@@ -183,7 +183,7 @@ class Profile extends Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post('http://52.26.41.109:3001/userUpdateName', data)
+        axios.post('http://localhost:3001/userUpdateName', data)
             .then(response => {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {
@@ -211,7 +211,7 @@ class Profile extends Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post('http://52.26.41.109:3001/userUpdateEmail', data)
+        axios.post('http://localhost:3001/userUpdateEmail', data)
             .then(response => {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {
@@ -240,7 +240,7 @@ class Profile extends Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post('http://52.26.41.109:3001/userUpdatePassword', data)
+        axios.post('http://localhost:3001/userUpdatePassword', data)
             .then(response => {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {

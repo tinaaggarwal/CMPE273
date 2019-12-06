@@ -34,7 +34,7 @@ class RestaurantMenu extends Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post('http://52.26.41.109:3001/menuItems', data)
+        axios.post('http://localhost:3001/menuItems', data)
             .then(response => {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {
@@ -50,7 +50,7 @@ class RestaurantMenu extends Component {
                 }
             });
 
-        axios.post('http://52.26.41.109:3001/menuSections', data)
+        axios.post('http://localhost:3001/menuSections', data)
             .then(response => {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {
@@ -93,7 +93,7 @@ class RestaurantMenu extends Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         // make a post request with the user data
-        axios.post('http://52.26.41.109:3001/addItemToCart', data)
+        axios.post('http://localhost:3001/addItemToCart', data)
             .then(response => {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {

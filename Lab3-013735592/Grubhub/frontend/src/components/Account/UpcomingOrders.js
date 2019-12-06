@@ -18,7 +18,7 @@ class UpcomingOrders extends Component {
 
     componentDidMount() {
 
-        axios.get('http://52.26.41.109:3001/upcomingOrdersForClient')
+        axios.get('http://localhost:3001/upcomingOrdersForClient')
             .then((response) => {
                 console.log(response.data);
                 let orderIds = response.data.map(obj => {
@@ -37,7 +37,7 @@ class UpcomingOrders extends Component {
                 //set the with credentials to true
                 axios.defaults.withCredentials = true;
                 //make a post request with the user data
-                axios.post('http://52.26.41.109:3001/itemsInOrders', data)
+                axios.post('http://localhost:3001/itemsInOrders', data)
                     .then(response => {
                         console.log("Status Code : ", response.status);
                         if (response.status === 200) {
@@ -65,7 +65,7 @@ class UpcomingOrders extends Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post('http://52.26.41.109:3001/updateOrderStatus', data)
+        axios.post('http://localhost:3001/updateOrderStatus', data)
             .then(response => {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {

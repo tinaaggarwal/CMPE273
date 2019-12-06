@@ -15,7 +15,7 @@ class Menu extends Component {
 
     componentDidMount() {
 
-        axios.get('http://52.26.41.109:3001/ownerSections')
+        axios.get('http://localhost:3001/ownerSections')
             .then((response) => {
                 console.log(response.data);
                 this.setState({
@@ -23,7 +23,7 @@ class Menu extends Component {
                 });
             });
 
-        axios.get('http://52.26.41.109:3001/ownerItemsList')
+        axios.get('http://localhost:3001/ownerItemsList')
             .then((response) => {
                 console.log(response.data);
                 this.setState({
@@ -43,7 +43,7 @@ class Menu extends Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post('http://52.26.41.109:3001/ownerDeleteItem', data)
+        axios.post('http://localhost:3001/ownerDeleteItem', data)
             .then(response => {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {
